@@ -39,7 +39,7 @@
             justify-content: center;
             align-items: center;
             gap: 6px;
-            padding: 8px 10px;
+            padding: 10px 10px 8px 10px;
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -68,40 +68,6 @@
             background: rgba(160, 130, 200, 0.25);
             color: #5b3f7a;
             font-weight: 600;
-        }
-
-        /* ===== 顶部状态栏 ===== */
-        .top-bar {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 12px;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-bottom: 1px solid rgba(200, 180, 220, 0.2);
-            flex-shrink: 0;
-        }
-        .top-bar span {
-            font-size: 18px;
-            font-weight: 600;
-            color: #3d2e5c;
-        }
-        .top-bar .dot {
-            width: 8px;
-            height: 8px;
-            background: #7bcfa6;
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 8px rgba(123, 207, 166, 0.6);
-            animation: pulse-dot 1.8s infinite;
-        }
-        @keyframes pulse-dot {
-            0% { opacity: 0.6; transform: scale(0.95); }
-            50% { opacity: 1; transform: scale(1.1); }
-            100% { opacity: 0.6; transform: scale(0.95); }
         }
 
         /* ===== 聊天区域 ===== */
@@ -614,7 +580,6 @@
         /* ===== 移动端适配 ===== */
         @media (max-width: 480px) {
             .func-bar button { font-size: 12px; padding: 4px 10px; }
-            .top-bar span { font-size: 16px; }
             .pop h3 { font-size: 18px; }
             .pop button { font-size: 14px; padding: 6px 14px; }
             .pop textarea { font-size: 15px; }
@@ -641,7 +606,6 @@
         }
         @media (max-width: 375px) {
             .func-bar button { font-size: 11px; padding: 3px 8px; }
-            .top-bar span { font-size: 15px; }
             .chat-item { font-size: clamp(14px, 3.8vw, 17px); }
             .chat-input-area button { padding: 8px 12px; font-size: 15px; }
         }
@@ -649,6 +613,7 @@
 </head>
 <body>
 
+    <!-- ===== 功能栏（已删除顶部状态行） ===== -->
     <div class="func-bar">
         <button id="avatarBtn">🖼️ 头像</button>
         <button id="importBtn">📥 导入字卡</button>
@@ -658,16 +623,12 @@
         <button id="speedBtn" class="speed-btn">⏱ 中速 (1.5s)</button>
     </div>
 
-    <div class="top-bar">
-        <span>🌙 梦角</span>
-        <span class="dot"></span>
-        <span>在线倾听中...</span>
-    </div>
-
+    <!-- ===== 聊天区域 ===== -->
     <div class="chat-box" id="chatBox">
         <div class="scroll-anchor" id="scrollAnchor"></div>
     </div>
 
+    <!-- ===== 输入区域 ===== -->
     <div class="chat-input-area">
         <input id="msgInput" placeholder="说点什么吧…" onkeydown="if(event.key==='Enter') sendMsg()">
         <button onclick="sendMsg()">发送</button>
@@ -741,6 +702,7 @@
         const CALENDAR_KEY = "dreamCalendarData";
         const CUSTOM_EMO_KEY = "dreamCustomEmo";
         const MODE_KEY = "replyMode";
+        const SPEED_INDEX_KEY = "dreamSpeedIndex"; // 新增：保存速度档位
 
         let chatRecords = [];
         let replyList = [];
@@ -766,6 +728,20 @@
             { label: '随机 (0.5~120s)', value: 'random' }
         ];
 
+        // ===== 速度存储 =====
+        function loadSpeedIndex() {
+            const saved = localStorage.getItem(SPEED_INDEX_KEY);
+            if (saved !== null) {
+                const idx = parseInt(saved);
+                if (idx >= 0 && idx < delayPresets.length) {
+                    currentDelayIndex = idx;
+                }
+            }
+        }
+        function saveSpeedIndex() {
+            localStorage.setItem(SPEED_INDEX_KEY, String(currentDelayIndex));
+        }
+
         function getDelay() {
             const preset = delayPresets[currentDelayIndex];
             if (preset.value === 'random') {
@@ -778,6 +754,7 @@
         }
         function cycleSpeed() {
             currentDelayIndex = (currentDelayIndex + 1) % delayPresets.length;
+            saveSpeedIndex();
             updateSpeedButton();
             showSystemMessage(`回复速度已切换为：${delayPresets[currentDelayIndex].label}`);
         }
@@ -1236,8 +1213,8 @@
             reader.readAsDataURL(file);
         }
 
-        // ===== 聊天消息（带时间戳） =====
-        function appendMessage(sender, text, isUser = false, save = true, timestamp = null) {
+        // ===== 聊天消息 =====
+        let originalAppendMessage = function(sender, text, isUser = false, save = true, timestamp = null) {
             const box = document.getElementById("chatBox");
             const row = document.createElement("div");
             row.className = `chat-row ${isUser ? "user" : "ai"}`;
@@ -1251,94 +1228,6 @@
             bubble.className = `chat-item ${isUser ? "user" : "ai"}`;
             bubble.textContent = text;
 
-            // 时间戳
-            const timeDiv = document.createElement("div");
-            timeDiv.className = "msg-time";
-            const now = timestamp || Date.now();
-            const date = new Date(now);
-            const hours = String(date.getHours()).padStart(2, "0");
-            const minutes = String(date.getMinutes()).padStart(2, "0");
-            timeDiv.textContent = `${hours}:${minutes}`;
-
-            // 将时间添加到气泡内部（底部）
-            bubble.appendChild(timeDiv);
-
-            if (isUser) {
-                row.appendChild(bubble);
-                row.appendChild(avatar);
-            } else {
-                row.appendChild(avatar);
-                row.appendChild(bubble);
-            }
-
-            const anchor = document.getElementById("scrollAnchor");
-            box.insertBefore(row, anchor);
-
-            if (save) {
-                chatRecords.push({ sender, text, isUser, timestamp: now });
-                if (chatRecords.length > 500) chatRecords = chatRecords.slice(-500);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
-            }
-            scrollToBottom();
-        }
-
-        // ===== 系统消息 =====
-        function showSystemMessage(text) {
-            const chatBox = document.getElementById("chatBox");
-            const anchor = document.getElementById("scrollAnchor");
-            const sysItem = document.createElement("div");
-            sysItem.className = "chat-item system";
-            sysItem.textContent = text;
-            chatBox.insertBefore(sysItem, anchor);
-            scrollToBottom();
-        }
-
-        // ===== 历史记录加载 =====
-        function initChatRecord() {
-            const local = localStorage.getItem(STORAGE_KEY);
-            const chatBox = document.getElementById("chatBox");
-            if (!local) {
-                chatRecords = [];
-                showSystemMessage("✨ 已成功建立心灵链接，随时可以向我倾诉");
-                return;
-            }
-            chatRecords = JSON.parse(local);
-            const MAX_RECORDS = 500;
-            if (chatRecords.length > MAX_RECORDS) {
-                chatRecords = chatRecords.slice(-MAX_RECORDS);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
-            }
-            chatRecords.forEach(item => {
-                // 兼容旧数据，无时间戳则传 null，appendMessage 会生成当前时间？但我们希望旧记录不显示时间，所以传一个特殊标记。
-                // 我们修改：如果无 timestamp，则不显示时间。我们传入 null，在函数内部判断。
-                const ts = item.timestamp || null;
-                appendMessage(item.sender, item.text, item.isUser, false, ts);
-            });
-            scrollToBottom();
-        }
-
-        // 重写 appendMessage 以支持无时间戳时不显示时间
-        // 但上面已经定义，我们修改为如果 timestamp 为 null 则不添加时间标签。
-        // 但是上面已经定义了，需要修改。因为在上面我们已经定义了时间标签，现在要支持无时间。
-        // 由于代码已定义，我们重新定义函数覆盖。
-        // 实际上我们可以在上方修改，但为了清晰，在下面重新定义并覆盖。
-        // 重新定义 appendMessage
-        const originalAppend = appendMessage;
-        appendMessage = function(sender, text, isUser = false, save = true, timestamp = null) {
-            const box = document.getElementById("chatBox");
-            const row = document.createElement("div");
-            row.className = `chat-row ${isUser ? "user" : "ai"}`;
-
-            const avatar = document.createElement("div");
-            avatar.className = "avatar";
-            const avatarSrc = isUser ? userAvatar : aiAvatar;
-            if (avatarSrc) avatar.innerHTML = `<img src="${avatarSrc}" alt="">`;
-
-            const bubble = document.createElement("div");
-            bubble.className = `chat-item ${isUser ? "user" : "ai"}`;
-            bubble.textContent = text;
-
-            // 只有 timestamp 存在时才显示时间
             if (timestamp !== null) {
                 const timeDiv = document.createElement("div");
                 timeDiv.className = "msg-time";
@@ -1369,7 +1258,41 @@
             scrollToBottom();
         };
 
-        // 为了兼容，保留原来的函数名，但实际上覆盖了。
+        // 赋值
+        let appendMessage = originalAppendMessage;
+
+        // ===== 系统消息 =====
+        function showSystemMessage(text) {
+            const chatBox = document.getElementById("chatBox");
+            const anchor = document.getElementById("scrollAnchor");
+            const sysItem = document.createElement("div");
+            sysItem.className = "chat-item system";
+            sysItem.textContent = text;
+            chatBox.insertBefore(sysItem, anchor);
+            scrollToBottom();
+        }
+
+        // ===== 历史记录加载 =====
+        function initChatRecord() {
+            const local = localStorage.getItem(STORAGE_KEY);
+            const chatBox = document.getElementById("chatBox");
+            if (!local) {
+                chatRecords = [];
+                showSystemMessage("✨ 已成功建立心灵链接，随时可以向我倾诉");
+                return;
+            }
+            chatRecords = JSON.parse(local);
+            const MAX_RECORDS = 500;
+            if (chatRecords.length > MAX_RECORDS) {
+                chatRecords = chatRecords.slice(-MAX_RECORDS);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
+            }
+            chatRecords.forEach(item => {
+                const ts = item.timestamp || null;
+                appendMessage(item.sender, item.text, item.isUser, false, ts);
+            });
+            scrollToBottom();
+        }
 
         // ===== 滚动 =====
         function scrollToBottom() {
@@ -1379,8 +1302,7 @@
             if (box) box.scrollTop = box.scrollHeight;
         }
 
-        // ===== 发送消息（含多条回复） =====
-        // 连续发送多条消息
+        // ===== 发送消息 =====
         function sendMultipleMessages(messages, interval = 500) {
             if (!messages || messages.length === 0) return;
             let index = 0;
@@ -1412,16 +1334,13 @@
                         appendMessage("梦角", "暂无回复字卡，请先导入文案", false);
                         return;
                     }
-                    // 随机生成 1~5 条消息
-                    const count = Math.floor(Math.random() * 5) + 1; // 1~5
+                    const count = Math.floor(Math.random() * 5) + 1;
                     const selected = [];
                     for (let i = 0; i < count; i++) {
                         const randomIndex = Math.floor(Math.random() * replyList.length);
                         selected.push(replyList[randomIndex]);
                     }
-                    // 逐条发送，间隔 0.5 秒
                     sendMultipleMessages(selected, 500);
-                    // 记录梦角情绪（只记录一次，表示当天有互动）
                     recordAiEmotion();
                 }, delayMs);
             }
@@ -1429,6 +1348,9 @@
 
         // ===== 初始化 =====
         window.onload = () => {
+            // 加载速度档位
+            loadSpeedIndex();
+
             loadMode();
             loadReply();
             renderCardList();
