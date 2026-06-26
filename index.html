@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#f3e8ff">
     <meta name="apple-mobile-web-app-title" content="梦角传讯">
-    <title>梦角传讯</title>
+    <title>梦角传讯 · 无限畅聊</title>
     <style>
         html {
             touch-action: manipulation;
@@ -140,11 +140,6 @@
             transform: scale(0.94);
             box-shadow: 0 2px 6px rgba(143, 109, 176, 0.2);
         }
-        .chat-input-area .send-btn:disabled {
-            opacity: 0.5;
-            transform: scale(0.98);
-            cursor: not-allowed;
-        }
 
         /* ===== 状态徽标（输入框旁边） ===== */
         .status-badge {
@@ -160,17 +155,17 @@
             background: rgba(200, 180, 220, 0.15);
             color: #8a7a9a;
         }
+        .status-badge.has-unread {
+            background: rgba(245, 180, 180, 0.25);
+            color: #9a3a3a;
+        }
+        .status-badge.all-read {
+            background: rgba(123, 207, 166, 0.2);
+            color: #2a7a4a;
+        }
         .status-badge.sending {
             background: rgba(255, 200, 100, 0.25);
             color: #b08830;
-        }
-        .status-badge.read {
-            background: rgba(123, 207, 166, 0.25);
-            color: #2a7a4a;
-        }
-        .status-badge.unread {
-            background: rgba(245, 180, 180, 0.25);
-            color: #9a3a3a;
         }
 
         /* ===== 消息状态标记（气泡内） ===== */
@@ -1137,8 +1132,8 @@
         let pendingTimers = {};
         let msgCounter = 0;
 
-        // ===== 状态管理 =====
-        let isProcessing = false;
+        // ===== 消息状态追踪 =====
+        let pendingMessages = {}; // { msgId: { status: 'sending'|'read'|'unread', timer: null } }
 
         // ===== 回复速度 =====
         const delayPresets = [
@@ -1177,29 +1172,26 @@
             showSystemMessage(`回复速度已切换为：${delayPresets[currentDelayIndex].label}`);
         }
 
-        // ===== 状态徽标更新（输入框旁边） =====
-        function setStatus(status, text = null) {
+        // ===== 【优化】状态徽标更新 - 显示未读数量 =====
+        function updateOverallStatus() {
             const badge = document.getElementById('statusBadge');
             if (!badge) return;
+
+            // 统计所有未读消息
+            const unreadCount = Object.values(pendingMessages).filter(s => s.status === 'unread').length;
+            const sendingCount = Object.values(pendingMessages).filter(s => s.status === 'sending').length;
+
             badge.className = 'status-badge';
-            switch (status) {
-                case 'idle':
-                    badge.textContent = text || '💬 就绪';
-                    break;
-                case 'sending':
-                    badge.classList.add('sending');
-                    badge.textContent = text || '⏳ 发送中...';
-                    break;
-                case 'read':
-                    badge.classList.add('read');
-                    badge.textContent = text || '✅ 已读';
-                    break;
-                case 'unread':
-                    badge.classList.add('unread');
-                    badge.textContent = text || '❌ 未读';
-                    break;
-                default:
-                    badge.textContent = text || '💬 就绪';
+
+            if (unreadCount > 0) {
+                badge.classList.add('has-unread');
+                badge.textContent = `❌ ${unreadCount}条未读`;
+            } else if (sendingCount > 0) {
+                badge.classList.add('sending');
+                badge.textContent = `⏳ ${sendingCount}条发送中...`;
+            } else {
+                badge.classList.add('all-read');
+                badge.textContent = '✅ 全部已读';
             }
         }
 
@@ -1208,12 +1200,14 @@
             return Math.random() < 0.7;
         }
 
-        // ===== 【修复】更新消息状态（消息气泡内） =====
+        // ===== 【优化】更新单条消息状态 =====
         function updateMessageStatus(msgId, status) {
             const msgElement = document.querySelector(`[data-msg-id="${msgId}"]`);
             if (!msgElement) return;
+
             const statusEl = msgElement.querySelector('.msg-status');
             if (!statusEl) return;
+
             if (status === 'read') {
                 statusEl.textContent = ' ✅ 已读';
                 statusEl.className = 'msg-status read';
@@ -1224,6 +1218,18 @@
                 statusEl.textContent = ' ⏳ 发送中...';
                 statusEl.className = 'msg-status sending';
             }
+
+            // 更新追踪状态
+            if (pendingMessages[msgId]) {
+                pendingMessages[msgId].status = status;
+                if (pendingMessages[msgId].timer) {
+                    clearTimeout(pendingMessages[msgId].timer);
+                    delete pendingMessages[msgId].timer;
+                }
+            }
+
+            // 更新全局状态
+            updateOverallStatus();
         }
 
         // ===== 字卡导入 =====
@@ -1817,9 +1823,9 @@
             textSpan.textContent = text;
             bubble.appendChild(textSpan);
 
-            // 【修复】添加消息状态标记
+            // 消息状态标记
             const statusSpan = document.createElement("span");
-            statusSpan.className = "msg-status sending";
+            statusSpan.className = "msg-status";
             if (status === 'read') {
                 statusSpan.textContent = ' ✅ 已读';
                 statusSpan.className = 'msg-status read';
@@ -1852,9 +1858,17 @@
             if (anchor) { box.insertBefore(row, anchor); } else { box.appendChild(row); }
 
             const now = timestamp || Date.now();
-            chatRecords.push({ sender, text, isUser, timestamp: now, isLetter: false, msgId: msgId, status: status });
+            const statusVal = status === 'idle' ? 'sending' : status;
+            chatRecords.push({ sender, text, isUser, timestamp: now, isLetter: false, msgId: msgId, status: statusVal });
             if (chatRecords.length > 500) chatRecords = chatRecords.slice(-500);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
+
+            // 追踪消息状态
+            if (isUser) {
+                pendingMessages[msgId] = { status: statusVal || 'sending', timer: null };
+                updateOverallStatus();
+            }
+
             scrollToBottom();
             return msgId;
         }
@@ -1862,7 +1876,6 @@
         // ===== 兼容 appendMessage（用于历史记录） =====
         function appendMessage(sender, text, isUser = false, save = true, timestamp = null, isLetter = false, status = 'idle') {
             if (!save) {
-                // 历史记录加载模式：不保存，显示时间，状态显示为已读
                 const box = document.getElementById("chatBox");
                 if (!box) return;
                 const row = document.createElement("div");
@@ -1878,7 +1891,6 @@
                 textSpan.textContent = text;
                 bubble.appendChild(textSpan);
 
-                // 历史消息标记为已读
                 const statusSpan = document.createElement("span");
                 statusSpan.className = "msg-status read";
                 statusSpan.textContent = ' ✅ 已读';
@@ -1903,7 +1915,6 @@
                 scrollToBottom();
                 return;
             }
-            // 正常保存模式
             return appendMessageWithId(sender, text, isUser, timestamp, isLetter, status);
         }
 
@@ -1940,7 +1951,6 @@
                     if (item.isLetter) return;
                     const ts = item.timestamp || null;
                     const sender = item.sender || (item.isUser ? "你" : "梦角");
-                    // 历史记录显示为已读
                     appendMessage(sender, item.text, item.isUser, false, ts, false, 'read');
                 });
             } catch (e) {
@@ -1949,6 +1959,7 @@
                 showSystemMessage("✨ 已重新建立心灵链接");
             }
             scrollToBottom();
+            updateOverallStatus();
         }
 
         function scrollToBottom() {
@@ -1958,6 +1969,7 @@
             if (box) box.scrollTop = box.scrollHeight;
         }
 
+        // ===== 发送多条消息（梦角回复） =====
         function sendMultipleMessages(messages, interval = 500) {
             if (!messages || messages.length === 0) return;
             let index = 0;
@@ -1965,7 +1977,7 @@
             function sendNext() {
                 if (index >= messages.length) return;
                 const msg = messages[index];
-                // 每条回复带独立时间戳，状态为已读（因为是回复）
+                // 回复自动标记为已读
                 appendMessage("梦角", msg, false, true, Date.now(), false, 'read');
                 index++;
                 if (index < messages.length) { setTimeout(sendNext, interval); }
@@ -1974,41 +1986,31 @@
         }
 
         // ============================================================
-        //  【核心】发送消息 - 立即显示时间戳 + 状态标记
+        //  【核心】发送消息 - 不限条数，立即显示，异步处理状态
         // ============================================================
         function sendMsg() {
             const input = document.getElementById("msgInput");
             if (!input) return;
             const text = input.value.trim();
             if (!text) return;
-            if (isProcessing) return;
 
-            // 锁定
-            isProcessing = true;
-            const sendBtn = document.getElementById("sendBtn");
-            sendBtn.disabled = true;
-
-            // 【修复】用户消息立即显示，带时间戳 + 发送中状态
+            // 用户消息立即显示，带时间戳 + 发送中状态
             const msgId = appendMessage("你", text, true, true, Date.now(), false, 'sending');
             input.value = "";
-
-            // 输入框旁状态更新
-            setStatus('sending', '⏳ 发送中...');
 
             // 获取延迟
             const delayMs = getDelay();
 
-            // 延迟后决定是否已读
-            setTimeout(() => {
+            // 延迟后决定是否已读（异步，不影响用户继续发消息）
+            const timerId = setTimeout(() => {
                 const isRead = decideReadStatus();
 
                 if (isRead) {
-                    // ✅ 已读 → 更新消息状态 + 输入框旁状态
+                    // ✅ 已读 → 更新消息状态
                     updateMessageStatus(msgId, 'read');
-                    setStatus('read', '✅ 已读');
                     recordAiEmotion();
 
-                    // 再延迟一点回复（模拟思考）
+                    // 再延迟一点回复
                     setTimeout(() => {
                         if (replyList.length === 0) {
                             appendMessage("梦角", "📭 暂无回复字卡，请先导入文案", false, true, Date.now(), false,
@@ -2025,24 +2027,18 @@
                             }
                             sendMultipleMessages(selected, 500);
                         }
-                        // 解锁
-                        isProcessing = false;
-                        sendBtn.disabled = false;
-                        setStatus('idle', '💬 就绪');
                     }, 300 + Math.random() * 500);
 
                 } else {
-                    // ❌ 未读 → 更新消息状态 + 输入框旁状态
+                    // ❌ 未读 → 更新消息状态
                     updateMessageStatus(msgId, 'unread');
-                    setStatus('unread', '❌ 未读');
-                    // 2秒后恢复
-                    setTimeout(() => {
-                        isProcessing = false;
-                        sendBtn.disabled = false;
-                        setStatus('idle', '💬 就绪');
-                    }, 2000);
                 }
             }, delayMs);
+
+            // 保存定时器引用以便清理
+            if (pendingMessages[msgId]) {
+                pendingMessages[msgId].timer = timerId;
+            }
         }
 
         // ============================================================
@@ -2083,7 +2079,6 @@
             renderMailList();
             restorePendingLetters();
             updateSpeedDisplay();
-            setStatus('idle', '💬 就绪');
 
             // ---- 功能菜单 ----
             document.getElementById("openMenuBtn").addEventListener("click", openFuncMenu);
@@ -2117,9 +2112,11 @@
                     if (confirm("确定清空全部聊天记录？")) {
                         localStorage.removeItem(STORAGE_KEY);
                         chatRecords = [];
+                        pendingMessages = {};
                         const chatBox = document.getElementById("chatBox");
                         if (chatBox) chatBox.innerHTML = `<div class="scroll-anchor" id="scrollAnchor"></div>`;
                         showSystemMessage("✨ 已重新建立心灵链接");
+                        updateOverallStatus();
                     }
                 }, 200); });
 
@@ -2227,6 +2224,17 @@
 
             // ---- 加载聊天记录 ----
             initChatRecord();
+
+            // ---- 恢复未完成的状态 ----
+            // 从聊天记录中恢复 pending 状态
+            chatRecords.forEach(item => {
+                if (item.isUser && item.status && item.status !== 'read' && item.msgId) {
+                    if (!pendingMessages[item.msgId]) {
+                        pendingMessages[item.msgId] = { status: item.status, timer: null };
+                    }
+                }
+            });
+            updateOverallStatus();
 
             // 显示投递中的信件数量
             const sendingCount = letters.filter(l => l.status === 'sent').length;
