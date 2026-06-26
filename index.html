@@ -28,6 +28,7 @@
             overscroll-behavior-y: none;
             display: flex;
             flex-direction: column;
+            font-size: 16px; /* 基础大小 */
         }
 
         /* 功能按钮栏 页面最顶部 */
@@ -251,6 +252,7 @@
             border-radius: 8px;
             background: #f8f8f8;
             cursor: pointer;
+            font-size: 15px;
         }
         .calendar-role-tab button.active {
             background: #4088e0;
@@ -426,12 +428,12 @@
             object-fit: cover;
         }
 
-        /* 聊天气泡 */
+        /* 聊天气泡 - 字体大小使用 clamp 自适应 */
         .chat-item {
             padding: 8px 12px;
             border-radius: 14px;
             line-height: 1.5;
-            font-size: 22px;
+            font-size: clamp(17px, 4.2vw, 22px);
             max-width: 75%;
             word-break: break-all;
         }
@@ -439,7 +441,7 @@
             align-self: center;
             background: #eef2f7;
             color: #666;
-            font-size: 16px;
+            font-size: clamp(14px, 3.2vw, 17px);
             text-align: center;
             max-width: 85%;
             border-radius: 8px;
@@ -484,7 +486,7 @@
             border: none;
             background: #4088e0;
             color: #fff;
-            font-size: 20px;
+            font-size: clamp(18px, 4vw, 22px);
             font-weight: 500;
             transition: background 0.2s;
         }
@@ -504,6 +506,109 @@
             padding: 1px 6px;
             border-radius: 4px;
             font-size: 13px;
+        }
+
+        /* ====== 移动端适配：针对小屏幕进一步优化字体 ====== */
+        @media (max-width: 480px) {
+            .func-bar button {
+                font-size: 12px;
+                padding: 3px 7px;
+            }
+            .top-bar span {
+                font-size: 16px;
+            }
+            .pop h3 {
+                font-size: 16px;
+            }
+            .pop button {
+                font-size: 14px;
+                padding: 5px 10px;
+            }
+            .pop textarea {
+                font-size: 15px;
+            }
+            .card-item {
+                font-size: 15px;
+                padding: 6px 8px;
+            }
+            .card-item .del-btn {
+                font-size: 12px;
+            }
+            .calendar-header h3 {
+                font-size: 16px;
+            }
+            .calendar-nav button {
+                font-size: 20px;
+            }
+            .calendar-role-tab button {
+                font-size: 14px;
+                padding: 5px;
+            }
+            .emoji-item {
+                width: 36px;
+                height: 36px;
+                font-size: 20px;
+            }
+            .calendar-week span {
+                font-size: 13px;
+            }
+            .day-cell {
+                font-size: 14px;
+            }
+            .day-cell .emo-mark {
+                font-size: 14px;
+            }
+            .calendar-bottom-btn button {
+                font-size: 13px;
+                padding: 5px 0;
+            }
+            .calendar-add-emo-btn {
+                font-size: 13px;
+            }
+            .emo-edit-item input {
+                font-size: 13px;
+            }
+            .import-hint {
+                font-size: 12px;
+            }
+            .chat-item {
+                font-size: clamp(16px, 4vw, 20px);
+                padding: 6px 10px;
+            }
+            .chat-item.system {
+                font-size: clamp(13px, 3vw, 16px);
+            }
+            .chat-input-area input {
+                font-size: 16px !important;
+                padding: 8px 10px;
+            }
+            .chat-input-area button {
+                font-size: clamp(17px, 4vw, 20px);
+                padding: 8px 0;
+                width: 60px;
+            }
+            .avatar {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        /* 极小屏（如 iPhone SE）额外调整 */
+        @media (max-width: 375px) {
+            .func-bar button {
+                font-size: 11px;
+                padding: 2px 6px;
+            }
+            .top-bar span {
+                font-size: 15px;
+            }
+            .chat-item {
+                font-size: clamp(15px, 3.8vw, 18px);
+            }
+            .chat-input-area button {
+                width: 55px;
+                font-size: 16px;
+            }
         }
     </style>
 </head>
