@@ -5,138 +5,661 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#e6f2ff">
+    <meta name="theme-color" content="#f3e8ff">
     <meta name="apple-mobile-web-app-title" content="梦角传讯">
-    <title>梦角传讯 · 回复速度最长120s</title>
+    <title>梦角传讯 · 暖心陪伴</title>
     <style>
-        /* === 完整样式（与上版一致） === */
-        html { touch-action: manipulation; height: 100%; }
-        * { margin:0; padding:0; box-sizing:border-box; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: #f7f8fa; color: #222; height: 100%; display: flex; flex-direction: column; overflow: hidden; font-size: 16px; }
-        .func-bar { width:100%; display:flex; justify-content:center; align-items:center; gap:4px; padding:6px 4px; background:#ffffff; border-bottom:1px solid #eee; flex-wrap:wrap; flex-shrink:0; }
-        .func-bar button { padding:4px 8px; border-radius:10px; border:1px solid #ddd; background:#f5f5f5; font-size:12px; color:#444; white-space:nowrap; transition:all 0.1s; }
-        .func-bar button:active { background:#e5e5e5; transform:scale(0.96); }
-        .func-bar .speed-btn { background:#e8f0fe; border-color:#4088e0; color:#1a5bb5; font-weight:500; }
-        .top-bar { width:100%; display:flex; justify-content:center; align-items:center; gap:6px; padding:6px 6px; background:#ffffff; border-bottom:1px solid #eee; flex-shrink:0; }
-        .top-bar span { font-size:18px; color:#333; font-weight:500; }
-        .top-bar .dot { width:7px; height:7px; background-color:#4caf50; border-radius:50%; display:inline-block; margin-right:4px; }
-        .chat-box { flex:1; overflow-y:auto; padding:8px 6px 12px 6px; display:flex; flex-direction:column; gap:6px; scroll-behavior:smooth; -webkit-overflow-scrolling:touch; min-height:0; }
-        .scroll-anchor { height:1px; flex-shrink:0; }
-        .chat-input-area { flex-shrink:0; display:flex; gap:6px; align-items:center; padding:6px 6px calc(6px + env(safe-area-inset-bottom)); background:#f7f8fa; border-top:1px solid #e5e7eb; }
-        .chat-input-area input { flex:1; padding:10px 12px; border:1px solid #e5e7eb; border-radius:18px; font-size:16px !important; min-font-size:16px; outline:none; background:#fff; }
-        .chat-input-area button { width:70px; padding:10px 0; border-radius:18px; border:none; background:#4088e0; color:#fff; font-size:clamp(18px,4vw,22px); font-weight:500; transition:background 0.2s; }
-        .chat-input-area button:active { background:#2a6fb8; }
-        .mode-toggle { padding:6px 10px; border-radius:18px; border:1px solid #ddd; background:#f0f0f0; font-size:13px; color:#555; white-space:nowrap; cursor:pointer; flex-shrink:0; }
-        .mode-toggle.active { background:#4088e0; color:#fff; border-color:#4088e0; }
-        .mask { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:99; display:none; align-items:center; justify-content:center; padding:10px; }
-        .pop { width:100%; max-width:420px; background:#fff; border-radius:14px; padding:16px; max-height:90vh; overflow-y:auto; }
-        .pop h3 { font-size:18px; margin-bottom:12px; }
-        .pop textarea { width:100%; height:100px; font-size:16px; padding:8px; border:1px solid #ddd; border-radius:8px; margin-bottom:10px; resize:vertical; }
-        .pop .file-box { margin-bottom:10px; }
-        .pop .btn-row { display:flex; gap:8px; justify-content:flex-end; }
-        .pop button { padding:6px 12px; border-radius:8px; border:none; font-size:15px; cursor:pointer; }
-        .btn-blue { background:#4088e0; color:#fff; }
-        .btn-blue:active { background:#2a6fb8; }
-        .btn-red { background:#f44336; color:#fff; }
-        .btn-red:active { background:#c62828; }
-        .btn-gray { background:#999; color:#fff; }
-        .btn-gray:active { background:#777; }
-        .pop .avatar-setting { display:flex; gap:12px; margin-bottom:12px; }
-        .pop .avatar-item { flex:1; text-align:center; }
-        .pop .avatar-preview { width:64px; height:64px; border-radius:50%; background:#eee; margin:0 auto 8px; overflow:hidden; }
-        .pop .avatar-preview img { width:100%; height:100%; object-fit:cover; }
-        .pop input[type="file"] { width:100%; font-size:14px; }
-        .card-list { max-height:240px; overflow-y:auto; border:1px solid #eee; border-radius:8px; margin:8px 0 12px; }
-        .card-item { display:flex; justify-content:space-between; align-items:center; padding:8px 10px; border-bottom:1px solid #eee; font-size:16px; gap:8px; }
-        .card-item:last-child { border-bottom:none; }
-        .card-item .del-btn { flex-shrink:0; padding:2px 6px; font-size:13px; }
-        .card-bottom-btns { display:flex; gap:8px; margin-top:10px; }
-        .card-bottom-btns button { padding:6px 12px; border-radius:8px; border:none; font-size:14px; }
-        .calendar-wrap { width:100%; }
-        .calendar-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-        .calendar-header h3 { margin:0; }
-        .calendar-nav { display:flex; align-items:center; gap:4px; }
-        .calendar-nav button { background:none; border:none; font-size:22px; padding:0 8px; cursor:pointer; }
-        .calendar-nav #calToday { font-size:14px; background:#4088e0; color:#fff; border-radius:6px; padding:2px 10px; border:none; }
-        .calendar-role-tab { display:flex; gap:8px; margin-bottom:10px; }
-        .calendar-role-tab button { flex:1; padding:6px; border:1px solid #ddd; border-radius:8px; background:#f8f8f8; cursor:pointer; font-size:15px; }
-        .calendar-role-tab button.active { background:#4088e0; color:#fff; border-color:#4088e0; }
-        .emoji-select { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
-        .emoji-item { width:40px; height:40px; font-size:22px; display:flex; align-items:center; justify-content:center; border:1px solid #eee; border-radius:8px; position:relative; cursor:pointer; }
-        .emoji-item.active { border:2px solid #4088e0; }
-        .emoji-item .emo-del { position:absolute; top:-4px; right:-4px; width:14px; height:14px; font-size:10px; background:#f44336; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; }
-        .calendar-week { display:grid; grid-template-columns:repeat(7,1fr); text-align:center; margin-bottom:6px; }
-        .calendar-week span { font-size:14px; color:#666; }
-        .calendar-days { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
-        .day-cell { aspect-ratio:1/1; border:1px solid #eee; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:15px; position:relative; cursor:pointer; transition:background 0.1s; }
-        .day-cell.today { border:2px solid #4caf50; }
-        .day-cell .emo-mark { font-size:16px; position:absolute; bottom:2px; }
-        .calendar-bottom-btn { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:14px; }
-        .calendar-bottom-btn button { padding:6px 0; border-radius:8px; border:none; font-size:14px; cursor:pointer; }
-        .calendar-add-emo-btn { width:100%; margin-top:8px; padding:6px; border-radius:8px; border:none; font-size:14px; cursor:pointer; }
-        .emo-edit-item { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
-        .emo-edit-item input { padding:6px; border:1px solid #ddd; border-radius:6px; flex:1; font-size:14px; }
-        .emo-list-box { max-height:160px; overflow-y:auto; border:1px solid #eee; border-radius:8px; padding:8px; margin:10px 0; }
-        .emo-list-box .emo-row { display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px solid #f0f0f0; }
-        .emo-list-box .emo-row:last-child { border-bottom:none; }
-        .chat-item { padding:8px 12px; border-radius:14px; line-height:1.5; font-size:clamp(17px,4.2vw,22px); max-width:75%; word-break:break-all; }
-        .chat-item.system { align-self:center; background:#eef2f7; color:#666; font-size:clamp(14px,3.2vw,17px); text-align:center; max-width:85%; border-radius:8px; padding:4px 10px; }
-        .chat-item.user { background:#4088e0; color:#fff; border-bottom-right-radius:3px; }
-        .chat-item.ai { background:#ffffff; border-bottom-left-radius:3px; box-shadow:0 1px 2px rgba(0,0,0,0.06); }
-        .chat-row { display:flex; align-items:flex-end; gap:8px; max-width:100%; }
-        .chat-row.user { justify-content:flex-end; }
-        .chat-row.ai { justify-content:flex-start; }
-        .avatar { width:40px; height:40px; border-radius:50%; background:#ddd; flex-shrink:0; overflow:hidden; }
-        .avatar img { width:100%; height:100%; object-fit:cover; }
-        .import-hint { font-size:13px; color:#888; margin-bottom:6px; line-height:1.6; }
-        .import-hint code { background:#f0f0f0; padding:1px 6px; border-radius:4px; font-size:13px; }
-        @media (max-width:480px) {
-            .func-bar button { font-size:11px; padding:3px 6px; }
-            .top-bar span { font-size:16px; }
-            .pop h3 { font-size:16px; }
-            .pop button { font-size:14px; padding:5px 10px; }
-            .pop textarea { font-size:15px; }
-            .card-item { font-size:15px; padding:6px 8px; }
-            .card-item .del-btn { font-size:12px; }
-            .calendar-header h3 { font-size:16px; }
-            .calendar-nav button { font-size:20px; }
-            .calendar-role-tab button { font-size:14px; padding:5px; }
-            .emoji-item { width:36px; height:36px; font-size:20px; }
-            .calendar-week span { font-size:13px; }
-            .day-cell { font-size:14px; }
-            .day-cell .emo-mark { font-size:14px; }
-            .calendar-bottom-btn button { font-size:13px; padding:5px 0; }
-            .calendar-add-emo-btn { font-size:13px; }
-            .emo-edit-item input { font-size:13px; }
-            .import-hint { font-size:12px; }
-            .chat-item { font-size:clamp(16px,4vw,20px); padding:6px 10px; }
-            .chat-item.system { font-size:clamp(13px,3vw,16px); }
-            .chat-input-area input { font-size:16px !important; padding:8px 10px; }
-            .chat-input-area button { font-size:clamp(17px,4vw,20px); padding:8px 0; width:60px; }
-            .mode-toggle { font-size:12px; padding:4px 8px; }
-            .avatar { width:36px; height:36px; }
+        /* ===== 全局重置 & 字体 ===== */
+        html {
+            touch-action: manipulation;
+            height: 100%;
         }
-        @media (max-width:375px) {
-            .func-bar button { font-size:10px; padding:2px 5px; }
-            .top-bar span { font-size:15px; }
-            .chat-item { font-size:clamp(15px,3.8vw,18px); }
-            .chat-input-area button { width:55px; font-size:16px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: #faf8ff;
+            color: #2d2a3e;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        /* ===== 功能栏 ===== */
+        .func-bar {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 10px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(200, 180, 220, 0.3);
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+        .func-bar button {
+            padding: 5px 14px;
+            border-radius: 20px;
+            border: none;
+            background: rgba(230, 215, 245, 0.6);
+            color: #4a3f5e;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .func-bar button:active {
+            transform: scale(0.94);
+            background: rgba(200, 175, 225, 0.8);
+        }
+        .func-bar .speed-btn {
+            background: rgba(160, 130, 200, 0.25);
+            color: #5b3f7a;
+            font-weight: 600;
+        }
+
+        /* ===== 顶部状态栏 ===== */
+        .top-bar {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(200, 180, 220, 0.2);
+            flex-shrink: 0;
+        }
+        .top-bar span {
+            font-size: 18px;
+            font-weight: 600;
+            color: #3d2e5c;
+        }
+        .top-bar .dot {
+            width: 8px;
+            height: 8px;
+            background: #7bcfa6;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px rgba(123, 207, 166, 0.6);
+            animation: pulse-dot 1.8s infinite;
+        }
+        @keyframes pulse-dot {
+            0% { opacity: 0.6; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 0.6; transform: scale(0.95); }
+        }
+
+        /* ===== 聊天区域 ===== */
+        .chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 10px 16px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            min-height: 0;
+            background: linear-gradient(180deg, #faf8ff 0%, #f3edfc 100%);
+        }
+        .scroll-anchor {
+            height: 1px;
+            flex-shrink: 0;
+        }
+
+        /* ===== 输入区域 ===== */
+        .chat-input-area {
+            flex-shrink: 0;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(200, 180, 220, 0.25);
+        }
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid rgba(180, 160, 200, 0.3);
+            border-radius: 30px;
+            font-size: 16px !important;
+            min-font-size: 16px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        .chat-input-area input:focus {
+            border-color: #b088d0;
+            box-shadow: 0 0 0 3px rgba(176, 136, 208, 0.15);
+        }
+        .chat-input-area button {
+            padding: 12px 22px;
+            border-radius: 30px;
+            border: none;
+            background: linear-gradient(135deg, #b088d0, #8f6db0);
+            color: #fff;
+            font-size: clamp(17px, 4vw, 20px);
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(143, 109, 176, 0.25);
+        }
+        .chat-input-area button:active {
+            transform: scale(0.94);
+            box-shadow: 0 2px 6px rgba(143, 109, 176, 0.2);
+        }
+        .mode-toggle {
+            padding: 8px 14px;
+            border-radius: 30px;
+            border: 1px solid rgba(180, 160, 200, 0.3);
+            background: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            font-weight: 500;
+            color: #4a3f5e;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+            backdrop-filter: blur(4px);
+        }
+        .mode-toggle.active {
+            background: #b088d0;
+            color: #fff;
+            border-color: #b088d0;
+        }
+
+        /* ===== 弹窗通用 ===== */
+        .mask {
+            position: fixed;
+            inset: 0;
+            background: rgba(30, 20, 45, 0.5);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 99;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .pop {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 20px 22px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .pop h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #3d2e5c;
+            margin-bottom: 14px;
+        }
+        .pop textarea {
+            width: 100%;
+            height: 100px;
+            font-size: 16px;
+            padding: 10px 14px;
+            border: 1px solid rgba(180, 160, 200, 0.3);
+            border-radius: 16px;
+            margin-bottom: 12px;
+            resize: vertical;
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(4px);
+        }
+        .pop .file-box {
+            margin-bottom: 12px;
+        }
+        .pop .btn-row {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .pop button {
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: none;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-blue {
+            background: linear-gradient(135deg, #b088d0, #8f6db0);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(143, 109, 176, 0.2);
+        }
+        .btn-blue:active { transform: scale(0.94); }
+        .btn-red {
+            background: #f5b3b3;
+            color: #5e3a3a;
+        }
+        .btn-red:active { background: #e89a9a; }
+        .btn-gray {
+            background: #d5cce0;
+            color: #3d2e5c;
+        }
+        .btn-gray:active { background: #c2b6d0; }
+
+        .pop .avatar-setting {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .pop .avatar-item {
+            flex: 1;
+            text-align: center;
+        }
+        .pop .avatar-preview {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #e8e0f0;
+            margin: 0 auto 10px;
+            overflow: hidden;
+            border: 2px solid rgba(200, 180, 220, 0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+        .pop .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .pop input[type="file"] {
+            width: 100%;
+            font-size: 14px;
+            color: #4a3f5e;
+        }
+
+        .card-list {
+            max-height: 240px;
+            overflow-y: auto;
+            border-radius: 16px;
+            margin: 10px 0 14px;
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(4px);
+        }
+        .card-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(200, 180, 220, 0.15);
+            font-size: 15px;
+            gap: 10px;
+        }
+        .card-item:last-child { border-bottom: none; }
+        .card-item .del-btn {
+            flex-shrink: 0;
+            padding: 4px 12px;
+            font-size: 13px;
+            border-radius: 16px;
+        }
+        .card-bottom-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .card-bottom-btns button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            font-size: 14px;
+        }
+
+        /* ===== 日历 ===== */
+        .calendar-wrap { width: 100%; }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .calendar-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #3d2e5c;
+            margin: 0;
+        }
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .calendar-nav button {
+            background: none;
+            border: none;
+            font-size: 22px;
+            padding: 0 8px;
+            cursor: pointer;
+            color: #4a3f5e;
+        }
+        .calendar-nav #calToday {
+            font-size: 14px;
+            background: rgba(176, 136, 208, 0.2);
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-weight: 500;
+        }
+        .calendar-role-tab {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .calendar-role-tab button {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid rgba(180, 160, 200, 0.3);
+            border-radius: 20px;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .calendar-role-tab button.active {
+            background: #b088d0;
+            color: #fff;
+            border-color: #b088d0;
+        }
+        .emoji-select {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .emoji-item {
+            width: 44px;
+            height: 44px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(180, 160, 200, 0.2);
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            background: rgba(255,255,255,0.4);
+            transition: all 0.15s;
+        }
+        .emoji-item.active {
+            border: 2px solid #b088d0;
+            background: rgba(176, 136, 208, 0.1);
+        }
+        .emoji-item .emo-del {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 16px;
+            height: 16px;
+            font-size: 11px;
+            background: #f5b3b3;
+            color: #5e3a3a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .calendar-week {
+            display: grid;
+            grid-template-columns: repeat(7,1fr);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .calendar-week span {
+            font-size: 14px;
+            color: #6a5a7a;
+            font-weight: 500;
+        }
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7,1fr);
+            gap: 6px;
+        }
+        .day-cell {
+            aspect-ratio: 1/1;
+            border: 1px solid rgba(200, 180, 220, 0.2);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            position: relative;
+            cursor: pointer;
+            background: rgba(255,255,255,0.3);
+            transition: all 0.15s;
+        }
+        .day-cell.today {
+            border: 2px solid #7bcfa6;
+        }
+        .day-cell .emo-mark {
+            font-size: 18px;
+            position: absolute;
+            bottom: 2px;
+        }
+        .calendar-bottom-btn {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        .calendar-bottom-btn button {
+            padding: 8px 0;
+            border-radius: 20px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(4px);
+            transition: all 0.2s;
+        }
+        .calendar-add-emo-btn {
+            width: 100%;
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 20px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .emo-edit-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .emo-edit-item input {
+            padding: 8px 14px;
+            border: 1px solid rgba(180, 160, 200, 0.3);
+            border-radius: 16px;
+            flex: 1;
+            font-size: 14px;
+            background: rgba(255,255,255,0.5);
+        }
+        .emo-list-box {
+            max-height: 160px;
+            overflow-y: auto;
+            border-radius: 16px;
+            padding: 8px;
+            margin: 10px 0;
+            background: rgba(255,255,255,0.3);
+        }
+        .emo-list-box .emo-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(200, 180, 220, 0.1);
+        }
+        .emo-list-box .emo-row:last-child { border-bottom: none; }
+
+        /* ===== 聊天消息 ===== */
+        .chat-item {
+            padding: 10px 16px;
+            border-radius: 18px;
+            line-height: 1.6;
+            font-size: clamp(16px, 4.2vw, 20px);
+            max-width: 80%;
+            word-break: break-word;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .chat-item.system {
+            align-self: center;
+            background: rgba(200, 180, 220, 0.2);
+            backdrop-filter: blur(4px);
+            color: #5a4a6a;
+            font-size: clamp(13px, 3.2vw, 16px);
+            text-align: center;
+            max-width: 85%;
+            border-radius: 30px;
+            padding: 6px 18px;
+        }
+        .chat-item.user {
+            background: linear-gradient(135deg, #b088d0, #9b77bb);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 14px rgba(143, 109, 176, 0.15);
+        }
+        .chat-item.ai {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(4px);
+            border-bottom-left-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+        }
+
+        /* 消息时间戳 */
+        .msg-time {
+            font-size: 11px;
+            color: #9a8aaa;
+            margin-top: 4px;
+            text-align: right;
+            letter-spacing: 0.3px;
+            opacity: 0.7;
+            padding-right: 4px;
+        }
+        .chat-item.user .msg-time {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .chat-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            max-width: 100%;
+        }
+        .chat-row.user {
+            justify-content: flex-end;
+        }
+        .chat-row.ai {
+            justify-content: flex-start;
+        }
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #ddd;
+            flex-shrink: 0;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.5);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .import-hint {
+            font-size: 13px;
+            color: #6a5a7a;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        .import-hint code {
+            background: rgba(176, 136, 208, 0.15);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        /* ===== 移动端适配 ===== */
+        @media (max-width: 480px) {
+            .func-bar button { font-size: 12px; padding: 4px 10px; }
+            .top-bar span { font-size: 16px; }
+            .pop h3 { font-size: 18px; }
+            .pop button { font-size: 14px; padding: 6px 14px; }
+            .pop textarea { font-size: 15px; }
+            .card-item { font-size: 14px; padding: 8px 12px; }
+            .card-item .del-btn { font-size: 12px; }
+            .calendar-header h3 { font-size: 18px; }
+            .calendar-nav button { font-size: 20px; }
+            .calendar-role-tab button { font-size: 14px; padding: 6px; }
+            .emoji-item { width: 40px; height: 40px; font-size: 20px; }
+            .calendar-week span { font-size: 13px; }
+            .day-cell { font-size: 14px; }
+            .day-cell .emo-mark { font-size: 16px; }
+            .calendar-bottom-btn button { font-size: 13px; padding: 6px 0; }
+            .calendar-add-emo-btn { font-size: 13px; }
+            .emo-edit-item input { font-size: 13px; }
+            .import-hint { font-size: 12px; }
+            .chat-item { font-size: clamp(15px, 4vw, 18px); padding: 8px 12px; }
+            .chat-item.system { font-size: clamp(12px, 3vw, 15px); }
+            .chat-input-area input { font-size: 16px !important; padding: 10px 14px; }
+            .chat-input-area button { font-size: clamp(16px, 4vw, 19px); padding: 10px 16px; }
+            .mode-toggle { font-size: 12px; padding: 6px 12px; }
+            .avatar { width: 38px; height: 38px; }
+            .msg-time { font-size: 10px; }
+        }
+        @media (max-width: 375px) {
+            .func-bar button { font-size: 11px; padding: 3px 8px; }
+            .top-bar span { font-size: 15px; }
+            .chat-item { font-size: clamp(14px, 3.8vw, 17px); }
+            .chat-input-area button { padding: 8px 12px; font-size: 15px; }
         }
     </style>
 </head>
 <body>
 
     <div class="func-bar">
-        <button id="avatarBtn">设置头像</button>
-        <button id="importBtn">导入字卡</button>
-        <button id="viewCardBtn">查看字卡</button>
-        <button id="calendarBtn">情绪日历</button>
-        <button id="clearRecordBtn">清空记录</button>
+        <button id="avatarBtn">🖼️ 头像</button>
+        <button id="importBtn">📥 导入字卡</button>
+        <button id="viewCardBtn">📋 字卡库</button>
+        <button id="calendarBtn">📅 情绪日历</button>
+        <button id="clearRecordBtn">🗑️ 清空记录</button>
         <button id="speedBtn" class="speed-btn">⏱ 中速 (1.5s)</button>
     </div>
 
     <div class="top-bar">
-        <span>梦角</span>
+        <span>🌙 梦角</span>
         <span class="dot"></span>
         <span>在线倾听中...</span>
     </div>
@@ -146,70 +669,66 @@
     </div>
 
     <div class="chat-input-area">
-        <input id="msgInput" placeholder="输入你想说的话…" onkeydown="if(event.key==='Enter') sendMsg()">
+        <input id="msgInput" placeholder="说点什么吧…" onkeydown="if(event.key==='Enter') sendMsg()">
         <button onclick="sendMsg()">发送</button>
         <button class="mode-toggle" id="modeToggle">💬 自动回复</button>
     </div>
 
-    <!-- 弹窗集合 -->
+    <!-- ===== 弹窗 ===== -->
     <div class="mask" id="avatarMask">
-        <div class="pop"><h3>设置双方头像</h3>
+        <div class="pop"><h3>🖼️ 设置头像</h3>
             <div class="avatar-setting">
-                <div class="avatar-item"><div class="avatar-preview" id="userAvatarPreview"></div><p style="font-size:14px;margin-bottom:8px;">我的头像</p><input type="file" id="userAvatarInput" accept="image/*"></div>
-                <div class="avatar-item"><div class="avatar-preview" id="aiAvatarPreview"></div><p style="font-size:14px;margin-bottom:8px;">梦角头像</p><input type="file" id="aiAvatarInput" accept="image/*"></div>
+                <div class="avatar-item"><div class="avatar-preview" id="userAvatarPreview"></div><p style="font-size:14px;color:#4a3f5e;">我的头像</p><input type="file" id="userAvatarInput" accept="image/*"></div>
+                <div class="avatar-item"><div class="avatar-preview" id="aiAvatarPreview"></div><p style="font-size:14px;color:#4a3f5e;">梦角头像</p><input type="file" id="aiAvatarInput" accept="image/*"></div>
             </div>
-            <div class="btn-row"><button id="avatarCancel">取消</button><button class="btn-blue" id="avatarConfirm">保存头像</button></div>
+            <div class="btn-row"><button id="avatarCancel" class="btn-gray">取消</button><button class="btn-blue" id="avatarConfirm">保存</button></div>
         </div>
     </div>
 
     <div class="mask" id="importMask">
-        <div class="pop"><h3>批量导入回复字卡</h3>
-            <div class="import-hint"><strong>支持三种方式（可同时使用）：</strong><br>① 普通文本：每行一句<br>② JSON数组：<code>["句子1","句子2"]</code><br>③ 上传 .txt / .json 文件</div>
+        <div class="pop"><h3>📥 批量导入字卡</h3>
+            <div class="import-hint"><strong>支持三种方式（可同时使用）：</strong><br>① 每行一句的文本<br>② JSON数组 <code>["句子1","句子2"]</code><br>③ 上传 .txt / .json 文件</div>
             <textarea id="textArea" placeholder="普通文本示例：\n我一直陪着你\n别难过\n\nJSON示例：\n[&quot;我一直陪着你&quot;,&quot;别难过&quot;]"></textarea>
-            <div class="file-box"><p style="font-size:14px;margin-bottom:8px;">📎 上传文件（.txt / .json）</p><input type="file" id="fileInput" accept=".txt,.json"></div>
-            <div class="btn-row"><button id="importCancel">取消</button><button class="btn-blue" id="importConfirm">确认导入</button></div>
+            <div class="file-box"><p style="font-size:14px;color:#4a3f5e;margin-bottom:6px;">📎 上传文件</p><input type="file" id="fileInput" accept=".txt,.json"></div>
+            <div class="btn-row"><button id="importCancel" class="btn-gray">取消</button><button class="btn-blue" id="importConfirm">导入</button></div>
         </div>
     </div>
 
     <div class="mask" id="viewCardMask">
-        <div class="pop"><h3>梦角自动回复字卡列表</h3><p style="font-size:14px;margin-bottom:8px;">所有梦角可自动回复文案，单条可删除</p>
+        <div class="pop"><h3>📋 字卡库</h3><p style="font-size:14px;color:#6a5a7a;margin-bottom:8px;">梦角可自动回复的文案，单条可删除</p>
             <div class="card-list" id="cardListWrap"></div>
-            <div class="card-bottom-btns"><button class="btn-red" id="clearAllCard">清空全部字卡</button><button id="viewCardClose">关闭</button></div>
+            <div class="card-bottom-btns"><button class="btn-red" id="clearAllCard">清空全部</button><button id="viewCardClose" class="btn-gray">关闭</button></div>
         </div>
     </div>
 
-    <!-- 情绪日历弹窗 -->
     <div class="mask" id="calendarMask">
         <div class="pop calendar-wrap">
             <div class="calendar-header">
-                <div class="calendar-nav"><button id="calPrev">&lt;</button></div>
+                <div class="calendar-nav"><button id="calPrev">‹</button></div>
                 <h3 id="calTitle">2026年6月</h3>
                 <div class="calendar-nav">
                     <button id="calToday">今天</button>
-                    <button id="calNext">&gt;</button>
+                    <button id="calNext">›</button>
                 </div>
             </div>
-            <div class="calendar-role-tab">
-                <button id="tabUser" class="active">我的情绪</button>
-                <button id="tabAi">梦角情绪</button>
-            </div>
+            <div class="calendar-role-tab"><button id="tabUser" class="active">😊 我的情绪</button><button id="tabAi">🌙 梦角情绪</button></div>
             <div class="emoji-select" id="emojiBox"></div>
-            <button class="btn-gray calendar-add-emo-btn" id="openEditEmo">自定义管理情绪</button>
+            <button class="btn-gray calendar-add-emo-btn" id="openEditEmo">✏️ 自定义管理情绪</button>
             <div class="calendar-week"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
             <div class="calendar-days" id="calDaysBox"></div>
             <div class="calendar-bottom-btn" id="calActionBtns">
-                <button id="calClearDay">清空当日标记</button>
-                <button class="btn-blue" id="calSave">保存当日情绪</button>
-                <button id="calClose">关闭</button>
+                <button id="calClearDay" class="btn-gray">清空标记</button>
+                <button class="btn-blue" id="calSave">💾 保存</button>
+                <button id="calClose" class="btn-gray">关闭</button>
             </div>
         </div>
     </div>
 
     <div class="mask" id="emoEditMask">
-        <div class="pop"><h3>自定义情绪管理</h3>
-            <div class="emo-edit-item"><input id="newEmoChar" placeholder="输入表情，如 😍"><input id="newEmoText" placeholder="情绪备注，如 想念"><button class="btn-blue" id="addNewEmo">添加</button></div>
+        <div class="pop"><h3>✏️ 自定义情绪</h3>
+            <div class="emo-edit-item"><input id="newEmoChar" placeholder="表情，如 😍"><input id="newEmoText" placeholder="备注，如 想念"><button class="btn-blue" id="addNewEmo">添加</button></div>
             <div class="emo-list-box" id="customEmoList"></div>
-            <div class="btn-row"><button id="closeEmoEdit">关闭</button></div>
+            <div class="btn-row"><button id="closeEmoEdit" class="btn-gray">关闭</button></div>
         </div>
     </div>
 
@@ -238,25 +757,22 @@
         let currentDelayIndex = 2;
         let selectedDateKey = null;
 
-        // ========== 修改点：最慢 60s，随机 0.5~120s ==========
+        // ===== 回复速度预设 =====
         const delayPresets = [
             { label: '即时', value: 0 },
             { label: '快速 (0.5s)', value: 500 },
             { label: '中速 (1.5s)', value: 1500 },
             { label: '慢速 (60s)', value: 60000 },
-            { label: '随机 (0.5~120s)', value: 'random' }   // 标签更新
+            { label: '随机 (0.5~120s)', value: 'random' }
         ];
 
         function getDelay() {
             const preset = delayPresets[currentDelayIndex];
             if (preset.value === 'random') {
-                // 0.5~120秒，单位毫秒：500 ~ 120000
                 return 500 + Math.random() * 119500;
             }
             return preset.value;
         }
-        // =====================================================
-
         function updateSpeedButton() {
             document.getElementById('speedBtn').textContent = '⏱ ' + delayPresets[currentDelayIndex].label;
         }
@@ -266,7 +782,7 @@
             showSystemMessage(`回复速度已切换为：${delayPresets[currentDelayIndex].label}`);
         }
 
-        // ==================== 模式切换 ====================
+        // ===== 模式切换 =====
         function loadMode() {
             const saved = localStorage.getItem(MODE_KEY);
             replyMode = (saved === "readonly") ? "readonly" : "auto";
@@ -290,7 +806,7 @@
             showSystemMessage(replyMode === "auto" ? "已切换为自动回复模式" : "已切换为已读不回模式（梦角将只显示已读）");
         }
 
-        // ==================== 字卡导入解析 ====================
+        // ===== 字卡导入解析 =====
         function parseImportText(rawText) {
             const result = [];
             const trimText = rawText.trim();
@@ -327,7 +843,7 @@
             return result;
         }
 
-        // ==================== 情绪存储 ====================
+        // ===== 情绪存储 =====
         function loadCustomEmo() {
             const raw = localStorage.getItem(CUSTOM_EMO_KEY);
             if (raw) customEmoList = JSON.parse(raw);
@@ -341,7 +857,7 @@
             allEmoList = [...baseEmoList, ...customEmoList];
         }
 
-        // ==================== 日历存储 ====================
+        // ===== 日历存储 =====
         function loadCalendarData() {
             const raw = localStorage.getItem(CALENDAR_KEY);
             if (raw) calendarData = JSON.parse(raw);
@@ -363,7 +879,7 @@
             return (year === calNowDate.getFullYear() && month === calNowDate.getMonth());
         }
 
-        // ==================== 渲染情绪面板 ====================
+        // ===== 渲染情绪面板 =====
         function renderEmojiBox() {
             const box = document.getElementById("emojiBox");
             box.innerHTML = "";
@@ -397,7 +913,7 @@
             });
         }
 
-        // ==================== 渲染日历（修复版） ====================
+        // ===== 渲染日历 =====
         function renderCalendar() {
             const y = calNowDate.getFullYear();
             const m = calNowDate.getMonth();
@@ -431,7 +947,7 @@
                 cell.dataset.date = key;
 
                 if (key === selectedDateKey) {
-                    cell.style.background = "#eef6ff";
+                    cell.style.background = "rgba(176, 136, 208, 0.15)";
                 } else {
                     cell.style.background = "";
                 }
@@ -455,7 +971,6 @@
                 box.appendChild(cell);
             }
 
-            // 根据角色控制操作按钮显示
             const actionBtns = document.getElementById("calActionBtns");
             if (calActiveRole === 'ai') {
                 actionBtns.style.display = 'none';
@@ -464,14 +979,14 @@
             }
         }
 
-        // ==================== 自定义情绪列表 ====================
+        // ===== 自定义情绪列表 =====
         function renderCustomEmoList() {
             const wrap = document.getElementById("customEmoList");
             wrap.innerHTML = "";
             if (customEmoList.length === 0) {
                 const p = document.createElement("p");
-                p.style.cssText = "color:#666;font-size:14px;";
-                p.textContent = "暂无自定义情绪，添加后显示在这里";
+                p.style.cssText = "color:#6a5a7a;font-size:14px;";
+                p.textContent = "暂无自定义情绪";
                 wrap.appendChild(p);
                 return;
             }
@@ -483,7 +998,7 @@
                 row.appendChild(span);
                 const btn = document.createElement("button");
                 btn.className = "btn-red";
-                btn.style.cssText = "font-size:12px;padding:2px 6px;";
+                btn.style.cssText = "font-size:12px;padding:2px 10px;border-radius:16px;border:none;";
                 btn.textContent = "删除";
                 btn.dataset.emo = emo;
                 row.appendChild(btn);
@@ -501,7 +1016,7 @@
             });
         }
 
-        // ==================== 日历交互绑定（修复版） ====================
+        // ===== 日历事件绑定 =====
         function bindCalendarEvent() {
             document.getElementById("tabUser").onclick = () => {
                 calActiveRole = "user";
@@ -536,7 +1051,7 @@
 
             document.getElementById("calSave").onclick = () => {
                 if (calActiveRole === 'ai') {
-                    alert("梦角情绪由系统自动记录，无需手动保存");
+                    alert("梦角情绪由系统自动记录");
                     return;
                 }
                 if (!calSelectEmo) {
@@ -558,11 +1073,11 @@
 
             document.getElementById("calClearDay").onclick = () => {
                 if (calActiveRole === 'ai') {
-                    alert("梦角情绪无法手动清空，由系统自动管理");
+                    alert("梦角情绪无法手动清空");
                     return;
                 }
                 if (!selectedDateKey) {
-                    alert("请先点击日期格子，或使用「今天」按钮选中日期！");
+                    alert("请先点击日期格子！");
                     return;
                 }
                 if (calendarData[selectedDateKey] && calendarData[selectedDateKey][calActiveRole]) {
@@ -616,7 +1131,7 @@
             };
         }
 
-        // ==================== 自动记录梦角情绪 ====================
+        // ===== 自动记录梦角情绪 =====
         function recordAiEmotion() {
             if (allEmoList.length === 0) return;
             const todayKey = getDateKey(new Date());
@@ -626,12 +1141,23 @@
             saveCalendarData();
         }
 
-        // ==================== 字卡逻辑 ====================
+        // ===== 字卡逻辑 =====
         function loadReply() {
             const local = localStorage.getItem(REPLY_KEY);
             if (local) replyList = JSON.parse(local);
             else {
-                replyList = ["我一直在呢，不要难过。", "我懂你的情绪，你已经很努力了。", "慢慢来，我会一直陪着你。", "你超棒的，请多偏爱自己一点。", "所有委屈我都接住了。", "别焦虑，一切都会慢慢变好。", "我永远站在你这边。", "你的心意，我全部收到。", "累了就停下来，我陪着你休息。", "你值得所有温柔与偏爱。"];
+                replyList = [
+                    "我一直在呢，不要难过。",
+                    "我懂你的情绪，你已经很努力了。",
+                    "慢慢来，我会一直陪着你。",
+                    "你超棒的，请多偏爱自己一点。",
+                    "所有委屈我都接住了。",
+                    "别焦虑，一切都会慢慢变好。",
+                    "我永远站在你这边。",
+                    "你的心意，我全部收到。",
+                    "累了就停下来，我陪着你休息。",
+                    "你值得所有温柔与偏爱。"
+                ];
                 saveReply();
             }
         }
@@ -642,8 +1168,8 @@
             wrap.innerHTML = "";
             if (replyList.length === 0) {
                 const p = document.createElement("p");
-                p.style.cssText = "text-align:center;color:#999;padding:20px 0;";
-                p.textContent = "暂无字卡，请先导入";
+                p.style.cssText = "text-align:center;color:#9a8aaa;padding:20px 0;";
+                p.textContent = "暂无字卡，请导入";
                 wrap.appendChild(p);
                 return;
             }
@@ -659,7 +1185,7 @@
                 btn.dataset.idx = index;
                 btn.onclick = (e) => {
                     e.stopPropagation();
-                    if (confirm(`确定删除这条字卡：\n${replyList[index]}`)) {
+                    if (confirm(`确定删除这条字卡？`)) {
                         replyList.splice(index, 1);
                         saveReply();
                         renderCardList();
@@ -671,16 +1197,16 @@
         }
         function bindClearAllCard() {
             document.getElementById("clearAllCard").onclick = () => {
-                if (confirm("确定清空所有回复字卡？删除后无法恢复！")) {
+                if (confirm("确定清空所有字卡？")) {
                     replyList = [];
                     saveReply();
                     renderCardList();
-                    alert("已清空全部字卡");
+                    alert("已清空");
                 }
             };
         }
 
-        // ==================== 头像（压缩） ====================
+        // ===== 头像（压缩） =====
         function loadAvatars() {
             userAvatar = localStorage.getItem(USER_AVATAR_KEY) || "";
             aiAvatar = localStorage.getItem(AI_AVATAR_KEY) || "";
@@ -710,24 +1236,53 @@
             reader.readAsDataURL(file);
         }
 
-        // ==================== 聊天记录 ====================
-        function initChatRecord() {
-            const local = localStorage.getItem(STORAGE_KEY);
-            const chatBox = document.getElementById("chatBox");
-            if (!local) {
-                chatRecords = [];
-                showSystemMessage("已成功建立心灵链接，随时可以向我倾诉✨");
-                return;
+        // ===== 聊天消息（带时间戳） =====
+        function appendMessage(sender, text, isUser = false, save = true, timestamp = null) {
+            const box = document.getElementById("chatBox");
+            const row = document.createElement("div");
+            row.className = `chat-row ${isUser ? "user" : "ai"}`;
+
+            const avatar = document.createElement("div");
+            avatar.className = "avatar";
+            const avatarSrc = isUser ? userAvatar : aiAvatar;
+            if (avatarSrc) avatar.innerHTML = `<img src="${avatarSrc}" alt="">`;
+
+            const bubble = document.createElement("div");
+            bubble.className = `chat-item ${isUser ? "user" : "ai"}`;
+            bubble.textContent = text;
+
+            // 时间戳
+            const timeDiv = document.createElement("div");
+            timeDiv.className = "msg-time";
+            const now = timestamp || Date.now();
+            const date = new Date(now);
+            const hours = String(date.getHours()).padStart(2, "0");
+            const minutes = String(date.getMinutes()).padStart(2, "0");
+            timeDiv.textContent = `${hours}:${minutes}`;
+
+            // 将时间添加到气泡内部（底部）
+            bubble.appendChild(timeDiv);
+
+            if (isUser) {
+                row.appendChild(bubble);
+                row.appendChild(avatar);
+            } else {
+                row.appendChild(avatar);
+                row.appendChild(bubble);
             }
-            chatRecords = JSON.parse(local);
-            const MAX_RECORDS = 500;
-            if (chatRecords.length > MAX_RECORDS) {
-                chatRecords = chatRecords.slice(-MAX_RECORDS);
+
+            const anchor = document.getElementById("scrollAnchor");
+            box.insertBefore(row, anchor);
+
+            if (save) {
+                chatRecords.push({ sender, text, isUser, timestamp: now });
+                if (chatRecords.length > 500) chatRecords = chatRecords.slice(-500);
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
             }
-            chatRecords.forEach(item => appendMessage(item.sender, item.text, item.isUser, false));
             scrollToBottom();
         }
+
+        // ===== 系统消息 =====
         function showSystemMessage(text) {
             const chatBox = document.getElementById("chatBox");
             const anchor = document.getElementById("scrollAnchor");
@@ -737,27 +1292,86 @@
             chatBox.insertBefore(sysItem, anchor);
             scrollToBottom();
         }
-        function appendMessage(sender, text, isUser = false, save = true) {
+
+        // ===== 历史记录加载 =====
+        function initChatRecord() {
+            const local = localStorage.getItem(STORAGE_KEY);
+            const chatBox = document.getElementById("chatBox");
+            if (!local) {
+                chatRecords = [];
+                showSystemMessage("✨ 已成功建立心灵链接，随时可以向我倾诉");
+                return;
+            }
+            chatRecords = JSON.parse(local);
+            const MAX_RECORDS = 500;
+            if (chatRecords.length > MAX_RECORDS) {
+                chatRecords = chatRecords.slice(-MAX_RECORDS);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
+            }
+            chatRecords.forEach(item => {
+                // 兼容旧数据，无时间戳则传 null，appendMessage 会生成当前时间？但我们希望旧记录不显示时间，所以传一个特殊标记。
+                // 我们修改：如果无 timestamp，则不显示时间。我们传入 null，在函数内部判断。
+                const ts = item.timestamp || null;
+                appendMessage(item.sender, item.text, item.isUser, false, ts);
+            });
+            scrollToBottom();
+        }
+
+        // 重写 appendMessage 以支持无时间戳时不显示时间
+        // 但上面已经定义，我们修改为如果 timestamp 为 null 则不添加时间标签。
+        // 但是上面已经定义了，需要修改。因为在上面我们已经定义了时间标签，现在要支持无时间。
+        // 由于代码已定义，我们重新定义函数覆盖。
+        // 实际上我们可以在上方修改，但为了清晰，在下面重新定义并覆盖。
+        // 重新定义 appendMessage
+        const originalAppend = appendMessage;
+        appendMessage = function(sender, text, isUser = false, save = true, timestamp = null) {
             const box = document.getElementById("chatBox");
             const row = document.createElement("div");
             row.className = `chat-row ${isUser ? "user" : "ai"}`;
+
             const avatar = document.createElement("div");
             avatar.className = "avatar";
             const avatarSrc = isUser ? userAvatar : aiAvatar;
             if (avatarSrc) avatar.innerHTML = `<img src="${avatarSrc}" alt="">`;
+
             const bubble = document.createElement("div");
             bubble.className = `chat-item ${isUser ? "user" : "ai"}`;
             bubble.textContent = text;
-            if (isUser) { row.appendChild(bubble); row.appendChild(avatar); } else { row.appendChild(avatar); row.appendChild(bubble); }
+
+            // 只有 timestamp 存在时才显示时间
+            if (timestamp !== null) {
+                const timeDiv = document.createElement("div");
+                timeDiv.className = "msg-time";
+                const date = new Date(timestamp);
+                const hours = String(date.getHours()).padStart(2, "0");
+                const minutes = String(date.getMinutes()).padStart(2, "0");
+                timeDiv.textContent = `${hours}:${minutes}`;
+                bubble.appendChild(timeDiv);
+            }
+
+            if (isUser) {
+                row.appendChild(bubble);
+                row.appendChild(avatar);
+            } else {
+                row.appendChild(avatar);
+                row.appendChild(bubble);
+            }
+
             const anchor = document.getElementById("scrollAnchor");
             box.insertBefore(row, anchor);
+
             if (save) {
-                chatRecords.push({ sender, text, isUser });
+                const now = timestamp || Date.now();
+                chatRecords.push({ sender, text, isUser, timestamp: now });
                 if (chatRecords.length > 500) chatRecords = chatRecords.slice(-500);
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
             }
             scrollToBottom();
-        }
+        };
+
+        // 为了兼容，保留原来的函数名，但实际上覆盖了。
+
+        // ===== 滚动 =====
         function scrollToBottom() {
             const anchor = document.getElementById("scrollAnchor");
             if (anchor) anchor.scrollIntoView({ behavior: 'auto', block: 'end' });
@@ -765,12 +1379,28 @@
             if (box) box.scrollTop = box.scrollHeight;
         }
 
-        // ==================== 发送消息 ====================
+        // ===== 发送消息（含多条回复） =====
+        // 连续发送多条消息
+        function sendMultipleMessages(messages, interval = 500) {
+            if (!messages || messages.length === 0) return;
+            let index = 0;
+            function sendNext() {
+                if (index >= messages.length) return;
+                const msg = messages[index];
+                appendMessage("梦角", msg, false, true);
+                index++;
+                if (index < messages.length) {
+                    setTimeout(sendNext, interval);
+                }
+            }
+            sendNext();
+        }
+
         function sendMsg() {
             const input = document.getElementById("msgInput");
             const text = input.value.trim();
             if (!text) return;
-            appendMessage("你", text, true);
+            appendMessage("你", text, true, true);
             input.value = "";
             const delayMs = getDelay();
 
@@ -782,14 +1412,22 @@
                         appendMessage("梦角", "暂无回复字卡，请先导入文案", false);
                         return;
                     }
-                    const r = replyList[Math.floor(Math.random() * replyList.length)];
-                    appendMessage("梦角", r, false);
+                    // 随机生成 1~5 条消息
+                    const count = Math.floor(Math.random() * 5) + 1; // 1~5
+                    const selected = [];
+                    for (let i = 0; i < count; i++) {
+                        const randomIndex = Math.floor(Math.random() * replyList.length);
+                        selected.push(replyList[randomIndex]);
+                    }
+                    // 逐条发送，间隔 0.5 秒
+                    sendMultipleMessages(selected, 500);
+                    // 记录梦角情绪（只记录一次，表示当天有互动）
                     recordAiEmotion();
                 }, delayMs);
             }
         }
 
-        // ==================== 初始化 ====================
+        // ===== 初始化 =====
         window.onload = () => {
             loadMode();
             loadReply();
@@ -852,13 +1490,13 @@
                     if (key && !seen.has(key)) { seen.add(key); unique.push(key); }
                 }
                 if (unique.length === 0) {
-                    alert("未检测到有效字卡内容！支持：\n• 每行一句的普通文本\n• JSON数组 [\"句子1\",\"句子2\"]\n• .txt / .json 文件");
+                    alert("未检测到有效字卡内容！支持文本、JSON 或文件");
                     return;
                 }
                 replyList = [...replyList, ...unique];
                 saveReply();
                 renderCardList();
-                alert(`✅ 导入成功！新增 ${unique.length} 条字卡（去重后）`);
+                alert(`✅ 导入成功！新增 ${unique.length} 条字卡`);
                 importMask.style.display = "none";
                 document.getElementById("textArea").value = "";
                 document.getElementById("fileInput").value = "";
@@ -871,11 +1509,11 @@
 
             // 清空记录
             document.getElementById("clearRecordBtn").addEventListener("click", function() {
-                if (confirm("确定清空全部聊天记录？删除后无法恢复！")) {
+                if (confirm("确定清空全部聊天记录？")) {
                     localStorage.removeItem(STORAGE_KEY);
                     chatRecords = [];
                     document.getElementById("chatBox").innerHTML = `<div class="scroll-anchor" id="scrollAnchor"></div>`;
-                    showSystemMessage("已成功建立心灵链接，随时可以向我倾诉✨");
+                    showSystemMessage("✨ 已重新建立心灵链接");
                 }
             });
         };
