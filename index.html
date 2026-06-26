@@ -7,9 +7,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#e6f2ff">
     <meta name="apple-mobile-web-app-title" content="梦角传讯">
-    <title>梦角传讯 · 情绪自动记录版</title>
+    <title>梦角传讯 · 回复速度最长60s</title>
     <style>
-        /* === 完整样式（与上版一致，已精简但全功能） === */
+        /* === 完整样式（与上版一致） === */
         html { touch-action: manipulation; height: 100%; }
         * { margin:0; padding:0; box-sizing:border-box; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: #f7f8fa; color: #222; height: 100%; display: flex; flex-direction: column; overflow: hidden; font-size: 16px; }
@@ -151,7 +151,7 @@
         <button class="mode-toggle" id="modeToggle">💬 自动回复</button>
     </div>
 
-    <!-- 弹窗集合 -->
+    <!-- 弹窗集合（同前，省略重复注释） -->
     <div class="mask" id="avatarMask">
         <div class="pop"><h3>设置双方头像</h3>
             <div class="avatar-setting">
@@ -238,13 +238,15 @@
         let currentDelayIndex = 2;
         let selectedDateKey = null;
 
+        // ========== 修改点：最慢档位改为 60 秒 ==========
         const delayPresets = [
             { label: '即时', value: 0 },
             { label: '快速 (0.5s)', value: 500 },
             { label: '中速 (1.5s)', value: 1500 },
-            { label: '慢速 (3s)', value: 3000 },
+            { label: '慢速 (60s)', value: 60000 },   // 原来是 3000，现改为 60000
             { label: '随机 (0.5~4s)', value: 'random' }
         ];
+        // ================================================
 
         function getDelay() {
             const preset = delayPresets[currentDelayIndex];
@@ -452,7 +454,6 @@
             // 根据角色控制操作按钮显示
             const actionBtns = document.getElementById("calActionBtns");
             if (calActiveRole === 'ai') {
-                // 梦角情绪 - 只读，隐藏保存和清空按钮
                 actionBtns.style.display = 'none';
             } else {
                 actionBtns.style.display = 'grid';
@@ -508,7 +509,6 @@
                 calActiveRole = "ai";
                 document.getElementById("tabAi").classList.add("active");
                 document.getElementById("tabUser").classList.remove("active");
-                // 切换到梦角情绪时，清空选中的情绪（因为不可编辑）
                 calSelectEmo = "";
                 renderCalendar();
             };
@@ -617,7 +617,6 @@
             if (allEmoList.length === 0) return;
             const todayKey = getDateKey(new Date());
             if (!calendarData[todayKey]) calendarData[todayKey] = {};
-            // 随机选一个情绪
             const randomEmo = allEmoList[Math.floor(Math.random() * allEmoList.length)];
             calendarData[todayKey].ai = randomEmo;
             saveCalendarData();
@@ -781,7 +780,6 @@
                     }
                     const r = replyList[Math.floor(Math.random() * replyList.length)];
                     appendMessage("梦角", r, false);
-                    // 梦角回复后自动记录情绪
                     recordAiEmotion();
                 }, delayMs);
             }
