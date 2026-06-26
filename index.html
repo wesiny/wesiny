@@ -59,6 +59,7 @@
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            cursor: pointer;
         }
         .func-bar button:active {
             transform: scale(0.94);
@@ -126,6 +127,7 @@
             font-weight: 600;
             transition: all 0.2s;
             box-shadow: 0 4px 12px rgba(143, 109, 176, 0.25);
+            cursor: pointer;
         }
         .chat-input-area button:active {
             transform: scale(0.94);
@@ -166,7 +168,7 @@
         .pop {
             width: 100%;
             max-width: 440px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-radius: 24px;
@@ -292,6 +294,7 @@
             border-radius: 20px;
             border: none;
             font-size: 14px;
+            cursor: pointer;
         }
 
         /* ===== 日历 ===== */
@@ -522,7 +525,7 @@
             box-shadow: 0 2px 12px rgba(0,0,0,0.03);
         }
 
-        /* 消息时间戳 - 修复样式 */
+        /* 消息时间戳 */
         .msg-time {
             font-size: 11px;
             color: #9a8aaa;
@@ -720,6 +723,7 @@
         let replyMode = "auto";
         let currentDelayIndex = 2;
         let selectedDateKey = null;
+        let isInitialLoad = true; // 标记是否首次加载
 
         // ===== 回复速度预设 =====
         const delayPresets = [
@@ -751,7 +755,8 @@
             return preset.value;
         }
         function updateSpeedButton() {
-            document.getElementById('speedBtn').textContent = '⏱ ' + delayPresets[currentDelayIndex].label;
+            const btn = document.getElementById('speedBtn');
+            if (btn) btn.textContent = '⏱ ' + delayPresets[currentDelayIndex].label;
         }
         function cycleSpeed() {
             currentDelayIndex = (currentDelayIndex + 1) % delayPresets.length;
@@ -769,6 +774,7 @@
         function saveMode() { localStorage.setItem(MODE_KEY, replyMode); }
         function updateModeUI() {
             const btn = document.getElementById("modeToggle");
+            if (!btn) return;
             if (replyMode === "auto") {
                 btn.textContent = "💬 自动回复";
                 btn.classList.remove("active");
@@ -860,6 +866,7 @@
         // ===== 渲染情绪面板 =====
         function renderEmojiBox() {
             const box = document.getElementById("emojiBox");
+            if (!box) return;
             box.innerHTML = "";
             allEmoList.forEach(emo => {
                 const div = document.createElement("div");
@@ -895,7 +902,8 @@
         function renderCalendar() {
             const y = calNowDate.getFullYear();
             const m = calNowDate.getMonth();
-            document.getElementById("calTitle").textContent = `${y}年${m + 1}月`;
+            const titleEl = document.getElementById("calTitle");
+            if (titleEl) titleEl.textContent = `${y}年${m + 1}月`;
 
             if (selectedDateKey && !isDateInCurrentMonth(selectedDateKey)) {
                 selectedDateKey = null;
@@ -908,6 +916,7 @@
             const today = new Date();
             const todayKey = getDateKey(today);
             const box = document.getElementById("calDaysBox");
+            if (!box) return;
             box.innerHTML = "";
 
             for (let i = 0; i < startWeek; i++) {
@@ -950,16 +959,19 @@
             }
 
             const actionBtns = document.getElementById("calActionBtns");
-            if (calActiveRole === 'ai') {
-                actionBtns.style.display = 'none';
-            } else {
-                actionBtns.style.display = 'grid';
+            if (actionBtns) {
+                if (calActiveRole === 'ai') {
+                    actionBtns.style.display = 'none';
+                } else {
+                    actionBtns.style.display = 'grid';
+                }
             }
         }
 
         // ===== 自定义情绪列表 =====
         function renderCustomEmoList() {
             const wrap = document.getElementById("customEmoList");
+            if (!wrap) return;
             wrap.innerHTML = "";
             if (customEmoList.length === 0) {
                 const p = document.createElement("p");
@@ -996,117 +1008,154 @@
 
         // ===== 日历事件绑定 =====
         function bindCalendarEvent() {
-            document.getElementById("tabUser").onclick = () => {
-                calActiveRole = "user";
-                document.getElementById("tabUser").classList.add("active");
-                document.getElementById("tabAi").classList.remove("active");
-                renderCalendar();
-            };
-            document.getElementById("tabAi").onclick = () => {
-                calActiveRole = "ai";
-                document.getElementById("tabAi").classList.add("active");
-                document.getElementById("tabUser").classList.remove("active");
-                calSelectEmo = "";
-                renderCalendar();
-            };
+            const tabUser = document.getElementById("tabUser");
+            const tabAi = document.getElementById("tabAi");
+            const calPrev = document.getElementById("calPrev");
+            const calNext = document.getElementById("calNext");
+            const calToday = document.getElementById("calToday");
+            const calSave = document.getElementById("calSave");
+            const calClearDay = document.getElementById("calClearDay");
+            const calClose = document.getElementById("calClose");
+            const openEditEmo = document.getElementById("openEditEmo");
+            const closeEmoEdit = document.getElementById("closeEmoEdit");
+            const addNewEmo = document.getElementById("addNewEmo");
+            const calendarBtn = document.getElementById("calendarBtn");
 
-            document.getElementById("calPrev").onclick = () => {
-                calNowDate = new Date(calNowDate.getFullYear(), calNowDate.getMonth() - 1, 1);
-                if (selectedDateKey && !isDateInCurrentMonth(selectedDateKey)) selectedDateKey = null;
-                renderCalendar();
-            };
-            document.getElementById("calNext").onclick = () => {
-                calNowDate = new Date(calNowDate.getFullYear(), calNowDate.getMonth() + 1, 1);
-                if (selectedDateKey && !isDateInCurrentMonth(selectedDateKey)) selectedDateKey = null;
-                renderCalendar();
-            };
-
-            document.getElementById("calToday").onclick = () => {
-                calNowDate = new Date();
-                selectedDateKey = getDateKey(calNowDate);
-                renderCalendar();
-            };
-
-            document.getElementById("calSave").onclick = () => {
-                if (calActiveRole === 'ai') {
-                    alert("梦角情绪由系统自动记录");
-                    return;
-                }
-                if (!calSelectEmo) {
-                    alert("请先选择情绪表情！");
-                    return;
-                }
-                let targetKey = selectedDateKey;
-                if (!targetKey) {
-                    targetKey = getDateKey(new Date());
-                    selectedDateKey = targetKey;
+            if (tabUser) {
+                tabUser.onclick = () => {
+                    calActiveRole = "user";
+                    tabUser.classList.add("active");
+                    if (tabAi) tabAi.classList.remove("active");
                     renderCalendar();
-                }
-                if (!calendarData[targetKey]) calendarData[targetKey] = {};
-                calendarData[targetKey][calActiveRole] = calSelectEmo;
-                saveCalendarData();
-                renderCalendar();
-                alert(`情绪已保存到 ${targetKey}`);
-            };
+                };
+            }
+            if (tabAi) {
+                tabAi.onclick = () => {
+                    calActiveRole = "ai";
+                    tabAi.classList.add("active");
+                    if (tabUser) tabUser.classList.remove("active");
+                    calSelectEmo = "";
+                    renderCalendar();
+                };
+            }
 
-            document.getElementById("calClearDay").onclick = () => {
-                if (calActiveRole === 'ai') {
-                    alert("梦角情绪无法手动清空");
-                    return;
-                }
-                if (!selectedDateKey) {
-                    alert("请先点击日期格子！");
-                    return;
-                }
-                if (calendarData[selectedDateKey] && calendarData[selectedDateKey][calActiveRole]) {
-                    delete calendarData[selectedDateKey][calActiveRole];
-                    if (Object.keys(calendarData[selectedDateKey]).length === 0) delete calendarData[selectedDateKey];
+            if (calPrev) {
+                calPrev.onclick = () => {
+                    calNowDate = new Date(calNowDate.getFullYear(), calNowDate.getMonth() - 1, 1);
+                    if (selectedDateKey && !isDateInCurrentMonth(selectedDateKey)) selectedDateKey = null;
+                    renderCalendar();
+                };
+            }
+            if (calNext) {
+                calNext.onclick = () => {
+                    calNowDate = new Date(calNowDate.getFullYear(), calNowDate.getMonth() + 1, 1);
+                    if (selectedDateKey && !isDateInCurrentMonth(selectedDateKey)) selectedDateKey = null;
+                    renderCalendar();
+                };
+            }
+
+            if (calToday) {
+                calToday.onclick = () => {
+                    calNowDate = new Date();
+                    selectedDateKey = getDateKey(calNowDate);
+                    renderCalendar();
+                };
+            }
+
+            if (calSave) {
+                calSave.onclick = () => {
+                    if (calActiveRole === 'ai') {
+                        alert("梦角情绪由系统自动记录");
+                        return;
+                    }
+                    if (!calSelectEmo) {
+                        alert("请先选择情绪表情！");
+                        return;
+                    }
+                    let targetKey = selectedDateKey;
+                    if (!targetKey) {
+                        targetKey = getDateKey(new Date());
+                        selectedDateKey = targetKey;
+                        renderCalendar();
+                    }
+                    if (!calendarData[targetKey]) calendarData[targetKey] = {};
+                    calendarData[targetKey][calActiveRole] = calSelectEmo;
                     saveCalendarData();
                     renderCalendar();
-                    alert("已清空该日期情绪");
-                } else {
-                    alert("该日期暂无记录");
-                }
-            };
+                    alert(`情绪已保存到 ${targetKey}`);
+                };
+            }
 
-            document.getElementById("calClose").onclick = () => {
-                document.getElementById("calendarMask").style.display = "none";
-                calSelectEmo = "";
-            };
+            if (calClearDay) {
+                calClearDay.onclick = () => {
+                    if (calActiveRole === 'ai') {
+                        alert("梦角情绪无法手动清空");
+                        return;
+                    }
+                    if (!selectedDateKey) {
+                        alert("请先点击日期格子！");
+                        return;
+                    }
+                    if (calendarData[selectedDateKey] && calendarData[selectedDateKey][calActiveRole]) {
+                        delete calendarData[selectedDateKey][calActiveRole];
+                        if (Object.keys(calendarData[selectedDateKey]).length === 0) delete calendarData[selectedDateKey];
+                        saveCalendarData();
+                        renderCalendar();
+                        alert("已清空该日期情绪");
+                    } else {
+                        alert("该日期暂无记录");
+                    }
+                };
+            }
 
-            document.getElementById("openEditEmo").onclick = () => {
-                document.getElementById("emoEditMask").style.display = "flex";
-                renderCustomEmoList();
-            };
-            document.getElementById("closeEmoEdit").onclick = () => {
-                document.getElementById("emoEditMask").style.display = "none";
-            };
-            document.getElementById("addNewEmo").onclick = () => {
-                const char = document.getElementById("newEmoChar").value.trim();
-                const text = document.getElementById("newEmoText").value.trim();
-                if (!char) { alert("请输入表情符号"); return; }
-                const fullEmo = `${char} ${text}`.trim();
-                if (allEmoList.includes(fullEmo)) { alert("该情绪已存在"); return; }
-                customEmoList.push(fullEmo);
-                saveCustomEmo();
-                renderCustomEmoList();
-                renderEmojiBox();
-                document.getElementById("newEmoChar").value = "";
-                document.getElementById("newEmoText").value = "";
-                alert("自定义情绪添加成功");
-            };
+            if (calClose) {
+                calClose.onclick = () => {
+                    document.getElementById("calendarMask").style.display = "none";
+                    calSelectEmo = "";
+                };
+            }
 
-            document.getElementById("calendarBtn").onclick = () => {
-                calNowDate = new Date();
-                calActiveRole = "user";
-                calSelectEmo = "";
-                selectedDateKey = getDateKey(calNowDate);
-                document.getElementById("tabUser").classList.add("active");
-                document.getElementById("tabAi").classList.remove("active");
-                renderEmojiBox();
-                renderCalendar();
-                document.getElementById("calendarMask").style.display = "flex";
-            };
+            if (openEditEmo) {
+                openEditEmo.onclick = () => {
+                    document.getElementById("emoEditMask").style.display = "flex";
+                    renderCustomEmoList();
+                };
+            }
+            if (closeEmoEdit) {
+                closeEmoEdit.onclick = () => {
+                    document.getElementById("emoEditMask").style.display = "none";
+                };
+            }
+            if (addNewEmo) {
+                addNewEmo.onclick = () => {
+                    const char = document.getElementById("newEmoChar").value.trim();
+                    const text = document.getElementById("newEmoText").value.trim();
+                    if (!char) { alert("请输入表情符号"); return; }
+                    const fullEmo = `${char} ${text}`.trim();
+                    if (allEmoList.includes(fullEmo)) { alert("该情绪已存在"); return; }
+                    customEmoList.push(fullEmo);
+                    saveCustomEmo();
+                    renderCustomEmoList();
+                    renderEmojiBox();
+                    document.getElementById("newEmoChar").value = "";
+                    document.getElementById("newEmoText").value = "";
+                    alert("自定义情绪添加成功");
+                };
+            }
+
+            if (calendarBtn) {
+                calendarBtn.onclick = () => {
+                    calNowDate = new Date();
+                    calActiveRole = "user";
+                    calSelectEmo = "";
+                    selectedDateKey = getDateKey(calNowDate);
+                    if (tabUser) tabUser.classList.add("active");
+                    if (tabAi) tabAi.classList.remove("active");
+                    renderEmojiBox();
+                    renderCalendar();
+                    document.getElementById("calendarMask").style.display = "flex";
+                };
+            }
         }
 
         // ===== 自动记录梦角情绪 =====
@@ -1143,6 +1192,7 @@
 
         function renderCardList() {
             const wrap = document.getElementById("cardListWrap");
+            if (!wrap) return;
             wrap.innerHTML = "";
             if (replyList.length === 0) {
                 const p = document.createElement("p");
@@ -1174,14 +1224,17 @@
             });
         }
         function bindClearAllCard() {
-            document.getElementById("clearAllCard").onclick = () => {
-                if (confirm("确定清空所有字卡？")) {
-                    replyList = [];
-                    saveReply();
-                    renderCardList();
-                    alert("已清空");
-                }
-            };
+            const btn = document.getElementById("clearAllCard");
+            if (btn) {
+                btn.onclick = () => {
+                    if (confirm("确定清空所有字卡？")) {
+                        replyList = [];
+                        saveReply();
+                        renderCardList();
+                        alert("已清空");
+                    }
+                };
+            }
         }
 
         // ===== 头像（压缩） =====
@@ -1193,8 +1246,8 @@
         function refreshAvatarPreviews() {
             const userPreview = document.getElementById("userAvatarPreview");
             const aiPreview = document.getElementById("aiAvatarPreview");
-            userPreview.innerHTML = userAvatar ? `<img src="${userAvatar}" alt="">` : "";
-            aiPreview.innerHTML = aiAvatar ? `<img src="${aiAvatar}" alt="">` : "";
+            if (userPreview) userPreview.innerHTML = userAvatar ? `<img src="${userAvatar}" alt="">` : "";
+            if (aiPreview) aiPreview.innerHTML = aiAvatar ? `<img src="${aiAvatar}" alt="">` : "";
         }
         function compressImage(file, callback) {
             const reader = new FileReader();
@@ -1214,9 +1267,11 @@
             reader.readAsDataURL(file);
         }
 
-        // ===== 【修复】聊天消息 - 时间戳正确显示 =====
+        // ===== 【核心修复】聊天消息 - 时间戳正确显示 =====
         function appendMessage(sender, text, isUser = false, save = true, timestamp = null) {
             const box = document.getElementById("chatBox");
+            if (!box) return;
+
             const row = document.createElement("div");
             row.className = `chat-row ${isUser ? "user" : "ai"}`;
 
@@ -1234,7 +1289,7 @@
             textSpan.textContent = text;
             bubble.appendChild(textSpan);
 
-            // ===== 时间戳修复：只有 timestamp 存在且不为 null 时才显示 =====
+            // ===== 时间戳修复：只有 timestamp 存在且有效时才显示 =====
             if (timestamp !== null && timestamp !== undefined) {
                 const timeDiv = document.createElement("div");
                 timeDiv.className = "msg-time";
@@ -1257,7 +1312,11 @@
             }
 
             const anchor = document.getElementById("scrollAnchor");
-            box.insertBefore(row, anchor);
+            if (anchor) {
+                box.insertBefore(row, anchor);
+            } else {
+                box.appendChild(row);
+            }
 
             if (save) {
                 const now = timestamp || Date.now();
@@ -1271,11 +1330,16 @@
         // ===== 系统消息 =====
         function showSystemMessage(text) {
             const chatBox = document.getElementById("chatBox");
+            if (!chatBox) return;
             const anchor = document.getElementById("scrollAnchor");
             const sysItem = document.createElement("div");
             sysItem.className = "chat-item system";
             sysItem.textContent = text;
-            chatBox.insertBefore(sysItem, anchor);
+            if (anchor) {
+                chatBox.insertBefore(sysItem, anchor);
+            } else {
+                chatBox.appendChild(sysItem);
+            }
             scrollToBottom();
         }
 
@@ -1283,31 +1347,50 @@
         function initChatRecord() {
             const local = localStorage.getItem(STORAGE_KEY);
             const chatBox = document.getElementById("chatBox");
+            if (!chatBox) return;
+
             if (!local) {
                 chatRecords = [];
                 showSystemMessage("✨ 已成功建立心灵链接，随时可以向我倾诉");
                 return;
             }
-            chatRecords = JSON.parse(local);
-            const MAX_RECORDS = 500;
-            if (chatRecords.length > MAX_RECORDS) {
-                chatRecords = chatRecords.slice(-MAX_RECORDS);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
+
+            try {
+                chatRecords = JSON.parse(local);
+                const MAX_RECORDS = 500;
+                if (chatRecords.length > MAX_RECORDS) {
+                    chatRecords = chatRecords.slice(-MAX_RECORDS);
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
+                }
+                chatRecords.forEach(item => {
+                    // 如果 item.timestamp 不存在，传 null（不显示时间）
+                    const ts = item.timestamp || null;
+                    // 确保 sender 字段存在
+                    const sender = item.sender || (item.isUser ? "你" : "梦角");
+                    appendMessage(sender, item.text, item.isUser, false, ts);
+                });
+            } catch (e) {
+                console.warn("解析聊天记录失败:", e);
+                chatRecords = [];
+                showSystemMessage("✨ 已重新建立心灵链接");
             }
-            chatRecords.forEach(item => {
-                // 关键修复：如果 item.timestamp 不存在，传 null（不显示时间）
-                const ts = item.timestamp || null;
-                appendMessage(item.sender, item.text, item.isUser, false, ts);
-            });
             scrollToBottom();
         }
 
         // ===== 滚动 =====
         function scrollToBottom() {
             const anchor = document.getElementById("scrollAnchor");
-            if (anchor) anchor.scrollIntoView({ behavior: 'auto', block: 'end' });
+            if (anchor) {
+                try {
+                    anchor.scrollIntoView({ behavior: 'auto', block: 'end' });
+                } catch (e) {
+                    // fallback
+                }
+            }
             const box = document.getElementById("chatBox");
-            if (box) box.scrollTop = box.scrollHeight;
+            if (box) {
+                box.scrollTop = box.scrollHeight;
+            }
         }
 
         // ===== 发送消息 =====
@@ -1329,8 +1412,10 @@
 
         function sendMsg() {
             const input = document.getElementById("msgInput");
+            if (!input) return;
             const text = input.value.trim();
             if (!text) return;
+
             // 用户消息带当前时间戳
             appendMessage("你", text, true, true);
             input.value = "";
@@ -1357,95 +1442,162 @@
         }
 
         // ===== 初始化 =====
-        window.onload = () => {
+        window.onload = function() {
+            // 加载速度档位
             loadSpeedIndex();
+
             loadMode();
             loadReply();
             renderCardList();
             bindClearAllCard();
             loadAvatars();
-            initChatRecord();
             loadCalendarData();
             loadCustomEmo();
             bindCalendarEvent();
             updateSpeedButton();
 
-            document.getElementById("modeToggle").addEventListener("click", toggleMode);
-            document.getElementById("speedBtn").addEventListener("click", cycleSpeed);
+            // 绑定模式切换
+            const modeToggle = document.getElementById("modeToggle");
+            if (modeToggle) modeToggle.addEventListener("click", toggleMode);
+
+            // 绑定速度切换
+            const speedBtn = document.getElementById("speedBtn");
+            if (speedBtn) speedBtn.addEventListener("click", cycleSpeed);
+
+            // 绑定发送按钮
+            const sendBtn = document.querySelector(".chat-input-area button[onclick]");
+            if (sendBtn) sendBtn.onclick = sendMsg;
+
+            // 绑定回车发送
+            const msgInput = document.getElementById("msgInput");
+            if (msgInput) {
+                msgInput.onkeydown = function(e) {
+                    if (e.key === 'Enter') sendMsg();
+                };
+            }
 
             // 头像弹窗
             const avatarMask = document.getElementById("avatarMask");
-            document.getElementById("avatarBtn").onclick = () => avatarMask.style.display = "flex";
-            document.getElementById("avatarCancel").onclick = () => avatarMask.style.display = "none";
-            document.getElementById("avatarConfirm").onclick = () => {
-                localStorage.setItem(USER_AVATAR_KEY, userAvatar);
-                localStorage.setItem(AI_AVATAR_KEY, aiAvatar);
-                alert("头像已保存！");
-                avatarMask.style.display = "none";
-            };
-            document.getElementById("userAvatarInput").addEventListener("change", e => {
-                const f = e.target.files[0];
-                if (!f) return;
-                compressImage(f, (dataUrl) => { userAvatar = dataUrl; refreshAvatarPreviews(); });
-            });
-            document.getElementById("aiAvatarInput").addEventListener("change", e => {
-                const f = e.target.files[0];
-                if (!f) return;
-                compressImage(f, (dataUrl) => { aiAvatar = dataUrl; refreshAvatarPreviews(); });
-            });
+            const avatarBtn = document.getElementById("avatarBtn");
+            const avatarCancel = document.getElementById("avatarCancel");
+            const avatarConfirm = document.getElementById("avatarConfirm");
+            const userAvatarInput = document.getElementById("userAvatarInput");
+            const aiAvatarInput = document.getElementById("aiAvatarInput");
+
+            if (avatarBtn) avatarBtn.onclick = () => { if (avatarMask) avatarMask.style.display = "flex"; };
+            if (avatarCancel) avatarCancel.onclick = () => { if (avatarMask) avatarMask.style.display = "none"; };
+            if (avatarConfirm) {
+                avatarConfirm.onclick = () => {
+                    localStorage.setItem(USER_AVATAR_KEY, userAvatar);
+                    localStorage.setItem(AI_AVATAR_KEY, aiAvatar);
+                    alert("头像已保存！");
+                    if (avatarMask) avatarMask.style.display = "none";
+                };
+            }
+            if (userAvatarInput) {
+                userAvatarInput.addEventListener("change", function(e) {
+                    const f = e.target.files[0];
+                    if (!f) return;
+                    compressImage(f, function(dataUrl) {
+                        userAvatar = dataUrl;
+                        refreshAvatarPreviews();
+                    });
+                });
+            }
+            if (aiAvatarInput) {
+                aiAvatarInput.addEventListener("change", function(e) {
+                    const f = e.target.files[0];
+                    if (!f) return;
+                    compressImage(f, function(dataUrl) {
+                        aiAvatar = dataUrl;
+                        refreshAvatarPreviews();
+                    });
+                });
+            }
 
             // 导入弹窗
             const importMask = document.getElementById("importMask");
-            document.getElementById("importBtn").onclick = () => importMask.style.display = "flex";
-            document.getElementById("importCancel").onclick = () => {
-                importMask.style.display = "none";
-                document.getElementById("textArea").value = "";
-                document.getElementById("fileInput").value = "";
-            };
-            document.getElementById("importConfirm").onclick = async () => {
-                let totalArr = [];
-                const textRaw = document.getElementById("textArea").value.trim();
-                if (textRaw) totalArr = totalArr.concat(parseImportText(textRaw));
-                const file = document.getElementById("fileInput").files[0];
-                if (file) {
-                    try {
-                        const fileText = await file.text();
-                        totalArr = totalArr.concat(parseImportText(fileText));
-                    } catch (err) { alert("文件读取失败：" + err.message); return; }
-                }
-                const unique = [];
-                const seen = new Set();
-                for (const item of totalArr) {
-                    const key = item.trim();
-                    if (key && !seen.has(key)) { seen.add(key); unique.push(key); }
-                }
-                if (unique.length === 0) {
-                    alert("未检测到有效字卡内容！支持文本、JSON 或文件");
-                    return;
-                }
-                replyList = [...replyList, ...unique];
-                saveReply();
-                renderCardList();
-                alert(`✅ 导入成功！新增 ${unique.length} 条字卡`);
-                importMask.style.display = "none";
-                document.getElementById("textArea").value = "";
-                document.getElementById("fileInput").value = "";
-            };
+            const importBtn = document.getElementById("importBtn");
+            const importCancel = document.getElementById("importCancel");
+            const importConfirm = document.getElementById("importConfirm");
+            const textArea = document.getElementById("textArea");
+            const fileInput = document.getElementById("fileInput");
+
+            if (importBtn) importBtn.onclick = () => { if (importMask) importMask.style.display = "flex"; };
+            if (importCancel) {
+                importCancel.onclick = () => {
+                    if (importMask) importMask.style.display = "none";
+                    if (textArea) textArea.value = "";
+                    if (fileInput) fileInput.value = "";
+                };
+            }
+            if (importConfirm) {
+                importConfirm.onclick = async function() {
+                    let totalArr = [];
+                    if (textArea) {
+                        const textRaw = textArea.value.trim();
+                        if (textRaw) totalArr = totalArr.concat(parseImportText(textRaw));
+                    }
+                    if (fileInput) {
+                        const file = fileInput.files[0];
+                        if (file) {
+                            try {
+                                const fileText = await file.text();
+                                totalArr = totalArr.concat(parseImportText(fileText));
+                            } catch (err) { alert("文件读取失败：" + err.message); return; }
+                        }
+                    }
+                    const unique = [];
+                    const seen = new Set();
+                    for (const item of totalArr) {
+                        const key = item.trim();
+                        if (key && !seen.has(key)) { seen.add(key); unique.push(key); }
+                    }
+                    if (unique.length === 0) {
+                        alert("未检测到有效字卡内容！支持文本、JSON 或文件");
+                        return;
+                    }
+                    replyList = [...replyList, ...unique];
+                    saveReply();
+                    renderCardList();
+                    alert(`✅ 导入成功！新增 ${unique.length} 条字卡`);
+                    if (importMask) importMask.style.display = "none";
+                    if (textArea) textArea.value = "";
+                    if (fileInput) fileInput.value = "";
+                };
+            }
 
             // 查看字卡
             const viewCardMask = document.getElementById("viewCardMask");
-            document.getElementById("viewCardBtn").onclick = () => { renderCardList(); viewCardMask.style.display = "flex"; };
-            document.getElementById("viewCardClose").onclick = () => viewCardMask.style.display = "none";
+            const viewCardBtn = document.getElementById("viewCardBtn");
+            const viewCardClose = document.getElementById("viewCardClose");
+
+            if (viewCardBtn) {
+                viewCardBtn.onclick = function() {
+                    renderCardList();
+                    if (viewCardMask) viewCardMask.style.display = "flex";
+                };
+            }
+            if (viewCardClose) viewCardClose.onclick = function() { if (viewCardMask) viewCardMask.style.display = "none"; };
 
             // 清空记录
-            document.getElementById("clearRecordBtn").addEventListener("click", function() {
-                if (confirm("确定清空全部聊天记录？")) {
-                    localStorage.removeItem(STORAGE_KEY);
-                    chatRecords = [];
-                    document.getElementById("chatBox").innerHTML = `<div class="scroll-anchor" id="scrollAnchor"></div>`;
-                    showSystemMessage("✨ 已重新建立心灵链接");
-                }
-            });
+            const clearRecordBtn = document.getElementById("clearRecordBtn");
+            if (clearRecordBtn) {
+                clearRecordBtn.addEventListener("click", function() {
+                    if (confirm("确定清空全部聊天记录？")) {
+                        localStorage.removeItem(STORAGE_KEY);
+                        chatRecords = [];
+                        const chatBox = document.getElementById("chatBox");
+                        if (chatBox) {
+                            chatBox.innerHTML = `<div class="scroll-anchor" id="scrollAnchor"></div>`;
+                        }
+                        showSystemMessage("✨ 已重新建立心灵链接");
+                    }
+                });
+            }
+
+            // 最后加载聊天记录（确保所有元素已就绪）
+            initChatRecord();
         };
     </script>
 </body>
