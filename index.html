@@ -123,7 +123,7 @@
             border-color: #b088d0;
             box-shadow: 0 0 0 3px rgba(176, 136, 208, 0.15);
         }
-        .chat-input-area button {
+        .chat-input-area .send-btn {
             padding: 12px 22px;
             border-radius: 30px;
             border: none;
@@ -136,27 +136,41 @@
             cursor: pointer;
             white-space: nowrap;
         }
-        .chat-input-area button:active {
+        .chat-input-area .send-btn:active {
             transform: scale(0.94);
             box-shadow: 0 2px 6px rgba(143, 109, 176, 0.2);
         }
-        .mode-toggle {
-            padding: 8px 14px;
-            border-radius: 30px;
-            border: 1px solid rgba(180, 160, 200, 0.3);
-            background: rgba(255, 255, 255, 0.6);
-            font-size: 13px;
-            font-weight: 500;
-            color: #4a3f5e;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: all 0.2s;
-            backdrop-filter: blur(4px);
+        .chat-input-area .send-btn:disabled {
+            opacity: 0.5;
+            transform: scale(0.98);
+            cursor: not-allowed;
         }
-        .mode-toggle.active {
-            background: #b088d0;
-            color: #fff;
-            border-color: #b088d0;
+
+        /* ===== 状态显示（输入框旁边） ===== */
+        .status-badge {
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
+            min-width: 60px;
+            text-align: center;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            background: rgba(200, 180, 220, 0.15);
+            color: #8a7a9a;
+        }
+        .status-badge.sending {
+            background: rgba(255, 200, 100, 0.2);
+            color: #b08830;
+        }
+        .status-badge.read {
+            background: rgba(123, 207, 166, 0.25);
+            color: #2a7a4a;
+        }
+        .status-badge.unread {
+            background: rgba(245, 180, 180, 0.2);
+            color: #9a3a3a;
         }
 
         /* ===== 功能菜单 ===== */
@@ -867,13 +881,9 @@
                 font-size: 16px !important;
                 padding: 10px 14px;
             }
-            .chat-input-area button {
+            .chat-input-area .send-btn {
                 font-size: clamp(16px, 4vw, 19px);
                 padding: 10px 16px;
-            }
-            .mode-toggle {
-                font-size: 12px;
-                padding: 6px 12px;
             }
             .avatar {
                 width: 38px;
@@ -887,6 +897,11 @@
             }
             .mail-item .mail-content {
                 font-size: 14px;
+            }
+            .status-badge {
+                font-size: 10px;
+                padding: 3px 8px;
+                min-width: 48px;
             }
         }
         @media (max-width: 375px) {
@@ -902,13 +917,18 @@
             .chat-item {
                 font-size: clamp(14px, 3.8vw, 17px);
             }
-            .chat-input-area button {
+            .chat-input-area .send-btn {
                 padding: 8px 12px;
                 font-size: 15px;
             }
             .app-header .menu-btn {
                 font-size: 13px;
                 padding: 4px 10px;
+            }
+            .status-badge {
+                font-size: 9px;
+                padding: 2px 6px;
+                min-width: 40px;
             }
         }
     </style>
@@ -933,8 +953,8 @@
     <!-- ===== 输入区域 ===== -->
     <div class="chat-input-area">
         <input id="msgInput" placeholder="说点什么吧…" onkeydown="if(event.key==='Enter') sendMsg()">
-        <button onclick="sendMsg()">发送</button>
-        <button class="mode-toggle" id="modeToggle">💬 自动回复</button>
+        <span class="status-badge" id="statusBadge">💬 就绪</span>
+        <button class="send-btn" id="sendBtn" onclick="sendMsg()">发送</button>
     </div>
 
     <!-- ============================================================
@@ -1071,7 +1091,6 @@
         const AI_AVATAR_KEY = "aiAvatar";
         const CALENDAR_KEY = "dreamCalendarData";
         const CUSTOM_EMO_KEY = "dreamCustomEmo";
-        const MODE_KEY = "replyMode";
         const SPEED_INDEX_KEY = "dreamSpeedIndex";
 
         let chatRecords = [];
@@ -1085,12 +1104,15 @@
         const baseEmoList = ["😊", "🥰", "😐", "😔", "😠", "😴"];
         let customEmoList = [];
         let allEmoList = [];
-        let replyMode = "auto";
         let currentDelayIndex = 2;
         let selectedDateKey = null;
         let letters = [];
         let pendingTimers = {};
         let msgCounter = 0;
+
+        // ===== 状态管理 =====
+        let currentStatus = 'idle'; // idle | sending | read | unread
+        let isProcessing = false; // 防止重复发送
 
         // ===== 回复速度 =====
         const delayPresets = [
@@ -1129,28 +1151,37 @@
             showSystemMessage(`回复速度已切换为：${delayPresets[currentDelayIndex].label}`);
         }
 
-        // ===== 模式切换 =====
-        function loadMode() {
-            const saved = localStorage.getItem(MODE_KEY);
-            replyMode = (saved === "readonly") ? "readonly" : "auto";
-            updateModeUI();
+        // ===== 状态显示更新 =====
+        function setStatus(status, text = null) {
+            const badge = document.getElementById('statusBadge');
+            if (!badge) return;
+            currentStatus = status;
+            // 移除所有类
+            badge.classList.remove('sending', 'read', 'unread');
+            switch (status) {
+                case 'idle':
+                    badge.textContent = text || '💬 就绪';
+                    break;
+                case 'sending':
+                    badge.classList.add('sending');
+                    badge.textContent = text || '⏳ 发送中...';
+                    break;
+                case 'read':
+                    badge.classList.add('read');
+                    badge.textContent = text || '✅ 已读';
+                    break;
+                case 'unread':
+                    badge.classList.add('unread');
+                    badge.textContent = text || '❌ 未读';
+                    break;
+                default:
+                    badge.textContent = text || '💬 就绪';
+            }
         }
 
-        function saveMode() { localStorage.setItem(MODE_KEY, replyMode); }
-
-        function updateModeUI() {
-            const btn = document.getElementById("modeToggle");
-            if (!btn) return;
-            if (replyMode === "auto") { btn.textContent = "💬 自动回复";
-                btn.classList.remove("active"); } else { btn.textContent = "🔇 已读不回";
-                btn.classList.add("active"); }
-        }
-
-        function toggleMode() {
-            replyMode = (replyMode === "auto") ? "readonly" : "auto";
-            saveMode();
-            updateModeUI();
-            showSystemMessage(replyMode === "auto" ? "已切换为自动回复模式" : "已切换为已读不回模式（梦角将只显示已读）");
+        // ===== 随机决定是否已读（70% 已读，30% 未读） =====
+        function decideReadStatus() {
+            return Math.random() < 0.7; // 70% 概率已读
         }
 
         // ===== 字卡导入 =====
@@ -1535,7 +1566,7 @@
         }
 
         // ============================================================
-        //  ✉️  信件系统（完全独立，不显示在聊天区）
+        //  ✉️  信件系统
         // ============================================================
 
         function saveLetters() {
@@ -1546,9 +1577,7 @@
                     sentAt: l.sentAt,
                     deliveredAt: l.deliveredAt,
                     status: l.status,
-                    replies: l.replies || [],
-                    letterMsgId: l.letterMsgId,
-                    replyMsgIds: l.replyMsgIds || []
+                    replies: l.replies || []
                 }));
                 localStorage.setItem(LETTERS_STORAGE_KEY, JSON.stringify(saveData));
             } catch (e) { console.warn("保存信件失败:", e); }
@@ -1579,8 +1608,6 @@
                 deliveredAt: null,
                 status: 'sent',
                 replies: [],
-                letterMsgId: null,
-                replyMsgIds: [],
                 timer: null,
                 delivered: false,
                 replied: false
@@ -1596,7 +1623,6 @@
         function deliverLetter(letterId) {
             const letter = letters.find(l => l.id === letterId);
             if (!letter || letter.delivered) return;
-
             letter.delivered = true;
             letter.deliveredAt = Date.now();
             letter.status = 'delivered';
@@ -1605,8 +1631,6 @@
                 delete pendingTimers[letterId]; }
             saveLetters();
             renderMailList();
-
-            // 静默延迟后回信（不显示在聊天区）
             const readDelay = 2000 + Math.random() * 4000;
             setTimeout(() => {
                 if (replyList.length === 0) {
@@ -1686,7 +1710,6 @@
             });
         }
 
-        // ===== 恢复待送达信件（静默恢复，不显示在聊天区） =====
         function restorePendingLetters() {
             const pending = letters.filter(l => l.status === 'sent' && !l.delivered);
             if (pending.length === 0) return;
@@ -1703,7 +1726,6 @@
             });
         }
 
-        // ===== 写信功能（完全独立，不显示在聊天区） =====
         function sendLetter() {
             const textarea = document.getElementById("letterContent");
             const content = textarea.value.trim();
@@ -1719,13 +1741,12 @@
         }
 
         // ============================================================
-        //  消息系统（普通聊天，不含信件）
+        //  消息系统
         // ============================================================
 
         function appendMessageWithId(sender, text, isUser = false, timestamp = null, isLetter = false) {
             const box = document.getElementById("chatBox");
             if (!box) return null;
-            // 如果是信件消息，不显示在聊天区（只保存数据）
             if (isLetter) {
                 const now = timestamp || Date.now();
                 const msgId = 'msg_' + (++msgCounter) + '_' + Date.now();
@@ -1810,7 +1831,6 @@
             return appendMessageWithId(sender, text, isUser, timestamp, isLetter);
         }
 
-        // ===== 系统消息（仅用于非信件提示） =====
         function showSystemMessage(text) {
             const chatBox = document.getElementById("chatBox");
             if (!chatBox) return;
@@ -1822,7 +1842,6 @@
             scrollToBottom();
         }
 
-        // ===== 加载历史记录（过滤信件消息） =====
         function initChatRecord() {
             const local = localStorage.getItem(STORAGE_KEY);
             const chatBox = document.getElementById("chatBox");
@@ -1840,7 +1859,6 @@
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
                 }
                 chatRecords.forEach(item => {
-                    // 跳过信件消息（isLetter: true），不显示在聊天区
                     if (item.isLetter) return;
                     const ts = item.timestamp || null;
                     const sender = item.sender || (item.isUser ? "你" : "梦角");
@@ -1854,7 +1872,6 @@
             scrollToBottom();
         }
 
-        // ===== 滚动 =====
         function scrollToBottom() {
             const anchor = document.getElementById("scrollAnchor");
             if (anchor) { try { anchor.scrollIntoView({ behavior: 'auto', block: 'end' }); } catch (e) {} }
@@ -1862,7 +1879,6 @@
             if (box) box.scrollTop = box.scrollHeight;
         }
 
-        // ===== 发送多条消息 =====
         function sendMultipleMessages(messages, interval = 500) {
             if (!messages || messages.length === 0) return;
             let index = 0;
@@ -1877,33 +1893,75 @@
             sendNext();
         }
 
-        // ===== 普通聊天发送 =====
+        // ============================================================
+        //  【核心】发送消息 - 随机决定是否已读
+        // ============================================================
         function sendMsg() {
             const input = document.getElementById("msgInput");
             if (!input) return;
             const text = input.value.trim();
             if (!text) return;
+            if (isProcessing) return;
+
+            // 锁定发送按钮
+            isProcessing = true;
+            const sendBtn = document.getElementById("sendBtn");
+            sendBtn.disabled = true;
+
+            // 显示用户消息
             appendMessage("你", text, true, true);
             input.value = "";
+
+            // 更新状态为「发送中」
+            setStatus('sending', '⏳ 发送中...');
+
+            // 获取延迟时间
             const delayMs = getDelay();
-            if (replyMode === "readonly") {
-                setTimeout(() => showSystemMessage("梦角已读"), Math.min(delayMs, 500));
-            } else {
-                setTimeout(() => {
-                    if (replyList.length === 0) {
-                        appendMessage("梦角", "暂无回复字卡，请先导入文案", false);
-                        return;
-                    }
-                    const count = Math.floor(Math.random() * 5) + 1;
-                    const selected = [];
-                    for (let i = 0; i < count; i++) {
-                        const randomIndex = Math.floor(Math.random() * replyList.length);
-                        selected.push(replyList[randomIndex]);
-                    }
-                    sendMultipleMessages(selected, 500);
+
+            // 延迟后决定是否已读
+            setTimeout(() => {
+                // 随机决定是否已读（70% 已读）
+                const isRead = decideReadStatus();
+
+                if (isRead) {
+                    // ✅ 已读 → 显示已读状态 + 回复
+                    setStatus('read', '✅ 已读');
+                    // 记录已读情绪
                     recordAiEmotion();
-                }, delayMs);
-            }
+
+                    // 再延迟一点后回复（模拟思考）
+                    setTimeout(() => {
+                        if (replyList.length === 0) {
+                            appendMessage("梦角", "📭 暂无回复字卡，请先导入文案", false);
+                        } else {
+                            const count = Math.floor(Math.random() * 5) + 1;
+                            const selected = [];
+                            const shuffled = [...replyList].sort(() => Math.random() - 0.5);
+                            for (let i = 0; i < Math.min(count, shuffled.length); i++) {
+                                selected.push(shuffled[i]);
+                            }
+                            while (selected.length < count && replyList.length > 0) {
+                                selected.push(replyList[Math.floor(Math.random() * replyList.length)]);
+                            }
+                            sendMultipleMessages(selected, 500);
+                        }
+                        // 解锁
+                        isProcessing = false;
+                        sendBtn.disabled = false;
+                        setStatus('idle', '💬 就绪');
+                    }, 300 + Math.random() * 500);
+
+                } else {
+                    // ❌ 未读 → 显示未读状态，不回复
+                    setStatus('unread', '❌ 未读');
+                    // 解锁（但保持未读状态几秒后自动恢复）
+                    setTimeout(() => {
+                        isProcessing = false;
+                        sendBtn.disabled = false;
+                        setStatus('idle', '💬 就绪');
+                    }, 2000);
+                }
+            }, delayMs);
         }
 
         // ============================================================
@@ -1933,7 +1991,6 @@
         // ============================================================
         window.onload = function() {
             loadSpeedIndex();
-            loadMode();
             loadReply();
             renderCardList();
             bindClearAllCard();
@@ -1945,6 +2002,7 @@
             renderMailList();
             restorePendingLetters();
             updateSpeedDisplay();
+            setStatus('idle', '💬 就绪');
 
             // ---- 功能菜单 ----
             document.getElementById("openMenuBtn").addEventListener("click", openFuncMenu);
@@ -1984,12 +2042,8 @@
                     }
                 }, 200); });
 
-            // ---- 模式切换 ----
-            document.getElementById("modeToggle").addEventListener("click", toggleMode);
-
             // ---- 发送 ----
-            const sendBtn = document.querySelector(".chat-input-area button[onclick]");
-            if (sendBtn) sendBtn.onclick = sendMsg;
+            document.getElementById("sendBtn").addEventListener("click", sendMsg);
             document.getElementById("msgInput").addEventListener("keydown", function(e) {
                 if (e.key === 'Enter') sendMsg();
             });
@@ -2092,12 +2146,6 @@
 
             // ---- 加载聊天记录 ----
             initChatRecord();
-
-            // ---- 显示投递中的信件数量（仅在信件箱中查看） ----
-            const sendingCount = letters.filter(l => l.status === 'sent').length;
-            if (sendingCount > 0) {
-                // 不显示在聊天区，仅更新信件箱状态
-            }
         };
     </script>
 </body>
