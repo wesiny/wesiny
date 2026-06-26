@@ -12,6 +12,7 @@
     <style>
         html {
             touch-action: manipulation;
+            height: 100%;
         }
         * {
             margin: 0;
@@ -23,12 +24,11 @@
         body {
             background: #f7f8fa;
             color: #222;
-            min-height: 100vh;
-            padding-bottom: env(safe-area-inset-bottom);
-            overscroll-behavior-y: none;
+            height: 100%;
             display: flex;
             flex-direction: column;
-            font-size: 16px; /* 基础大小 */
+            overflow: hidden; /* 防止整体滚动 */
+            font-size: 16px;
         }
 
         /* 功能按钮栏 页面最顶部 */
@@ -42,6 +42,7 @@
             background: #ffffff;
             border-bottom: 1px solid #eee;
             flex-wrap: wrap;
+            flex-shrink: 0;
         }
         .func-bar button {
             padding: 4px 10px;
@@ -66,9 +67,7 @@
             padding: 6px 6px;
             background: #ffffff;
             border-bottom: 1px solid #eee;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            flex-shrink: 0;
         }
         .top-bar span {
             font-size: 18px;
@@ -84,7 +83,73 @@
             margin-right: 4px;
         }
 
-        /* 通用弹窗遮罩 */
+        /* ---- 聊天区域：flex:1 自动撑满 ---- */
+        .chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            min-height: 0; /* 防止flex溢出 */
+        }
+
+        /* ---- 底部输入区域：不再 fixed，随键盘上移 ---- */
+        .chat-input-area {
+            flex-shrink: 0;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+            background: #f7f8fa;
+            border-top: 1px solid #e5e7eb;
+        }
+        .chat-input-area input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            font-size: 16px !important;
+            min-font-size: 16px;
+            outline: none;
+            background: #fff;
+        }
+        .chat-input-area button {
+            width: 70px;
+            padding: 10px 0;
+            border-radius: 18px;
+            border: none;
+            background: #4088e0;
+            color: #fff;
+            font-size: clamp(18px, 4vw, 22px);
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .chat-input-area button:active {
+            background: #2a6fb8;
+        }
+
+        /* 回复模式切换按钮（放输入框旁边） */
+        .mode-toggle {
+            padding: 6px 10px;
+            border-radius: 18px;
+            border: 1px solid #ddd;
+            background: #f0f0f0;
+            font-size: 13px;
+            color: #555;
+            white-space: nowrap;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .mode-toggle.active {
+            background: #4088e0;
+            color: #fff;
+            border-color: #4088e0;
+        }
+
+        /* 通用弹窗遮罩 (与之前相同) */
         .mask {
             position: fixed;
             inset: 0;
@@ -387,47 +452,6 @@
             border-bottom: none;
         }
 
-        /* 聊天区域 */
-        .chat-box {
-            flex: 1;
-            padding: 8px 6px;
-            height: calc(100vh - 160px - env(safe-area-inset-bottom) - 60px);
-            overflow-y: auto;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        /* 单条消息容器 */
-        .chat-row {
-            display: flex;
-            align-items: flex-end;
-            gap: 8px;
-            max-width: 100%;
-        }
-        .chat-row.user {
-            justify-content: flex-end;
-        }
-        .chat-row.ai {
-            justify-content: flex-start;
-        }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #ddd;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
         /* 聊天气泡 - 字体大小使用 clamp 自适应 */
         .chat-item {
             padding: 8px 12px;
@@ -458,40 +482,31 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
         }
 
-        /* 底部输入区域 */
-        .chat-input-area {
-            position: fixed;
-            bottom: calc(6px + env(safe-area-inset-bottom));
-            left: 6px;
-            right: 6px;
+        /* 单条消息容器 */
+        .chat-row {
             display: flex;
-            gap: 6px;
-            align-items: center;
-            background: transparent;
+            align-items: flex-end;
+            gap: 8px;
+            max-width: 100%;
         }
-        .chat-input-area input {
-            flex: 1;
-            padding: 10px 12px;
-            border: 1px solid #e5e7eb;
-            border-radius: 18px;
-            font-size: 16px !important;
-            min-font-size: 16px;
-            outline: none;
-            background: #fff;
+        .chat-row.user {
+            justify-content: flex-end;
         }
-        .chat-input-area button {
-            width: 70px;
-            padding: 10px 0;
-            border-radius: 18px;
-            border: none;
-            background: #4088e0;
-            color: #fff;
-            font-size: clamp(18px, 4vw, 22px);
-            font-weight: 500;
-            transition: background 0.2s;
+        .chat-row.ai {
+            justify-content: flex-start;
         }
-        .chat-input-area button:active {
-            background: #2a6fb8;
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ddd;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         /* 导入提示 */
@@ -508,7 +523,7 @@
             font-size: 13px;
         }
 
-        /* ====== 移动端适配：针对小屏幕进一步优化字体 ====== */
+        /* 移动端适配 */
         @media (max-width: 480px) {
             .func-bar button {
                 font-size: 12px;
@@ -587,13 +602,15 @@
                 padding: 8px 0;
                 width: 60px;
             }
+            .mode-toggle {
+                font-size: 12px;
+                padding: 4px 8px;
+            }
             .avatar {
                 width: 36px;
                 height: 36px;
             }
         }
-
-        /* 极小屏（如 iPhone SE）额外调整 */
         @media (max-width: 375px) {
             .func-bar button {
                 font-size: 11px;
@@ -630,11 +647,14 @@
         <span>在线倾听中...</span>
     </div>
 
+    <!-- 聊天区域 -->
     <div class="chat-box" id="chatBox"></div>
 
+    <!-- 底部输入区域（含模式切换） -->
     <div class="chat-input-area">
         <input id="msgInput" placeholder="输入你想说的话…" onkeydown="if(event.key==='Enter') sendMsg()">
         <button onclick="sendMsg()">发送</button>
+        <button class="mode-toggle" id="modeToggle"> 自动回复</button>
     </div>
 
     <!-- 头像设置弹窗 -->
@@ -747,12 +767,14 @@ JSON示例：
     </div>
 
     <script>
+        // ==================== 核心变量 ====================
         const REPLY_KEY = "dreamReplyList";
         const STORAGE_KEY = "dreamChatRecord";
         const USER_AVATAR_KEY = "userAvatar";
         const AI_AVATAR_KEY = "aiAvatar";
         const CALENDAR_KEY = "dreamCalendarData";
         const CUSTOM_EMO_KEY = "dreamCustomEmo";
+        const MODE_KEY = "replyMode"; // 'auto' 或 'readonly'
 
         let chatRecords = [];
         let replyList = [];
@@ -765,43 +787,62 @@ JSON示例：
         const baseEmoList = ["", "🥰", "", "", "", ""];
         let customEmoList = [];
         let allEmoList = [];
+        let replyMode = "auto"; // 'auto' 或 'readonly'
 
-        // ========== 核心修复：parseImportText - 只提取文本，去除JSON语法符号 ==========
+        // ==================== 模式切换 ====================
+        function loadMode() {
+            const saved = localStorage.getItem(MODE_KEY);
+            if (saved === "readonly") replyMode = "readonly";
+            else replyMode = "auto";
+            updateModeUI();
+        }
+
+        function saveMode() {
+            localStorage.setItem(MODE_KEY, replyMode);
+        }
+
+        function updateModeUI() {
+            const btn = document.getElementById("modeToggle");
+            if (replyMode === "auto") {
+                btn.textContent = " 自动回复";
+                btn.classList.remove("active");
+            } else {
+                btn.textContent = " 已读不回";
+                btn.classList.add("active");
+            }
+        }
+
+        function toggleMode() {
+            replyMode = (replyMode === "auto") ? "readonly" : "auto";
+            saveMode();
+            updateModeUI();
+            // 显示提示
+            const msg = replyMode === "auto" ? "已切换为自动回复模式" : "已切换为已读不回模式（梦角将只显示已读）";
+            showSystemMessage(msg);
+        }
+
+        // ==================== 字卡导入解析（同前） ====================
         function parseImportText(rawText) {
             const result = [];
             const trimText = rawText.trim();
             if (!trimText) return result;
-
-            // 尝试智能提取：如果包含 [ 和 ]，尝试按JSON数组解析
             if (trimText.includes('[') && trimText.includes(']')) {
-                // 尝试提取所有被引号包裹的字符串
                 const extracted = tryExtractJsonStrings(trimText);
-                if (extracted.length > 0) {
-                    return extracted;
-                }
+                if (extracted.length > 0) return extracted;
             }
-
-            // 降级方案：按行分割，清理每行
             const lines = trimText.split(/\r?\n/);
             for (const line of lines) {
                 let clean = line.trim();
                 if (!clean) continue;
-                // 如果行是JSON格式的残留（如带引号），尝试清理
                 clean = clean.replace(/^["']|["']$/g, '').trim();
-                // 去除行首行尾的中括号、逗号等（残留的JSON语法）
                 clean = clean.replace(/^[\[\]{}]/, '').replace(/[\[\]{}]$/, '').trim();
                 if (clean) result.push(clean);
             }
-
             return result;
         }
 
-        // 辅助函数：从混合文本中提取JSON数组中的字符串
         function tryExtractJsonStrings(text) {
             const result = [];
-            // 尝试多种JSON解析方式
-
-            // 方式1：标准JSON解析
             try {
                 const parsed = JSON.parse(text);
                 if (Array.isArray(parsed)) {
@@ -815,54 +856,38 @@ JSON示例：
                     }
                     if (result.length > 0) return result;
                 }
-            } catch (_) { /* 继续尝试 */ }
-
-            // 方式2：用正则提取所有 "..." 或 '...' 中的内容
-            // 先尝试匹配双引号
+            } catch (_) {}
             let match;
             const doubleQuoteRegex = /"([^"\\]*(?:\\.[^"\\]*)*)"/g;
             let found = false;
             while ((match = doubleQuoteRegex.exec(text)) !== null) {
                 const content = match[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\').trim();
-                if (content) {
-                    result.push(content);
-                    found = true;
-                }
+                if (content) { result.push(content);
+                    found = true; }
             }
             if (found) return result;
-
-            // 再尝试匹配单引号
             const singleQuoteRegex = /'([^'\\]*(?:\\.[^'\\]*)*)'/g;
             while ((match = singleQuoteRegex.exec(text)) !== null) {
                 const content = match[1].replace(/\\'/g, "'").replace(/\\\\/g, '\\').trim();
-                if (content) {
-                    result.push(content);
-                    found = true;
-                }
+                if (content) { result.push(content);
+                    found = true; }
             }
             if (found) return result;
-
-            // 方式3：尝试提取 [ 和 ] 之间的内容，然后分割
             const bracketMatch = text.match(/\[([\s\S]*?)\]/);
             if (bracketMatch) {
                 const inner = bracketMatch[1];
-                // 按逗号分割，但要注意字符串内的逗号
                 const parts = splitByCommaOutsideQuotes(inner);
                 for (const part of parts) {
                     let clean = part.trim();
-                    // 去除首尾引号
                     clean = clean.replace(/^["']|["']$/g, '').trim();
-                    // 去除首尾的空白、逗号、括号残留
                     clean = clean.replace(/^[\s,]+|[\s,]+$/g, '').trim();
                     if (clean) result.push(clean);
                 }
                 if (result.length > 0) return result;
             }
-
             return result;
         }
 
-        // 辅助：按逗号分割，但忽略引号内的逗号
         function splitByCommaOutsideQuotes(str) {
             const parts = [];
             let current = '';
@@ -871,12 +896,8 @@ JSON示例：
             for (let i = 0; i < str.length; i++) {
                 const ch = str[i];
                 if (ch === '"' || ch === "'") {
-                    if (!inQuote) {
-                        inQuote = true;
-                        quoteChar = ch;
-                    } else if (ch === quoteChar && str[i - 1] !== '\\') {
-                        inQuote = false;
-                    }
+                    if (!inQuote) { inQuote = true;
+                        quoteChar = ch; } else if (ch === quoteChar && str[i - 1] !== '\\') { inQuote = false; }
                     current += ch;
                 } else if (ch === ',' && !inQuote) {
                     parts.push(current);
@@ -889,7 +910,7 @@ JSON示例：
             return parts;
         }
 
-        // ========== 情绪存储 ==========
+        // ==================== 情绪存储 ====================
         function loadCustomEmo() {
             const raw = localStorage.getItem(CUSTOM_EMO_KEY);
             if (raw) customEmoList = JSON.parse(raw);
@@ -905,7 +926,7 @@ JSON示例：
             allEmoList = [...baseEmoList, ...customEmoList];
         }
 
-        // ========== 日历存储 ==========
+        // ==================== 日历存储 ====================
         function loadCalendarData() {
             const raw = localStorage.getItem(CALENDAR_KEY);
             if (raw) calendarData = JSON.parse(raw);
@@ -922,7 +943,7 @@ JSON示例：
             return `${y}-${m}-${d}`;
         }
 
-        // ========== 渲染情绪面板 ==========
+        // ==================== 渲染情绪面板 ====================
         function renderEmojiBox() {
             const box = document.getElementById("emojiBox");
             box.innerHTML = "";
@@ -956,7 +977,7 @@ JSON示例：
             });
         }
 
-        // ========== 渲染日历 ==========
+        // ==================== 渲染日历 ====================
         function renderCalendar() {
             const y = calNowDate.getFullYear();
             const m = calNowDate.getMonth();
@@ -1000,7 +1021,7 @@ JSON示例：
             }
         }
 
-        // ========== 自定义情绪列表渲染 ==========
+        // ==================== 自定义情绪列表渲染 ====================
         function renderCustomEmoList() {
             const wrap = document.getElementById("customEmoList");
             wrap.innerHTML = "";
@@ -1011,7 +1032,8 @@ JSON示例：
             customEmoList.forEach(emo => {
                 const row = document.createElement("div");
                 row.className = "emo-row";
-                row.innerHTML = `<span>${emo}</span><button class="btn-red" style="font-size:12px;padding:2px 6px;" data-emo="${emo}">删除</button>`;
+                row.innerHTML =
+                    `<span>${emo}</span><button class="btn-red" style="font-size:12px;padding:2px 6px;" data-emo="${emo}">删除</button>`;
                 wrap.appendChild(row);
             });
             document.querySelectorAll("#customEmoList button").forEach(btn => {
@@ -1026,7 +1048,7 @@ JSON示例：
             });
         }
 
-        // ========== 日历交互绑定 ==========
+        // ==================== 日历交互绑定 ====================
         function bindCalendarEvent() {
             document.getElementById("tabUser").onclick = () => {
                 calActiveRole = "user";
@@ -1125,7 +1147,7 @@ JSON示例：
             };
         }
 
-        // ========== 字卡基础逻辑 ==========
+        // ==================== 字卡基础逻辑 ====================
         function loadReply() {
             const local = localStorage.getItem(REPLY_KEY);
             if (local) {
@@ -1155,8 +1177,7 @@ JSON示例：
             const wrap = document.getElementById("cardListWrap");
             wrap.innerHTML = "";
             if (replyList.length === 0) {
-                wrap.innerHTML =
-                "<p style='text-align:center;color:#999;padding:20px 0;'>暂无字卡，请先导入</p>";
+                wrap.innerHTML = "<p style='text-align:center;color:#999;padding:20px 0;'>暂无字卡，请先导入</p>";
                 return;
             }
             replyList.forEach((text, index) => {
@@ -1190,7 +1211,7 @@ JSON示例：
             };
         }
 
-        // ========== 头像逻辑 ==========
+        // ==================== 头像逻辑 ====================
         function loadAvatars() {
             userAvatar = localStorage.getItem(USER_AVATAR_KEY) || "";
             aiAvatar = localStorage.getItem(AI_AVATAR_KEY) || "";
@@ -1204,7 +1225,7 @@ JSON示例：
             aiPreview.innerHTML = aiAvatar ? `<img src="${aiAvatar}" alt="">` : "";
         }
 
-        // ========== 聊天记录 ==========
+        // ==================== 聊天记录 ====================
         function initChatRecord() {
             const local = localStorage.getItem(STORAGE_KEY);
             const chatBox = document.getElementById("chatBox");
@@ -1225,6 +1246,7 @@ JSON示例：
             sysItem.className = "chat-item system";
             sysItem.textContent = text;
             chatBox.appendChild(sysItem);
+            scrollToBottom();
         }
 
         function appendMessage(sender, text, isUser = false, save = true) {
@@ -1250,27 +1272,46 @@ JSON示例：
                 chatRecords.push({ sender, text, isUser });
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
             }
-            setTimeout(() => box.scrollTop = box.scrollHeight, 50);
+            scrollToBottom();
         }
 
+        function scrollToBottom() {
+            const box = document.getElementById("chatBox");
+            setTimeout(() => {
+                box.scrollTop = box.scrollHeight;
+            }, 50);
+        }
+
+        // ==================== 发送消息（核心修改） ====================
         function sendMsg() {
             const input = document.getElementById("msgInput");
             const text = input.value.trim();
             if (!text) return;
             appendMessage("你", text, true);
             input.value = "";
-            setTimeout(() => {
-                if (replyList.length === 0) {
-                    appendMessage("梦角", "暂无回复字卡，请先导入文案", false);
-                    return;
-                }
-                const r = replyList[Math.floor(Math.random() * replyList.length)];
-                appendMessage("梦角", r, false);
-            }, 600);
+
+            // 根据模式决定回复
+            if (replyMode === "readonly") {
+                // 已读不回：显示已读标记
+                setTimeout(() => {
+                    showSystemMessage("梦角已读");
+                }, 400);
+            } else {
+                // 自动回复模式
+                setTimeout(() => {
+                    if (replyList.length === 0) {
+                        appendMessage("梦角", "暂无回复字卡，请先导入文案", false);
+                        return;
+                    }
+                    const r = replyList[Math.floor(Math.random() * replyList.length)];
+                    appendMessage("梦角", r, false);
+                }, 600);
+            }
         }
 
-        // ========== 初始化 ==========
+        // ==================== 初始化 ====================
         window.onload = () => {
+            loadMode();
             loadReply();
             renderCardList();
             bindClearAllCard();
@@ -1279,6 +1320,9 @@ JSON示例：
             loadCalendarData();
             loadCustomEmo();
             bindCalendarEvent();
+
+            // 模式切换按钮
+            document.getElementById("modeToggle").addEventListener("click", toggleMode);
 
             // ---- 头像弹窗 ----
             const avatarMask = document.getElementById("avatarMask");
@@ -1333,7 +1377,6 @@ JSON示例：
                         return;
                     }
                 }
-                // 去重（保留首次出现的顺序）
                 const unique = [];
                 const seen = new Set();
                 for (const item of totalArr) {
