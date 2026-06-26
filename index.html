@@ -1,1086 +1,1275 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#e6f2ff">
-<meta name="apple-mobile-web-app-title" content="梦角传讯">
-<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoi546L5L7p5L7j8L+86LWEIiwic2hvcnRfbmFtZSI6IuW8teS4reW+veC7vCIsImRlc2NyaXB0aW9uIjoi546L5L7p5L7j8L+85LWE57uf54K55pyN5YqhIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dy3VuZF9jb2xvciI6IiNlNmYyZmYiLCJ0aGVtZV9jb2xvciI6IiM0MDg4ZTAiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiM0MDg4ZTAiLz48dGV4dCB4PSIyMCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJzYXJpIiBmb250LXNpemU9IjIwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+PC90ZXh0Pjwvc3ZnPiIsInNpemVzIjoiNDB4NDAiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0=">
-<title>梦角传讯</title>
-<style>
-html {
-    touch-action: manipulation;
-}
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    -webkit-tap-highlight-color: transparent;
-}
-body{
-    background: #f7f8fa;
-    color: #222;
-    min-height: 100vh;
-    padding-bottom: env(safe-area-inset-bottom);
-    overscroll-behavior-y: none;
-    display: flex;
-    flex-direction: column;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#e6f2ff">
+    <meta name="apple-mobile-web-app-title" content="梦角传讯">
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoi546L5L7p5L7j8L+86LWEIiwic2hvcnRfbmFtZSI6IuW8teS4reW+veC7vCIsImRlc2NyaXB0aW9uIjoi546L5L7p5L7j8L+85LWE57uf54K55pyN5YqhIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dy3VuZF9jb2xvciI6IiNlNmYyZmYiLCJ0aGVtZV9jb2xvciI6IiM0MDg4ZTAiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiM0MDg4ZTAiLz48dGV4dCB4PSIyMCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJzYXJpIiBmb250LXNpemU9IjIwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+PC90ZXh0Pjwvc3ZnPiIsInNpemVzIjoiNDB4NDAiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0=">
+    <title>梦角传讯</title>
+    <style>
+        html {
+            touch-action: manipulation;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: #f7f8fa;
+            color: #222;
+            min-height: 100vh;
+            padding-bottom: env(safe-area-inset-bottom);
+            overscroll-behavior-y: none;
+            display: flex;
+            flex-direction: column;
+        }
 
-/* 功能按钮栏 页面最顶部 */
-.func-bar{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 6px;
-    background: #ffffff;
-    border-bottom: 1px solid #eee;
-    flex-wrap: wrap;
-}
-.func-bar button{
-    padding:4px 8px;
-    border-radius:10px;
-    border:1px solid #ddd;
-    background:#f5f5f5;
-    font-size:15px;
-    color:#666;
-}
+        /* 功能按钮栏 页面最顶部 */
+        .func-bar {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 6px;
+            background: #ffffff;
+            border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
+        }
+        .func-bar button {
+            padding: 4px 10px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            background: #f5f5f5;
+            font-size: 14px;
+            color: #444;
+            white-space: nowrap;
+        }
+        .func-bar button:active {
+            background: #e5e5e5;
+        }
 
-/* 顶部状态栏（仅名称在线状态） */
-.top-bar{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 6px;
-    background: #ffffff;
-    border-bottom: 1px solid #eee;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-.top-bar span{
-    font-size: 18px;
-    color: #333;
-    font-weight: 500;
-}
-.top-bar .dot {
-    width: 7px;
-    height: 7px;
-    background-color: #4caf50;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 4px;
-}
+        /* 顶部状态栏 */
+        .top-bar {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 6px;
+            background: #ffffff;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .top-bar span {
+            font-size: 18px;
+            color: #333;
+            font-weight: 500;
+        }
+        .top-bar .dot {
+            width: 7px;
+            height: 7px;
+            background-color: #4caf50;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
 
-/* 通用弹窗遮罩 */
-.mask{
-    position: fixed;
-    inset:0;
-    background:rgba(0,0,0,0.5);
-    z-index:99;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:10px;
-}
-.pop{
-    width:100%;
-    max-width:420px;
-    background:#fff;
-    border-radius:14px;
-    padding:16px;
-}
-.pop h3{
-    font-size:18px;
-    margin-bottom:12px;
-}
-.pop textarea{
-    width:100%;
-    height:100px;
-    font-size:16px;
-    padding:8px;
-    border:1px solid #ddd;
-    border-radius:8px;
-    margin-bottom:10px;
-}
-.pop .file-box{
-    margin-bottom:10px;
-}
-.pop .btn-row{
-    display:flex;
-    gap:8px;
-    justify-content:flex-end;
-}
-.pop button{
-    padding:6px 12px;
-    border-radius:8px;
-    border:none;
-    font-size:15px;
-}
-.btn-blue{
-    background:#4088e0;
-    color:#fff;
-}
-.btn-red{
-    background:#f44336;
-    color:#fff;
-}
-.btn-gray{
-    background:#999;
-    color:#fff;
-}
+        /* 通用弹窗遮罩 */
+        .mask {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+        .pop {
+            width: 100%;
+            max-width: 420px;
+            background: #fff;
+            border-radius: 14px;
+            padding: 16px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .pop h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+        .pop textarea {
+            width: 100%;
+            height: 100px;
+            font-size: 16px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+        .pop .file-box {
+            margin-bottom: 10px;
+        }
+        .pop .btn-row {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+        .pop button {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .btn-blue {
+            background: #4088e0;
+            color: #fff;
+        }
+        .btn-blue:active {
+            background: #2a6fb8;
+        }
+        .btn-red {
+            background: #f44336;
+            color: #fff;
+        }
+        .btn-red:active {
+            background: #c62828;
+        }
+        .btn-gray {
+            background: #999;
+            color: #fff;
+        }
+        .btn-gray:active {
+            background: #777;
+        }
 
-/* 头像设置弹窗 */
-.pop .avatar-setting{
-    display:flex;
-    gap:12px;
-    margin-bottom:12px;
-}
-.pop .avatar-item{
-    flex:1;
-    text-align:center;
-}
-.pop .avatar-preview{
-    width:64px;
-    height:64px;
-    border-radius:50%;
-    background:#eee;
-    margin:0 auto 8px;
-    overflow:hidden;
-}
-.pop .avatar-preview img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-.pop input[type="file"]{
-    width:100%;
-    font-size:14px;
-}
+        /* 头像设置弹窗 */
+        .pop .avatar-setting {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .pop .avatar-item {
+            flex: 1;
+            text-align: center;
+        }
+        .pop .avatar-preview {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #eee;
+            margin: 0 auto 8px;
+            overflow: hidden;
+        }
+        .pop .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .pop input[type="file"] {
+            width: 100%;
+            font-size: 14px;
+        }
 
-/* 字卡查看弹窗样式 */
-.card-list{
-    max-height: 240px;
-    overflow-y: auto;
-    border:1px solid #eee;
-    border-radius:8px;
-    margin:8px 0 12px;
-}
-.card-item{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:8px 10px;
-    border-bottom:1px solid #eee;
-    font-size:16px;
-    gap:8px;
-}
-.card-item:last-child{
-    border-bottom:none;
-}
-.card-item .del-btn{
-    flex-shrink:0;
-    padding:2px 6px;
-    font-size:13px;
-}
-.card-bottom-btns{
-    display:flex;
-    gap:8px;
-    margin-top:10px;
-}
+        /* 字卡查看弹窗样式 */
+        .card-list {
+            max-height: 240px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin: 8px 0 12px;
+        }
+        .card-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+            gap: 8px;
+        }
+        .card-item:last-child {
+            border-bottom: none;
+        }
+        .card-item .del-btn {
+            flex-shrink: 0;
+            padding: 2px 6px;
+            font-size: 13px;
+        }
+        .card-bottom-btns {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .card-bottom-btns button {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+        }
 
-/* 日历弹窗样式 */
-.calendar-wrap{
-    width:100%;
-}
-.calendar-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:12px;
-}
-.calendar-header h3{
-    margin:0;
-}
-.calendar-nav button{
-    background:none;
-    border:none;
-    font-size:22px;
-    padding:0 8px;
-}
-.calendar-role-tab{
-    display:flex;
-    gap:8px;
-    margin-bottom:10px;
-}
-.calendar-role-tab button{
-    flex:1;
-    padding:6px;
-    border:1px solid #ddd;
-    border-radius:8px;
-    background:#f8f8f8;
-}
-.calendar-role-tab button.active{
-    background:#4088e0;
-    color:#fff;
-    border-color:#4088e0;
-}
-.emoji-select{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-    margin-bottom:12px;
-}
-.emoji-item{
-    width:40px;
-    height:40px;
-    font-size:22px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border:1px solid #eee;
-    border-radius:8px;
-    position:relative;
-}
-.emoji-item.active{
-    border:2px solid #4088e0;
-}
-.emoji-item .emo-del{
-    position:absolute;
-    top:-4px;
-    right:-4px;
-    width:14px;
-    height:14px;
-    font-size:10px;
-    background:#f44336;
-    color:#fff;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-.calendar-week{
-    display:grid;
-    grid-template-columns: repeat(7, 1fr);
-    text-align:center;
-    margin-bottom:6px;
-}
-.calendar-week span{
-    font-size:14px;
-    color:#666;
-}
-.calendar-days{
-    display:grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap:4px;
-}
-.day-cell{
-    aspect-ratio:1/1;
-    border:1px solid #eee;
-    border-radius:8px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    font-size:15px;
-    position:relative;
-}
-.day-cell.today{
-    border:2px solid #4caf50;
-}
-.day-cell .emo-mark{
-    font-size:16px;
-    position:absolute;
-    bottom:2px;
-}
-.calendar-bottom-btn{
-    display:grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap:8px;
-    margin-top:14px;
-}
-.calendar-add-emo-btn{
-    width:100%;
-    margin-top:8px;
-}
+        /* 日历弹窗样式 */
+        .calendar-wrap {
+            width: 100%;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .calendar-header h3 {
+            margin: 0;
+        }
+        .calendar-nav button {
+            background: none;
+            border: none;
+            font-size: 22px;
+            padding: 0 8px;
+            cursor: pointer;
+        }
+        .calendar-role-tab {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .calendar-role-tab button {
+            flex: 1;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f8f8f8;
+            cursor: pointer;
+        }
+        .calendar-role-tab button.active {
+            background: #4088e0;
+            color: #fff;
+            border-color: #4088e0;
+        }
+        .emoji-select {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .emoji-item {
+            width: 40px;
+            height: 40px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            position: relative;
+            cursor: pointer;
+        }
+        .emoji-item.active {
+            border: 2px solid #4088e0;
+        }
+        .emoji-item .emo-del {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 14px;
+            height: 14px;
+            font-size: 10px;
+            background: #f44336;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .calendar-week {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        .calendar-week span {
+            font-size: 14px;
+            color: #666;
+        }
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        .day-cell {
+            aspect-ratio: 1/1;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+        .day-cell.today {
+            border: 2px solid #4caf50;
+        }
+        .day-cell .emo-mark {
+            font-size: 16px;
+            position: absolute;
+            bottom: 2px;
+        }
+        .calendar-bottom-btn {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-top: 14px;
+        }
+        .calendar-bottom-btn button {
+            padding: 6px 0;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .calendar-add-emo-btn {
+            width: 100%;
+            margin-top: 8px;
+            padding: 6px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
 
-/* 自定义情绪弹窗 */
-.emo-edit-item{
-    display:flex;
-    gap:8px;
-    align-items:center;
-    margin-bottom:8px;
-}
-.emo-edit-item input{
-    padding:6px;
-    border:1px solid #ddd;
-    border-radius:6px;
-    flex:1;
-}
-.emo-list-box{
-    max-height:160px;
-    overflow-y:auto;
-    border:1px solid #eee;
-    border-radius:8px;
-    padding:8px;
-    margin:10px 0;
-}
+        /* 自定义情绪弹窗 */
+        .emo-edit-item {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .emo-edit-item input {
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            flex: 1;
+            font-size: 14px;
+        }
+        .emo-list-box {
+            max-height: 160px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 8px;
+            margin: 10px 0;
+        }
+        .emo-list-box .emo-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .emo-list-box .emo-row:last-child {
+            border-bottom: none;
+        }
 
-/* 聊天区域 */
-.chat-box{
-    flex: 1;
-    padding: 8px 6px;
-    height: calc(100vh - 160px - env(safe-area-inset-bottom) - 60px);
-    overflow-y: auto;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
+        /* 聊天区域 */
+        .chat-box {
+            flex: 1;
+            padding: 8px 6px;
+            height: calc(100vh - 160px - env(safe-area-inset-bottom) - 60px);
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
 
-/* 单条消息容器：头像+气泡 */
-.chat-row{
-    display:flex;
-    align-items:flex-end;
-    gap:8px;
-    max-width:100%;
-}
-.chat-row.user{
-    justify-content:flex-end;
-}
-.chat-row.ai{
-    justify-content:flex-start;
-}
+        /* 单条消息容器 */
+        .chat-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            max-width: 100%;
+        }
+        .chat-row.user {
+            justify-content: flex-end;
+        }
+        .chat-row.ai {
+            justify-content: flex-start;
+        }
 
-.avatar{
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    background:#ddd;
-    flex-shrink:0;
-    overflow:hidden;
-}
-.avatar img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ddd;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-/* 聊天气泡 */
-.chat-item{
-    padding: 8px 12px;
-    border-radius: 14px;
-    line-height: 1.5;
-    font-size: 22px;
-    max-width: 75%;
-    word-break: break-all;
-}
-.chat-item.system{
-    align-self: center;
-    background: #eef2f7;
-    color: #666;
-    font-size: 16px;
-    text-align: center;
-    max-width: 85%;
-    border-radius: 8px;
-    padding: 4px 10px;
-}
-.chat-item.user{
-    background: #4088e0;
-    color: #fff;
-    border-bottom-right-radius: 3px;
-}
-.chat-item.ai{
-    background: #ffffff;
-    border-bottom-left-radius: 3px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
-}
+        /* 聊天气泡 */
+        .chat-item {
+            padding: 8px 12px;
+            border-radius: 14px;
+            line-height: 1.5;
+            font-size: 22px;
+            max-width: 75%;
+            word-break: break-all;
+        }
+        .chat-item.system {
+            align-self: center;
+            background: #eef2f7;
+            color: #666;
+            font-size: 16px;
+            text-align: center;
+            max-width: 85%;
+            border-radius: 8px;
+            padding: 4px 10px;
+        }
+        .chat-item.user {
+            background: #4088e0;
+            color: #fff;
+            border-bottom-right-radius: 3px;
+        }
+        .chat-item.ai {
+            background: #ffffff;
+            border-bottom-left-radius: 3px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+        }
 
-/* 底部输入区域 */
-.chat-input-area{
-    position: fixed;
-    bottom: calc(6px + env(safe-area-inset-bottom));
-    left: 6px;
-    right: 6px;
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    background: transparent;
-}
-.chat-input-area input{
-    flex: 1;
-    padding: 10px 12px;
-    border: 1px solid #e5e7eb;
-    border-radius: 18px;
-    font-size: 16px !important;
-    min-font-size: 16px;
-    outline: none;
-    background: #fff;
-}
-.chat-input-area button{
-    width: 70px;
-    padding: 10px 0;
-    border-radius: 18px;
-    border: none;
-    background: #4088e0;
-    color: #fff;
-    font-size: 20px;
-    font-weight: 500;
-    transition: background 0.2s;
-}
-.chat-input-area button:active {
-    background: #2a6fb8;
-}
-</style>
+        /* 底部输入区域 */
+        .chat-input-area {
+            position: fixed;
+            bottom: calc(6px + env(safe-area-inset-bottom));
+            left: 6px;
+            right: 6px;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            background: transparent;
+        }
+        .chat-input-area input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            font-size: 16px !important;
+            min-font-size: 16px;
+            outline: none;
+            background: #fff;
+        }
+        .chat-input-area button {
+            width: 70px;
+            padding: 10px 0;
+            border-radius: 18px;
+            border: none;
+            background: #4088e0;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .chat-input-area button:active {
+            background: #2a6fb8;
+        }
+
+        /* 导入提示 */
+        .import-hint {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 6px;
+            line-height: 1.6;
+        }
+        .import-hint code {
+            background: #f0f0f0;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+    </style>
 </head>
 <body>
 
-<!-- 功能按钮栏 页面最顶端 -->
-<div class="func-bar">
-    <button id="avatarBtn">设置头像</button>
-    <button id="importBtn">导入字卡</button>
-    <button id="viewCardBtn">查看字卡</button>
-    <button id="calendarBtn">情绪日历</button>
-    <button id="clearRecordBtn">清空记录</button>
-</div>
+    <!-- 功能按钮栏 -->
+    <div class="func-bar">
+        <button id="avatarBtn">设置头像</button>
+        <button id="importBtn">导入字卡</button>
+        <button id="viewCardBtn">查看字卡</button>
+        <button id="calendarBtn">情绪日历</button>
+        <button id="clearRecordBtn">清空记录</button>
+    </div>
 
-<!-- 名称在线状态栏 -->
-<div class="top-bar">
-    <span>梦角</span>
-    <span class="dot"></span>
-    <span>在线倾听中...</span>
-</div>
+    <!-- 名称在线状态栏 -->
+    <div class="top-bar">
+        <span>梦角</span>
+        <span class="dot"></span>
+        <span>在线倾听中...</span>
+    </div>
 
-<div class="chat-box" id="chatBox">
-</div>
+    <div class="chat-box" id="chatBox"></div>
 
-<div class="chat-input-area">
-    <input id="msgInput" placeholder="输入你想说的话…" onkeydown="if(event.key==='Enter') sendMsg()">
-    <button onclick="sendMsg()">发送</button>
-</div>
+    <div class="chat-input-area">
+        <input id="msgInput" placeholder="输入你想说的话…" onkeydown="if(event.key==='Enter') sendMsg()">
+        <button onclick="sendMsg()">发送</button>
+    </div>
 
-<!-- 头像设置弹窗 -->
-<div class="mask" id="avatarMask">
-    <div class="pop">
-        <h3>设置双方头像</h3>
-        <div class="avatar-setting">
-            <div class="avatar-item">
-                <div class="avatar-preview" id="userAvatarPreview"></div>
-                <p style="font-size:14px;margin-bottom:8px;">我的头像</p>
-                <input type="file" id="userAvatarInput" accept="image/*">
+    <!-- 头像设置弹窗 -->
+    <div class="mask" id="avatarMask">
+        <div class="pop">
+            <h3>设置双方头像</h3>
+            <div class="avatar-setting">
+                <div class="avatar-item">
+                    <div class="avatar-preview" id="userAvatarPreview"></div>
+                    <p style="font-size:14px;margin-bottom:8px;">我的头像</p>
+                    <input type="file" id="userAvatarInput" accept="image/*">
+                </div>
+                <div class="avatar-item">
+                    <div class="avatar-preview" id="aiAvatarPreview"></div>
+                    <p style="font-size:14px;margin-bottom:8px;">梦角头像</p>
+                    <input type="file" id="aiAvatarInput" accept="image/*">
+                </div>
             </div>
-            <div class="avatar-item">
-                <div class="avatar-preview" id="aiAvatarPreview"></div>
-                <p style="font-size:14px;margin-bottom:8px;">梦角头像</p>
-                <input type="file" id="aiAvatarInput" accept="image/*">
+            <div class="btn-row">
+                <button id="avatarCancel">取消</button>
+                <button class="btn-blue" id="avatarConfirm">保存头像</button>
             </div>
-        </div>
-        <div class="btn-row">
-            <button id="avatarCancel">取消</button>
-            <button class="btn-blue" id="avatarConfirm">保存头像</button>
         </div>
     </div>
-</div>
 
-<!-- 导入字卡弹窗 -->
-<div class="mask" id="importMask">
-    <div class="pop">
-        <h3>批量导入回复字卡</h3>
-        <p style="font-size:14px;margin-bottom:6px;">方式1：普通文本（每行一句）</p>
-        <p style="font-size:14px;margin-bottom:8px;">方式2：JSON数组 ["句子1","句子2"]，自动清除引号、逗号、空格</p>
-        <textarea id="textArea" placeholder="普通文本示例：
+    <!-- 导入字卡弹窗 -->
+    <div class="mask" id="importMask">
+        <div class="pop">
+            <h3>批量导入回复字卡</h3>
+            <div class="import-hint">
+                <strong>支持三种方式（可同时使用）：</strong><br>
+                ① 普通文本：每行一句<br>
+                ② JSON数组：<code>["句子1","句子2"]</code><br>
+                ③ 上传 .txt / .json 文件
+            </div>
+            <textarea id="textArea" placeholder="普通文本示例：
 我一直陪着你
 别难过
 
 JSON示例：
-["我一直陪着你","别难过","我会一直在"]"></textarea>
-        <div class="file-box">
-            <p style="font-size:14px;margin-bottom:8px;">方式3：上传本地txt/json文件</p>
-            <input type="file" id="fileInput" accept=".txt,.json">
-        </div>
-        <div class="btn-row">
-            <button id="importCancel">取消</button>
-            <button class="btn-blue" id="importConfirm">确认导入</button>
-        </div>
-    </div>
-</div>
-
-<!-- 查看全部字卡弹窗（删除功能） -->
-<div class="mask" id="viewCardMask">
-    <div class="pop">
-        <h3>梦角自动回复字卡列表</h3>
-        <p style="font-size:14px;margin-bottom:8px;">所有梦角可自动回复文案，单条可删除</p>
-        <div class="card-list" id="cardListWrap"></div>
-        <div class="card-bottom-btns">
-            <button class="btn-red" id="clearAllCard">清空全部字卡</button>
-            <button id="viewCardClose">关闭</button>
-        </div>
-    </div>
-</div>
-
-<!-- 情绪日历弹窗 -->
-<div class="mask" id="calendarMask">
-    <div class="pop calendar-wrap">
-        <div class="calendar-header">
-            <div class="calendar-nav">
-                <button id="calPrev">&lt;</button>
+[&quot;我一直陪着你&quot;,&quot;别难过&quot;,&quot;我会一直在&quot;]"></textarea>
+            <div class="file-box">
+                <p style="font-size:14px;margin-bottom:8px;"> 上传文件（.txt / .json）</p>
+                <input type="file" id="fileInput" accept=".txt,.json">
             </div>
-            <h3 id="calTitle">2026年6月</h3>
-            <div class="calendar-nav">
-                <button id="calNext">&gt;</button>
+            <div class="btn-row">
+                <button id="importCancel">取消</button>
+                <button class="btn-blue" id="importConfirm">确认导入</button>
             </div>
         </div>
-        <div class="calendar-role-tab">
-            <button id="tabUser" class="active">我的情绪</button>
-            <button id="tabAi">梦角情绪</button>
-        </div>
-        <div class="emoji-select" id="emojiBox"></div>
-        <button class="btn-gray calendar-add-emo-btn" id="openEditEmo">自定义管理情绪</button>
-        <div class="calendar-week">
-            <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
-        </div>
-        <div class="calendar-days" id="calDaysBox"></div>
-        <div class="calendar-bottom-btn">
-            <button id="calClearDay">清空当日标记</button>
-            <button class="btn-blue" id="calSave">保存当日情绪</button>
-            <button id="calClose">关闭</button>
+    </div>
+
+    <!-- 查看全部字卡弹窗 -->
+    <div class="mask" id="viewCardMask">
+        <div class="pop">
+            <h3>梦角自动回复字卡列表</h3>
+            <p style="font-size:14px;margin-bottom:8px;">所有梦角可自动回复文案，单条可删除</p>
+            <div class="card-list" id="cardListWrap"></div>
+            <div class="card-bottom-btns">
+                <button class="btn-red" id="clearAllCard">清空全部字卡</button>
+                <button id="viewCardClose">关闭</button>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- 自定义情绪编辑弹窗 -->
-<div class="mask" id="emoEditMask">
-    <div class="pop">
-        <h3>自定义情绪管理</h3>
-        <div class="emo-edit-item">
-            <input id="newEmoChar" placeholder="输入表情，如 ">
-            <input id="newEmoText" placeholder="情绪备注，如 想念">
-            <button class="btn-blue" id="addNewEmo">添加</button>
-        </div>
-        <div class="emo-list-box" id="customEmoList"></div>
-        <div class="btn-row">
-            <button id="closeEmoEdit">关闭</button>
+    <!-- 情绪日历弹窗 -->
+    <div class="mask" id="calendarMask">
+        <div class="pop calendar-wrap">
+            <div class="calendar-header">
+                <div class="calendar-nav">
+                    <button id="calPrev">&lt;</button>
+                </div>
+                <h3 id="calTitle">2026年6月</h3>
+                <div class="calendar-nav">
+                    <button id="calNext">&gt;</button>
+                </div>
+            </div>
+            <div class="calendar-role-tab">
+                <button id="tabUser" class="active">我的情绪</button>
+                <button id="tabAi">梦角情绪</button>
+            </div>
+            <div class="emoji-select" id="emojiBox"></div>
+            <button class="btn-gray calendar-add-emo-btn" id="openEditEmo">自定义管理情绪</button>
+            <div class="calendar-week">
+                <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+            </div>
+            <div class="calendar-days" id="calDaysBox"></div>
+            <div class="calendar-bottom-btn">
+                <button id="calClearDay">清空当日标记</button>
+                <button class="btn-blue" id="calSave">保存当日情绪</button>
+                <button id="calClose">关闭</button>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-const REPLY_KEY = "dreamReplyList";
-const STORAGE_KEY = "dreamChatRecord";
-const USER_AVATAR_KEY = "userAvatar";
-const AI_AVATAR_KEY = "aiAvatar";
-const CALENDAR_KEY = "dreamCalendarData";
-const CUSTOM_EMO_KEY = "dreamCustomEmo";
+    <!-- 自定义情绪编辑弹窗 -->
+    <div class="mask" id="emoEditMask">
+        <div class="pop">
+            <h3>自定义情绪管理</h3>
+            <div class="emo-edit-item">
+                <input id="newEmoChar" placeholder="输入表情，如 ">
+                <input id="newEmoText" placeholder="情绪备注，如 想念">
+                <button class="btn-blue" id="addNewEmo">添加</button>
+            </div>
+            <div class="emo-list-box" id="customEmoList"></div>
+            <div class="btn-row">
+                <button id="closeEmoEdit">关闭</button>
+            </div>
+        </div>
+    </div>
 
-let chatRecords = [];
-let replyList = [];
-let userAvatar = "";
-let aiAvatar = "";
-let calNowDate = new Date();
-let calActiveRole = "user";
-let calSelectEmo = "";
-let calendarData = {};
-const baseEmoList = ["","🥰","","","",""];
-let customEmoList = [];
-let allEmoList = [];
+    <script>
+        const REPLY_KEY = "dreamReplyList";
+        const STORAGE_KEY = "dreamChatRecord";
+        const USER_AVATAR_KEY = "userAvatar";
+        const AI_AVATAR_KEY = "aiAvatar";
+        const CALENDAR_KEY = "dreamCalendarData";
+        const CUSTOM_EMO_KEY = "dreamCustomEmo";
 
-// 情绪存储
-function loadCustomEmo(){
-    const raw = localStorage.getItem(CUSTOM_EMO_KEY);
-    if(raw) customEmoList = JSON.parse(raw);
-    mergeAllEmo();
-}
-function saveCustomEmo(){
-    localStorage.setItem(CUSTOM_EMO_KEY, JSON.stringify(customEmoList));
-    mergeAllEmo();
-}
-function mergeAllEmo(){
-    allEmoList = [...baseEmoList, ...customEmoList];
-}
+        let chatRecords = [];
+        let replyList = [];
+        let userAvatar = "";
+        let aiAvatar = "";
+        let calNowDate = new Date();
+        let calActiveRole = "user";
+        let calSelectEmo = "";
+        let calendarData = {};
+        const baseEmoList = ["", "🥰", "", "", "", ""];
+        let customEmoList = [];
+        let allEmoList = [];
 
-// 日历存储
-function loadCalendarData(){
-    const raw = localStorage.getItem(CALENDAR_KEY);
-    if(raw) calendarData = JSON.parse(raw);
-}
-function saveCalendarData(){
-    localStorage.setItem(CALENDAR_KEY, JSON.stringify(calendarData));
-}
-function getDateKey(dateObj){
-    const y = dateObj.getFullYear();
-    const m = String(dateObj.getMonth()+1).padStart(2,"0");
-    const d = String(dateObj.getDate()).padStart(2,"0");
-    return `${y}-${m}-${d}`;
-}
+        // ========== 核心修复：parseImportText - 只提取文本，去除JSON语法符号 ==========
+        function parseImportText(rawText) {
+            const result = [];
+            const trimText = rawText.trim();
+            if (!trimText) return result;
 
-// 渲染情绪面板
-function renderEmojiBox(){
-    const box = document.getElementById("emojiBox");
-    box.innerHTML = "";
-    allEmoList.forEach(emo=>{
-        const div = document.createElement("div");
-        div.className = "emoji-item";
-        div.dataset.emo = emo;
-        div.textContent = emo;
-        if(emo === calSelectEmo) div.classList.add("active");
-        if(!baseEmoList.includes(emo)){
-            const del = document.createElement("span");
-            del.className = "emo-del";
-            del.textContent = "×";
-            del.onclick = (e)=>{
-                e.stopPropagation();
-                if(confirm(`删除自定义情绪 ${emo}？`)){
-                    customEmoList = customEmoList.filter(item=>item !== emo);
-                    saveCustomEmo();
-                    renderEmojiBox();
-                    renderCalendar();
+            // 尝试智能提取：如果包含 [ 和 ]，尝试按JSON数组解析
+            if (trimText.includes('[') && trimText.includes(']')) {
+                // 尝试提取所有被引号包裹的字符串
+                const extracted = tryExtractJsonStrings(trimText);
+                if (extracted.length > 0) {
+                    return extracted;
                 }
             }
-            div.appendChild(del);
-        }
-        div.onclick = ()=>{
-            document.querySelectorAll(".emoji-item").forEach(i=>i.classList.remove("active"));
-            div.classList.add("active");
-            calSelectEmo = emo;
-        }
-        box.appendChild(div);
-    })
-}
 
-// 渲染日历（修复标记错乱）
-function renderCalendar(){
-    const y = calNowDate.getFullYear();
-    const m = calNowDate.getMonth();
-    document.getElementById("calTitle").textContent = `${y}年${m+1}月`;
-    const firstDay = new Date(y, m, 1);
-    const lastDay = new Date(y, m+1, 0);
-    const startWeek = firstDay.getDay();
-    const totalDays = lastDay.getDate();
-    const today = new Date();
-    const todayKey = getDateKey(today);
-    const box = document.getElementById("calDaysBox");
-    box.innerHTML = "";
-    for(let i=0;i<startWeek;i++){
-        const empty = document.createElement("div");
-        empty.className = "day-cell";
-        box.appendChild(empty);
-    }
-    for(let d=1;d<=totalDays;d++){
-        const cellDate = new Date(y,m,d);
-        const key = getDateKey(cellDate);
-        const cell = document.createElement("div");
-        cell.className = "day-cell";
-        if(key === todayKey) cell.classList.add("today");
-        cell.dataset.date = key;
-        cell.innerHTML = `<span>${d}</span>`;
-        if(calendarData[key]){
-            const markSpan = document.createElement("span");
-            markSpan.className = "emo-mark";
-            if(calActiveRole === "user" && calendarData[key].user){
-                markSpan.textContent = calendarData[key].user;
-            }else if(calActiveRole === "ai" && calendarData[key].ai){
-                markSpan.textContent = calendarData[key].ai;
+            // 降级方案：按行分割，清理每行
+            const lines = trimText.split(/\r?\n/);
+            for (const line of lines) {
+                let clean = line.trim();
+                if (!clean) continue;
+                // 如果行是JSON格式的残留（如带引号），尝试清理
+                clean = clean.replace(/^["']|["']$/g, '').trim();
+                // 去除行首行尾的中括号、逗号等（残留的JSON语法）
+                clean = clean.replace(/^[\[\]{}]/, '').replace(/[\[\]{}]$/, '').trim();
+                if (clean) result.push(clean);
             }
-            cell.appendChild(markSpan);
-        }
-        cell.onclick = ()=>{
-            document.querySelectorAll(".day-cell").forEach(c=>c.style.background="#fff");
-            cell.style.background="#eef6ff";
-        };
-        box.appendChild(cell);
-    }
-}
 
-// 自定义情绪列表渲染
-function renderCustomEmoList(){
-    const wrap = document.getElementById("customEmoList");
-    wrap.innerHTML = "";
-    if(customEmoList.length === 0){
-        wrap.innerHTML = "<p style='color:#666;font-size:14px;'>暂无自定义情绪，添加后显示在这里</p>";
-        return;
-    }
-    customEmoList.forEach(emo=>{
-        const row = document.createElement("div");
-        row.style.display="flex";
-        justifyContent:"space-between";
-        alignItems:"center";
-        row.style.padding="4px 0";
-        row.style.borderBottom="1px solid #eee";
-        row.innerHTML = `<span>${emo}</span><button class="btn-red" style="font-size:12px;padding:2px 6px;" data-emo="${emo}">删除</button>`;
-        wrap.appendChild(row);
-    })
-    document.querySelectorAll("#customEmoList button").forEach(btn=>{
-        btn.onclick = ()=>{
-            const e = btn.dataset.emo;
-            customEmoList = customEmoList.filter(item=>item !== e);
-            saveCustomEmo();
-            renderCustomEmoList();
-            renderEmojiBox();
-            renderCalendar();
+            return result;
         }
-    })
-}
 
-// 日历交互绑定
-function bindCalendarEvent(){
-    document.getElementById("tabUser").onclick = ()=>{
-        calActiveRole = "user";
-        document.getElementById("tabUser").classList.add("active");
-        document.getElementById("tabAi").classList.remove("active");
-        renderCalendar();
-    }
-    document.getElementById("tabAi").onclick = ()=>{
-        calActiveRole = "ai";
-        document.getElementById("tabAi").classList.add("active");
-        document.getElementById("tabUser").classList.remove("active");
-        renderCalendar();
-    }
-    document.getElementById("calPrev").onclick = ()=>{
-        calNowDate = new Date(calNowDate.getFullYear(), calNowDate.getMonth()-1, 1);
-        renderCalendar();
-    }
-    document.getElementById("calNext").onclick = ()=>{
-        calNowDate = new Date(calNowDate.getFullYear(), calNowDate.getMonth()+1, 1);
-        renderCalendar();
-    }
-    document.getElementById("calSave").onclick = ()=>{
-        if(!calSelectEmo){
-            alert("请先选择情绪表情！");
-            return;
-        }
-        const selected = document.querySelector(".day-cell[style*='background:#eef6ff']");
-        if(!selected){
-            alert("请先点击日期格子！");
-            return;
-        }
-        const key = selected.dataset.date;
-        if(!calendarData[key]) calendarData[key] = {};
-        calendarData[key][calActiveRole] = calSelectEmo;
-        saveCalendarData();
-        renderCalendar();
-        alert("情绪记录保存成功");
-    }
-    document.getElementById("calClearDay").onclick = ()=>{
-        const selected = document.querySelector(".day-cell[style*='background:#eef6ff']");
-        if(!selected){
-            alert("请先选择日期格子！");
-            return;
-        }
-        const key = selected.dataset.date;
-        if(calendarData[key] && calendarData[key][calActiveRole]){
-            delete calendarData[key][calActiveRole];
-            if(Object.keys(calendarData[key]).length === 0) delete calendarData[key];
-            saveCalendarData();
-            renderCalendar();
-            alert("已清空该日期情绪");
-        }else{
-            alert("该日期暂无记录");
-        }
-    }
-    document.getElementById("openEditEmo").onclick = ()=>{
-        document.getElementById("emoEditMask").style.display = "flex";
-        renderCustomEmoList();
-    }
-    document.getElementById("calClose").onclick = ()=>{
-        document.getElementById("calendarMask").style.display = "none";
-        calSelectEmo = "";
-    }
-    document.getElementById("closeEmoEdit").onclick = ()=>{
-        document.getElementById("emoEditMask").style.display = "none";
-    }
-    document.getElementById("addNewEmo").onclick = ()=>{
-        const char = document.getElementById("newEmoChar").value.trim();
-        const text = document.getElementById("newEmoText").value.trim();
-        if(!char){
-            alert("请输入表情符号");
-            return;
-        }
-        const fullEmo = `${char} ${text}`;
-        if(allEmoList.includes(fullEmo)){
-            alert("该情绪已存在");
-            return;
-        }
-        customEmoList.push(fullEmo);
-        saveCustomEmo();
-        renderCustomEmoList();
-        renderEmojiBox();
-        document.getElementById("newEmoChar").value = "";
-        document.getElementById("newEmoText").value = "";
-        alert("自定义情绪添加成功");
-    }
-    document.getElementById("calendarBtn").onclick = ()=>{
-        calNowDate = new Date();
-        calActiveRole = "user";
-        calSelectEmo = "";
-        document.getElementById("tabUser").classList.add("active");
-        document.getElementById("tabAi").classList.remove("active");
-        renderEmojiBox();
-        renderCalendar();
-        document.getElementById("calendarMask").style.display = "flex";
-    }
-}
+        // 辅助函数：从混合文本中提取JSON数组中的字符串
+        function tryExtractJsonStrings(text) {
+            const result = [];
+            // 尝试多种JSON解析方式
 
-// 字卡基础逻辑
-function loadReply(){
-    const local = localStorage.getItem(REPLY_KEY);
-    if(local){
-        replyList = JSON.parse(local);
-    }else{
-        replyList = [
-            "我一直在呢，不要难过。",
-            "我懂你的情绪，你已经很努力了。",
-            "慢慢来，我会一直陪着你。",
-            "你超棒的，请多偏爱自己一点。",
-            "所有委屈我都接住了。",
-            "别焦虑，一切都会慢慢变好。",
-            "我永远站在你这边。",
-            "你的心意，我全部收到。",
-            "累了就停下来，我陪着你休息。",
-            "你值得所有温柔与偏爱。"
-        ];
-        saveReply();
-    }
-}
-function saveReply(){
-    localStorage.setItem(REPLY_KEY, JSON.stringify(replyList));
-}
-function renderCardList(){
-    const wrap = document.getElementById("cardListWrap");
-    wrap.innerHTML = "";
-    replyList.forEach((text, index)=>{
-        const div = document.createElement("div");
-        div.className = "card-item";
-        div.innerHTML = `<span>${text}</span><button class="del-btn btn-red" data-idx="${index}">删除</button>`;
-        wrap.appendChild(div);
-    })
-    document.querySelectorAll(".del-btn").forEach(btn=>{
-        btn.onclick = (e)=>{
-            e.stopPropagation();
-            const idx = Number(btn.dataset.idx);
-            if(confirm(`确定删除这条字卡：\n${replyList[idx]}`)){
-                replyList.splice(idx,1);
+            // 方式1：标准JSON解析
+            try {
+                const parsed = JSON.parse(text);
+                if (Array.isArray(parsed)) {
+                    for (const item of parsed) {
+                        if (typeof item === 'string') {
+                            const clean = item.replace(/[\r\n]/g, '').trim();
+                            if (clean) result.push(clean);
+                        } else if (typeof item === 'number' || typeof item === 'boolean') {
+                            result.push(String(item));
+                        }
+                    }
+                    if (result.length > 0) return result;
+                }
+            } catch (_) { /* 继续尝试 */ }
+
+            // 方式2：用正则提取所有 "..." 或 '...' 中的内容
+            // 先尝试匹配双引号
+            let match;
+            const doubleQuoteRegex = /"([^"\\]*(?:\\.[^"\\]*)*)"/g;
+            let found = false;
+            while ((match = doubleQuoteRegex.exec(text)) !== null) {
+                const content = match[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\').trim();
+                if (content) {
+                    result.push(content);
+                    found = true;
+                }
+            }
+            if (found) return result;
+
+            // 再尝试匹配单引号
+            const singleQuoteRegex = /'([^'\\]*(?:\\.[^'\\]*)*)'/g;
+            while ((match = singleQuoteRegex.exec(text)) !== null) {
+                const content = match[1].replace(/\\'/g, "'").replace(/\\\\/g, '\\').trim();
+                if (content) {
+                    result.push(content);
+                    found = true;
+                }
+            }
+            if (found) return result;
+
+            // 方式3：尝试提取 [ 和 ] 之间的内容，然后分割
+            const bracketMatch = text.match(/\[([\s\S]*?)\]/);
+            if (bracketMatch) {
+                const inner = bracketMatch[1];
+                // 按逗号分割，但要注意字符串内的逗号
+                const parts = splitByCommaOutsideQuotes(inner);
+                for (const part of parts) {
+                    let clean = part.trim();
+                    // 去除首尾引号
+                    clean = clean.replace(/^["']|["']$/g, '').trim();
+                    // 去除首尾的空白、逗号、括号残留
+                    clean = clean.replace(/^[\s,]+|[\s,]+$/g, '').trim();
+                    if (clean) result.push(clean);
+                }
+                if (result.length > 0) return result;
+            }
+
+            return result;
+        }
+
+        // 辅助：按逗号分割，但忽略引号内的逗号
+        function splitByCommaOutsideQuotes(str) {
+            const parts = [];
+            let current = '';
+            let inQuote = false;
+            let quoteChar = '';
+            for (let i = 0; i < str.length; i++) {
+                const ch = str[i];
+                if (ch === '"' || ch === "'") {
+                    if (!inQuote) {
+                        inQuote = true;
+                        quoteChar = ch;
+                    } else if (ch === quoteChar && str[i - 1] !== '\\') {
+                        inQuote = false;
+                    }
+                    current += ch;
+                } else if (ch === ',' && !inQuote) {
+                    parts.push(current);
+                    current = '';
+                } else {
+                    current += ch;
+                }
+            }
+            if (current.trim()) parts.push(current);
+            return parts;
+        }
+
+        // ========== 情绪存储 ==========
+        function loadCustomEmo() {
+            const raw = localStorage.getItem(CUSTOM_EMO_KEY);
+            if (raw) customEmoList = JSON.parse(raw);
+            mergeAllEmo();
+        }
+
+        function saveCustomEmo() {
+            localStorage.setItem(CUSTOM_EMO_KEY, JSON.stringify(customEmoList));
+            mergeAllEmo();
+        }
+
+        function mergeAllEmo() {
+            allEmoList = [...baseEmoList, ...customEmoList];
+        }
+
+        // ========== 日历存储 ==========
+        function loadCalendarData() {
+            const raw = localStorage.getItem(CALENDAR_KEY);
+            if (raw) calendarData = JSON.parse(raw);
+        }
+
+        function saveCalendarData() {
+            localStorage.setItem(CALENDAR_KEY, JSON.stringify(calendarData));
+        }
+
+        function getDateKey(dateObj) {
+            const y = dateObj.getFullYear();
+            const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+            const d = String(dateObj.getDate()).padStart(2, "0");
+            return `${y}-${m}-${d}`;
+        }
+
+        // ========== 渲染情绪面板 ==========
+        function renderEmojiBox() {
+            const box = document.getElementById("emojiBox");
+            box.innerHTML = "";
+            allEmoList.forEach(emo => {
+                const div = document.createElement("div");
+                div.className = "emoji-item";
+                div.dataset.emo = emo;
+                div.textContent = emo;
+                if (emo === calSelectEmo) div.classList.add("active");
+                if (!baseEmoList.includes(emo)) {
+                    const del = document.createElement("span");
+                    del.className = "emo-del";
+                    del.textContent = "×";
+                    del.onclick = (e) => {
+                        e.stopPropagation();
+                        if (confirm(`删除自定义情绪 ${emo}？`)) {
+                            customEmoList = customEmoList.filter(item => item !== emo);
+                            saveCustomEmo();
+                            renderEmojiBox();
+                            renderCalendar();
+                        }
+                    };
+                    div.appendChild(del);
+                }
+                div.onclick = () => {
+                    document.querySelectorAll(".emoji-item").forEach(i => i.classList.remove("active"));
+                    div.classList.add("active");
+                    calSelectEmo = emo;
+                };
+                box.appendChild(div);
+            });
+        }
+
+        // ========== 渲染日历 ==========
+        function renderCalendar() {
+            const y = calNowDate.getFullYear();
+            const m = calNowDate.getMonth();
+            document.getElementById("calTitle").textContent = `${y}年${m + 1}月`;
+            const firstDay = new Date(y, m, 1);
+            const lastDay = new Date(y, m + 1, 0);
+            const startWeek = firstDay.getDay();
+            const totalDays = lastDay.getDate();
+            const today = new Date();
+            const todayKey = getDateKey(today);
+            const box = document.getElementById("calDaysBox");
+            box.innerHTML = "";
+            for (let i = 0; i < startWeek; i++) {
+                const empty = document.createElement("div");
+                empty.className = "day-cell";
+                box.appendChild(empty);
+            }
+            for (let d = 1; d <= totalDays; d++) {
+                const cellDate = new Date(y, m, d);
+                const key = getDateKey(cellDate);
+                const cell = document.createElement("div");
+                cell.className = "day-cell";
+                if (key === todayKey) cell.classList.add("today");
+                cell.dataset.date = key;
+                cell.innerHTML = `<span>${d}</span>`;
+                if (calendarData[key]) {
+                    const markSpan = document.createElement("span");
+                    markSpan.className = "emo-mark";
+                    if (calActiveRole === "user" && calendarData[key].user) {
+                        markSpan.textContent = calendarData[key].user;
+                    } else if (calActiveRole === "ai" && calendarData[key].ai) {
+                        markSpan.textContent = calendarData[key].ai;
+                    }
+                    if (markSpan.textContent) cell.appendChild(markSpan);
+                }
+                cell.onclick = () => {
+                    document.querySelectorAll(".day-cell").forEach(c => c.style.background = "");
+                    cell.style.background = "#eef6ff";
+                };
+                box.appendChild(cell);
+            }
+        }
+
+        // ========== 自定义情绪列表渲染 ==========
+        function renderCustomEmoList() {
+            const wrap = document.getElementById("customEmoList");
+            wrap.innerHTML = "";
+            if (customEmoList.length === 0) {
+                wrap.innerHTML = "<p style='color:#666;font-size:14px;'>暂无自定义情绪，添加后显示在这里</p>";
+                return;
+            }
+            customEmoList.forEach(emo => {
+                const row = document.createElement("div");
+                row.className = "emo-row";
+                row.innerHTML = `<span>${emo}</span><button class="btn-red" style="font-size:12px;padding:2px 6px;" data-emo="${emo}">删除</button>`;
+                wrap.appendChild(row);
+            });
+            document.querySelectorAll("#customEmoList button").forEach(btn => {
+                btn.onclick = () => {
+                    const e = btn.dataset.emo;
+                    customEmoList = customEmoList.filter(item => item !== e);
+                    saveCustomEmo();
+                    renderCustomEmoList();
+                    renderEmojiBox();
+                    renderCalendar();
+                };
+            });
+        }
+
+        // ========== 日历交互绑定 ==========
+        function bindCalendarEvent() {
+            document.getElementById("tabUser").onclick = () => {
+                calActiveRole = "user";
+                document.getElementById("tabUser").classList.add("active");
+                document.getElementById("tabAi").classList.remove("active");
+                renderCalendar();
+            };
+            document.getElementById("tabAi").onclick = () => {
+                calActiveRole = "ai";
+                document.getElementById("tabAi").classList.add("active");
+                document.getElementById("tabUser").classList.remove("active");
+                renderCalendar();
+            };
+            document.getElementById("calPrev").onclick = () => {
+                calNowDate = new Date(calNowDate.getFullYear(), calNowDate.getMonth() - 1, 1);
+                renderCalendar();
+            };
+            document.getElementById("calNext").onclick = () => {
+                calNowDate = new Date(calNowDate.getFullYear(), calNowDate.getMonth() + 1, 1);
+                renderCalendar();
+            };
+            document.getElementById("calSave").onclick = () => {
+                if (!calSelectEmo) {
+                    alert("请先选择情绪表情！");
+                    return;
+                }
+                const selected = document.querySelector(".day-cell[style*='background:#eef6ff']");
+                if (!selected) {
+                    alert("请先点击日期格子！");
+                    return;
+                }
+                const key = selected.dataset.date;
+                if (!calendarData[key]) calendarData[key] = {};
+                calendarData[key][calActiveRole] = calSelectEmo;
+                saveCalendarData();
+                renderCalendar();
+                alert("情绪记录保存成功");
+            };
+            document.getElementById("calClearDay").onclick = () => {
+                const selected = document.querySelector(".day-cell[style*='background:#eef6ff']");
+                if (!selected) {
+                    alert("请先选择日期格子！");
+                    return;
+                }
+                const key = selected.dataset.date;
+                if (calendarData[key] && calendarData[key][calActiveRole]) {
+                    delete calendarData[key][calActiveRole];
+                    if (Object.keys(calendarData[key]).length === 0) delete calendarData[key];
+                    saveCalendarData();
+                    renderCalendar();
+                    alert("已清空该日期情绪");
+                } else {
+                    alert("该日期暂无记录");
+                }
+            };
+            document.getElementById("openEditEmo").onclick = () => {
+                document.getElementById("emoEditMask").style.display = "flex";
+                renderCustomEmoList();
+            };
+            document.getElementById("calClose").onclick = () => {
+                document.getElementById("calendarMask").style.display = "none";
+                calSelectEmo = "";
+            };
+            document.getElementById("closeEmoEdit").onclick = () => {
+                document.getElementById("emoEditMask").style.display = "none";
+            };
+            document.getElementById("addNewEmo").onclick = () => {
+                const char = document.getElementById("newEmoChar").value.trim();
+                const text = document.getElementById("newEmoText").value.trim();
+                if (!char) {
+                    alert("请输入表情符号");
+                    return;
+                }
+                const fullEmo = `${char} ${text}`.trim();
+                if (allEmoList.includes(fullEmo)) {
+                    alert("该情绪已存在");
+                    return;
+                }
+                customEmoList.push(fullEmo);
+                saveCustomEmo();
+                renderCustomEmoList();
+                renderEmojiBox();
+                document.getElementById("newEmoChar").value = "";
+                document.getElementById("newEmoText").value = "";
+                alert("自定义情绪添加成功");
+            };
+            document.getElementById("calendarBtn").onclick = () => {
+                calNowDate = new Date();
+                calActiveRole = "user";
+                calSelectEmo = "";
+                document.getElementById("tabUser").classList.add("active");
+                document.getElementById("tabAi").classList.remove("active");
+                renderEmojiBox();
+                renderCalendar();
+                document.getElementById("calendarMask").style.display = "flex";
+            };
+        }
+
+        // ========== 字卡基础逻辑 ==========
+        function loadReply() {
+            const local = localStorage.getItem(REPLY_KEY);
+            if (local) {
+                replyList = JSON.parse(local);
+            } else {
+                replyList = [
+                    "我一直在呢，不要难过。",
+                    "我懂你的情绪，你已经很努力了。",
+                    "慢慢来，我会一直陪着你。",
+                    "你超棒的，请多偏爱自己一点。",
+                    "所有委屈我都接住了。",
+                    "别焦虑，一切都会慢慢变好。",
+                    "我永远站在你这边。",
+                    "你的心意，我全部收到。",
+                    "累了就停下来，我陪着你休息。",
+                    "你值得所有温柔与偏爱。"
+                ];
+                saveReply();
+            }
+        }
+
+        function saveReply() {
+            localStorage.setItem(REPLY_KEY, JSON.stringify(replyList));
+        }
+
+        function renderCardList() {
+            const wrap = document.getElementById("cardListWrap");
+            wrap.innerHTML = "";
+            if (replyList.length === 0) {
+                wrap.innerHTML =
+                "<p style='text-align:center;color:#999;padding:20px 0;'>暂无字卡，请先导入</p>";
+                return;
+            }
+            replyList.forEach((text, index) => {
+                const div = document.createElement("div");
+                div.className = "card-item";
+                div.innerHTML =
+                    `<span>${text}</span><button class="del-btn btn-red" data-idx="${index}">删除</button>`;
+                wrap.appendChild(div);
+            });
+            document.querySelectorAll(".del-btn").forEach(btn => {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    const idx = Number(btn.dataset.idx);
+                    if (confirm(`确定删除这条字卡：\n${replyList[idx]}`)) {
+                        replyList.splice(idx, 1);
+                        saveReply();
+                        renderCardList();
+                    }
+                };
+            });
+        }
+
+        function bindClearAllCard() {
+            document.getElementById("clearAllCard").onclick = () => {
+                if (confirm("确定清空所有回复字卡？删除后无法恢复！")) {
+                    replyList = [];
+                    saveReply();
+                    renderCardList();
+                    alert("已清空全部字卡");
+                }
+            };
+        }
+
+        // ========== 头像逻辑 ==========
+        function loadAvatars() {
+            userAvatar = localStorage.getItem(USER_AVATAR_KEY) || "";
+            aiAvatar = localStorage.getItem(AI_AVATAR_KEY) || "";
+            refreshAvatarPreviews();
+        }
+
+        function refreshAvatarPreviews() {
+            const userPreview = document.getElementById("userAvatarPreview");
+            const aiPreview = document.getElementById("aiAvatarPreview");
+            userPreview.innerHTML = userAvatar ? `<img src="${userAvatar}" alt="">` : "";
+            aiPreview.innerHTML = aiAvatar ? `<img src="${aiAvatar}" alt="">` : "";
+        }
+
+        // ========== 聊天记录 ==========
+        function initChatRecord() {
+            const local = localStorage.getItem(STORAGE_KEY);
+            const chatBox = document.getElementById("chatBox");
+            if (!local) {
+                chatRecords = [];
+                showSystemMessage("已成功建立心灵链接，随时可以向我倾诉✨");
+                return;
+            }
+            chatRecords = JSON.parse(local);
+            chatRecords.forEach(item => {
+                appendMessage(item.sender, item.text, item.isUser, false);
+            });
+        }
+
+        function showSystemMessage(text) {
+            const chatBox = document.getElementById("chatBox");
+            const sysItem = document.createElement("div");
+            sysItem.className = "chat-item system";
+            sysItem.textContent = text;
+            chatBox.appendChild(sysItem);
+        }
+
+        function appendMessage(sender, text, isUser = false, save = true) {
+            const box = document.getElementById("chatBox");
+            const row = document.createElement("div");
+            row.className = `chat-row ${isUser ? "user" : "ai"}`;
+            const avatar = document.createElement("div");
+            avatar.className = "avatar";
+            const avatarSrc = isUser ? userAvatar : aiAvatar;
+            if (avatarSrc) avatar.innerHTML = `<img src="${avatarSrc}" alt="">`;
+            const bubble = document.createElement("div");
+            bubble.className = `chat-item ${isUser ? "user" : "ai"}`;
+            bubble.textContent = text;
+            if (isUser) {
+                row.appendChild(bubble);
+                row.appendChild(avatar);
+            } else {
+                row.appendChild(avatar);
+                row.appendChild(bubble);
+            }
+            box.appendChild(row);
+            if (save) {
+                chatRecords.push({ sender, text, isUser });
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
+            }
+            setTimeout(() => box.scrollTop = box.scrollHeight, 50);
+        }
+
+        function sendMsg() {
+            const input = document.getElementById("msgInput");
+            const text = input.value.trim();
+            if (!text) return;
+            appendMessage("你", text, true);
+            input.value = "";
+            setTimeout(() => {
+                if (replyList.length === 0) {
+                    appendMessage("梦角", "暂无回复字卡，请先导入文案", false);
+                    return;
+                }
+                const r = replyList[Math.floor(Math.random() * replyList.length)];
+                appendMessage("梦角", r, false);
+            }, 600);
+        }
+
+        // ========== 初始化 ==========
+        window.onload = () => {
+            loadReply();
+            renderCardList();
+            bindClearAllCard();
+            loadAvatars();
+            initChatRecord();
+            loadCalendarData();
+            loadCustomEmo();
+            bindCalendarEvent();
+
+            // ---- 头像弹窗 ----
+            const avatarMask = document.getElementById("avatarMask");
+            document.getElementById("avatarBtn").onclick = () => avatarMask.style.display = "flex";
+            document.getElementById("avatarCancel").onclick = () => avatarMask.style.display = "none";
+            document.getElementById("avatarConfirm").onclick = () => {
+                localStorage.setItem(USER_AVATAR_KEY, userAvatar);
+                localStorage.setItem(AI_AVATAR_KEY, aiAvatar);
+                alert("头像已保存！");
+                avatarMask.style.display = "none";
+            };
+            document.getElementById("userAvatarInput").addEventListener("change", e => {
+                const f = e.target.files[0];
+                if (!f) return;
+                const r = new FileReader();
+                r.onload = ev => { userAvatar = ev.target.result;
+                    refreshAvatarPreviews(); };
+                r.readAsDataURL(f);
+            });
+            document.getElementById("aiAvatarInput").addEventListener("change", e => {
+                const f = e.target.files[0];
+                if (!f) return;
+                const r = new FileReader();
+                r.onload = ev => { aiAvatar = ev.target.result;
+                    refreshAvatarPreviews(); };
+                r.readAsDataURL(f);
+            });
+
+            // ---- 导入弹窗 ----
+            const importMask = document.getElementById("importMask");
+            document.getElementById("importBtn").onclick = () => importMask.style.display = "flex";
+            document.getElementById("importCancel").onclick = () => {
+                importMask.style.display = "none";
+                document.getElementById("textArea").value = "";
+                document.getElementById("fileInput").value = "";
+            };
+            document.getElementById("importConfirm").onclick = async () => {
+                let totalArr = [];
+                const textRaw = document.getElementById("textArea").value.trim();
+                if (textRaw) {
+                    const parsed = parseImportText(textRaw);
+                    totalArr = totalArr.concat(parsed);
+                }
+                const file = document.getElementById("fileInput").files[0];
+                if (file) {
+                    try {
+                        const fileText = await file.text();
+                        const parsed = parseImportText(fileText);
+                        totalArr = totalArr.concat(parsed);
+                    } catch (err) {
+                        alert("文件读取失败：" + err.message);
+                        return;
+                    }
+                }
+                // 去重（保留首次出现的顺序）
+                const unique = [];
+                const seen = new Set();
+                for (const item of totalArr) {
+                    const key = item.trim();
+                    if (key && !seen.has(key)) {
+                        seen.add(key);
+                        unique.push(key);
+                    }
+                }
+                if (unique.length === 0) {
+                    alert("未检测到有效字卡内容！支持：\n• 每行一句的普通文本\n• JSON数组 [\"句子1\",\"句子2\"]\n• .txt / .json 文件");
+                    return;
+                }
+                replyList = [...replyList, ...unique];
                 saveReply();
                 renderCardList();
-            }
-        }
-    })
-}
-function bindClearAllCard(){
-    document.getElementById("clearAllCard").onclick = ()=>{
-        if(confirm("确定清空所有回复字卡？删除后无法恢复！")){
-            replyList = [];
-            saveReply();
-            renderCardList();
-            alert("已清空全部字卡");
-        }
-    }
-}
+                alert(`✅ 导入成功！新增 ${unique.length} 条字卡（去重后）`);
+                importMask.style.display = "none";
+                document.getElementById("textArea").value = "";
+                document.getElementById("fileInput").value = "";
+            };
 
-// 【核心修复】JSON/文本导入净化函数，彻底清除符号、空行、多余空格
-function parseImportText(rawText) {
-    let result = [];
-    const trimText = rawText.trim();
-    if (!trimText) return result;
-    if (trimText.startsWith("[") && trimText.endsWith("]")) {
-        try {
-            const jsonArr = JSON.parse(trimText);
-            if (Array.isArray(jsonArr)) {
-                jsonArr.forEach(item => {
-                    if (typeof item === "string") {
-                        // 清除换行、首尾空格
-                        const cleanStr = item.replace(/[\r\n]/g, "").trim();
-                        if (cleanStr) result.push(cleanStr);
-                    }
-                })
-            }
-        } catch (err) {
-            // JSON解析失败降级文本处理
-            const lines = trimText.split(/\r?\n/);
-            lines.forEach(line=>{
-                const clean = line.trim();
-                if(clean) result.push(clean);
-            })
-        }
-    } else {
-        // 普通文本分行净化
-        const lines = trimText.split(/\r?\n/);
-        lines.forEach(line=>{
-            const clean = line.trim();
-            if(clean) result.push(clean);
-        })
-    }
-    return result;
-}
+            // ---- 查看字卡弹窗 ----
+            const viewCardMask = document.getElementById("viewCardMask");
+            document.getElementById("viewCardBtn").onclick = () => {
+                renderCardList();
+                viewCardMask.style.display = "flex";
+            };
+            document.getElementById("viewCardClose").onclick = () => viewCardMask.style.display = "none";
 
-// 头像逻辑
-function loadAvatars(){
-    userAvatar = localStorage.getItem(USER_AVATAR_KEY) || "";
-    aiAvatar = localStorage.getItem(AI_AVATAR_KEY) || "";
-    refreshAvatarPreviews();
-}
-function refreshAvatarPreviews(){
-    const userPreview = document.getElementById("userAvatarPreview");
-    const aiPreview = document.getElementById("aiAvatarPreview");
-    userPreview.innerHTML = userAvatar ? `<img src="${userAvatar}" alt="">` : "";
-    aiPreview.innerHTML = aiAvatar ? `<img src="${aiAvatar}" alt="">` : "";
-}
-
-// 聊天记录
-function initChatRecord(){
-    const local = localStorage.getItem(STORAGE_KEY);
-    const chatBox = document.getElementById("chatBox");
-    if(!local){
-        chatRecords = [];
-        showSystemMessage("已成功建立心灵链接，随时可以向我倾诉✨");
-        return;
-    }
-    chatRecords = JSON.parse(local);
-    chatRecords.forEach(item=>{
-        appendMessage(item.sender, item.text, item.isUser, false);
-    })
-}
-function showSystemMessage(text){
-    const chatBox = document.getElementById("chatBox");
-    const sysItem = document.createElement("div");
-    sysItem.className = "chat-item system";
-    sysItem.textContent = text;
-    chatBox.appendChild(sysItem);
-}
-function appendMessage(sender, text, isUser = false, save = true) {
-    const box = document.getElementById("chatBox");
-    const row = document.createElement("div");
-    row.className = `chat-row ${isUser ? "user" : "ai"}`;
-    const avatar = document.createElement("div");
-    avatar.className = "avatar";
-    const avatarSrc = isUser ? userAvatar : aiAvatar;
-    if(avatarSrc) avatar.innerHTML = `<img src="${avatarSrc}" alt="">`;
-    const bubble = document.createElement("div");
-    bubble.className = `chat-item ${isUser ? "user" : "ai"}`;
-    bubble.textContent = text;
-    if(isUser){
-        row.appendChild(bubble);
-        row.appendChild(avatar);
-    }else{
-        row.appendChild(avatar);
-        row.appendChild(bubble);
-    }
-    box.appendChild(row);
-    if(save){
-        chatRecords.push({sender, text, isUser});
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
-    }
-    setTimeout(() => box.scrollTop = box.scrollHeight, 50);
-}
-function sendMsg(){
-    const input = document.getElementById("msgInput");
-    const text = input.value.trim();
-    if(!text) return;
-    appendMessage("你", text, true);
-    input.value = "";
-    setTimeout(()=>{
-        if(replyList.length === 0){
-            appendMessage("梦角", "暂无回复字卡，请先导入文案", false);
-            return;
-        }
-        const r = replyList[Math.floor(Math.random() * replyList.length)];
-        appendMessage("梦角", r, false);
-    }, 600);
-}
-
-window.onload = ()=>{
-    loadReply();
-    renderCardList();
-    bindClearAllCard();
-    loadAvatars();
-    initChatRecord();
-    loadCalendarData();
-    loadCustomEmo();
-    bindCalendarEvent();
-
-    // 头像弹窗
-    const avatarMask = document.getElementById("avatarMask");
-    document.getElementById("avatarBtn").onclick = ()=> avatarMask.style.display = "flex";
-    document.getElementById("avatarCancel").onclick = ()=> avatarMask.style.display = "none";
-    document.getElementById("avatarConfirm").onclick = ()=>{
-        localStorage.setItem(USER_AVATAR_KEY, userAvatar);
-        localStorage.setItem(AI_AVATAR_KEY, aiAvatar);
-        alert("头像已保存！");
-        avatarMask.style.display = "none";
-    }
-    document.getElementById("userAvatarInput").addEventListener("change",e=>{
-        const f = e.target.files[0];
-        if(!f) return;
-        const r = new FileReader();
-        r.onload = ev=>{ userAvatar = ev.target.result; refreshAvatarPreviews(); }
-        r.readAsDataURL(f);
-    })
-    document.getElementById("aiAvatarInput").addEventListener("change",e=>{
-        const f = e.target.files[0];
-        if(!f) return;
-        const r = new FileReader();
-        r.onload = ev=>{ aiAvatar = ev.target.result; refreshAvatarPreviews(); }
-        r.readAsDataURL(f);
-    })
-
-    // 导入弹窗
-    const importMask = document.getElementById("importMask");
-    document.getElementById("importBtn").onclick = ()=> importMask.style.display = "flex";
-    document.getElementById("importCancel").onclick = ()=>{
-        importMask.style.display = "none";
-        document.getElementById("textArea").value = "";
-        document.getElementById("fileInput").value = "";
-    }
-    document.getElementById("importConfirm").onclick = async ()=>{
-        let totalArr = [];
-        const textRaw = document.getElementById("textArea").value.trim();
-        if(textRaw) totalArr = parseImportText(textRaw);
-        const file = document.getElementById("fileInput").files[0];
-        if(file){
-            const fileText = await file.text();
-            const fileArr = parseImportText(fileText);
-            totalArr = [...totalArr, ...fileArr];
-        }
-        if(totalArr.length === 0){
-            alert("未检测到有效字卡内容！支持换行文本 / JSON数组");
-            return;
-        }
-        replyList = [...replyList, ...totalArr];
-        saveReply();
-        renderCardList();
-        alert(`导入成功，新增${totalArr.length}条回复字卡！`);
-        importMask.style.display = "none";
-        document.getElementById("textArea").value = "";
-        document.getElementById("fileInput").value = "";
-    }
-
-    // 查看字卡弹窗
-    const viewCardMask = document.getElementById("viewCardMask");
-    document.getElementById("viewCardBtn").onclick = ()=>{
-        renderCardList();
-        viewCardMask.style.display = "flex";
-    }
-    document.getElementById("viewCardClose").onclick = ()=> viewCardMask.style.display = "none";
-
-    // 清空聊天记录
-    document.getElementById("clearRecordBtn").addEventListener("click",function(){
-        if(confirm("确定清空全部聊天记录？删除后无法恢复！")){
-            localStorage.removeItem(STORAGE_KEY);
-            chatRecords = [];
-            document.getElementById("chatBox").innerHTML = "";
-            showSystemMessage("已成功建立心灵链接，随时可以向我倾诉✨");
-        }
-    })
-}
-</script>
+            // ---- 清空聊天记录 ----
+            document.getElementById("clearRecordBtn").addEventListener("click", function() {
+                if (confirm("确定清空全部聊天记录？删除后无法恢复！")) {
+                    localStorage.removeItem(STORAGE_KEY);
+                    chatRecords = [];
+                    document.getElementById("chatBox").innerHTML = "";
+                    showSystemMessage("已成功建立心灵链接，随时可以向我倾诉✨");
+                }
+            });
+        };
+    </script>
 
 </body>
 </html>
-
