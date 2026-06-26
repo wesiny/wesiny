@@ -222,6 +222,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            position: relative;
+        }
+        .avatar-container:hover {
+            opacity: 0.7;
         }
         .avatar {
             width: 100%;
@@ -231,6 +237,11 @@
             justify-content: center;
             font-size: 14px;
             color: var(--text-secondary);
+        }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .status {
             font-size: 10px;
@@ -668,8 +679,6 @@
 
         /* ===== 响应式 ===== */
         @media (max-width: 480px) {
-            .splash-card-body { padding: 18px; }
-            .splash-slide-title { font-size: 18px; }
             .header-actions .action-btn { width: 30px; height: 30px; font-size: 12px; }
             .username { font-size: 12px; }
             .modal-content { padding: 18px; margin: 10px; }
@@ -749,7 +758,11 @@
     <div class="header-inner">
         <div class="user-info">
             <div id="partner-name" class="username">梦角</div>
-            <div class="avatar-container"><div class="avatar" id="partner-avatar"><i class="fas fa-user"></i></div></div>
+            <div class="avatar-container" id="partner-avatar-container" title="点击更换头像">
+                <div class="avatar" id="partner-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
             <div class="status"><span>在线</span></div>
         </div>
         <div class="header-actions">
@@ -758,7 +771,11 @@
         </div>
         <div class="user-info">
             <div id="my-name" class="username">我</div>
-            <div class="avatar-container"><div class="avatar" id="my-avatar"><i class="fas fa-user"></i></div></div>
+            <div class="avatar-container" id="my-avatar-container" title="点击更换头像">
+                <div class="avatar" id="my-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
             <div class="status"><span>在线</span></div>
         </div>
     </div>
@@ -880,9 +897,6 @@
         <div class="modal-title"><i class="fas fa-tools"></i><span>高级功能</span></div>
         <div class="settings-grid" style="grid-template-columns:1fr 1fr 1fr;">
             <div class="settings-card" id="custom-replies-function"><i class="fas fa-comment-dots"></i><span>自定义回复</span></div>
-            <div class="settings-card" id="music-player-toggle" onclick="alert('🎵 音乐播放器已开启')"><i class="fas fa-music"></i><span>音乐播放器</span></div>
-            <div class="settings-card" id="stats-function" onclick="alert('📊 消息统计已开启')"><i class="fas fa-chart-bar"></i><span>消息统计</span></div>
-            <div class="settings-card" id="decision-function"><i class="fas fa-balance-scale"></i><span>抉择</span></div>
             <div class="settings-card" id="anniversary-function"><i class="fas fa-heart"></i><span>重要日</span></div>
             <div class="settings-card" id="mood-function"><i class="fas fa-calendar-day"></i><span>心晴手账</span></div>
             <div class="settings-card" id="envelope-function"><i class="fas fa-envelope"></i><span>信封投递</span></div>
@@ -936,80 +950,6 @@
         <div class="modal-buttons">
             <button class="modal-btn modal-btn-secondary" id="cancel-reply-editor">取消</button>
             <button class="modal-btn modal-btn-primary" id="save-reply-editor">保存</button>
-        </div>
-    </div>
-</div>
-
-<!-- ===== 抉择 ===== -->
-<div class="modal" id="decision-menu-modal">
-    <div class="modal-content">
-        <div class="modal-title"><i class="fas fa-balance-scale"></i><span>抉择助手</span></div>
-        <div class="decision-menu-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div class="decision-option-card" id="open-coin-toss" style="padding:20px;background:var(--primary-bg);border-radius:12px;text-align:center;cursor:pointer;border:1px solid var(--border-color);">
-                <i class="fas fa-coins" style="font-size:28px;color:var(--accent-color);"></i>
-                <h3 style="margin:8px 0 4px;">抛硬币</h3>
-                <p style="font-size:12px;color:var(--text-secondary);">是 / 否 二元选择</p>
-            </div>
-            <div class="decision-option-card" id="open-wheel" style="padding:20px;background:var(--primary-bg);border-radius:12px;text-align:center;cursor:pointer;border:1px solid var(--border-color);">
-                <i class="fas fa-magic" style="font-size:28px;color:var(--accent-color);"></i>
-                <h3 style="margin:8px 0 4px;">随机抽签</h3>
-                <p style="font-size:12px;color:var(--text-secondary);">自定义选项随机抽取</p>
-            </div>
-        </div>
-        <div class="modal-buttons">
-            <button class="modal-btn modal-btn-secondary" id="close-decision-menu">关闭</button>
-        </div>
-    </div>
-</div>
-
-<!-- ===== 抛硬币 ===== -->
-<div class="coin-toss-overlay modal" id="coin-toss-overlay">
-    <div class="modal-content" style="max-width:300px;text-align:center;">
-        <div class="coin-container" style="perspective:600px;height:120px;display:flex;justify-content:center;align-items:center;">
-            <div class="coin" id="animated-coin" style="width:100px;height:100px;position:relative;transform-style:preserve-3d;transition:transform 0.6s;">
-                <div class="coin-face coin-front" style="position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:50%;background:#f5c842;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:bold;">
-                    <div class="coin-text-main" style="font-size:24px;">是</div>
-                    <div class="coin-text-sub" style="font-size:12px;">YES</div>
-                </div>
-                <div class="coin-face coin-back" style="position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:50%;background:#e74c3c;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:bold;transform:rotateY(180deg);">
-                    <div class="coin-text-main" style="font-size:24px;">否</div>
-                    <div class="coin-text-sub" style="font-size:12px;">NO</div>
-                </div>
-            </div>
-        </div>
-        <div class="coin-result-container" style="margin:12px 0;">
-            <div class="coin-result-text" id="coin-result-text" style="font-size:18px;font-weight:600;color:var(--accent-color);"></div>
-        </div>
-        <div class="coin-confirm-buttons" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-            <button class="coin-btn-action modal-btn modal-btn-secondary" id="cancel-coin-result">取消</button>
-            <button class="coin-btn-action modal-btn modal-btn-secondary" id="retry-coin-toss"><i class="fas fa-redo-alt"></i> 再来一次</button>
-            <button class="coin-btn-action modal-btn modal-btn-primary" id="send-coin-result">发送结果</button>
-        </div>
-    </div>
-</div>
-
-<!-- ===== 随机抽签 ===== -->
-<div class="modal" id="wheel-modal">
-    <div class="modal-content">
-        <div class="modal-title"><i class="fas fa-magic"></i><span>随机抽签</span></div>
-        <div class="picker-wrapper">
-            <div class="picker-box-stage" style="background:var(--primary-bg);border-radius:12px;padding:20px;text-align:center;margin-bottom:16px;">
-                <div class="picker-cards-row" id="picker-cards-row" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:60px;"></div>
-                <div class="picker-result-text" id="wheel-result" style="font-size:18px;font-weight:600;color:var(--accent-color);margin-top:12px;"></div>
-            </div>
-            <div class="picker-controls">
-                <div class="picker-options-label" style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">选项列表（至少2项）</div>
-                <div class="picker-options-list" id="wheel-options-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;"></div>
-                <div style="display:flex;gap:6px;">
-                    <input type="text" id="wheel-new-option" placeholder="输入选项" style="flex:1;padding:8px 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--primary-bg);color:var(--text-primary);font-family:var(--font-family);">
-                    <button class="modal-btn modal-btn-secondary" id="add-wheel-option" style="padding:8px 14px;">添加</button>
-                </div>
-            </div>
-        </div>
-        <div class="modal-buttons">
-            <button class="modal-btn modal-btn-secondary" id="close-wheel">关闭</button>
-            <button class="modal-btn modal-btn-primary" id="spin-wheel-btn"><i class="fas fa-random"></i> 开始抽签</button>
-            <button class="modal-btn modal-btn-primary" id="send-wheel-result" style="display:none;">发送结果</button>
         </div>
     </div>
 </div>
@@ -1148,7 +1088,14 @@
 
         const avatar = document.createElement('div');
         avatar.className = 'avatar-mini';
-        avatar.innerHTML = '<i class="fas fa-user"></i>';
+        // 使用存储的头像
+        const avatarKey = type === 'sent' ? 'myAvatar' : 'partnerAvatar';
+        const savedAvatar = localStorage.getItem(avatarKey);
+        if (savedAvatar) {
+            avatar.innerHTML = `<img src="${savedAvatar}" alt="avatar">`;
+        } else {
+            avatar.innerHTML = '<i class="fas fa-user"></i>';
+        }
 
         const msg = document.createElement('div');
         msg.className = 'message message-' + type;
@@ -1213,7 +1160,44 @@
     });
 
     // ============================================================
-    //  3. 主题切换
+    //  3. 头像上传功能
+    // ============================================================
+    function setupAvatarUpload(containerId, avatarId, storageKey) {
+        const container = document.getElementById(containerId);
+        const avatarEl = document.getElementById(avatarId);
+        if (!container || !avatarEl) return;
+
+        // 加载已保存的头像
+        const saved = localStorage.getItem(storageKey);
+        if (saved) {
+            avatarEl.innerHTML = `<img src="${saved}" alt="avatar">`;
+        }
+
+        container.addEventListener('click', function() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const dataUrl = ev.target.result;
+                    localStorage.setItem(storageKey, dataUrl);
+                    avatarEl.innerHTML = `<img src="${dataUrl}" alt="avatar">`;
+                    // 更新聊天消息中的头像（下次发送或已显示的不变，但新消息会使用）
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        });
+    }
+
+    setupAvatarUpload('my-avatar-container', 'my-avatar', 'myAvatar');
+    setupAvatarUpload('partner-avatar-container', 'partner-avatar', 'partnerAvatar');
+
+    // ============================================================
+    //  4. 主题切换
     // ============================================================
     let darkMode = false;
     const themeToggle = document.getElementById('theme-toggle');
@@ -1238,7 +1222,7 @@
     if (darkModeToggle) darkModeToggle.addEventListener('click', () => setTheme(!darkMode));
 
     // ============================================================
-    //  4. 主题色切换
+    //  5. 主题色切换
     // ============================================================
     document.querySelectorAll('.theme-color-btn').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -1254,7 +1238,7 @@
     document.documentElement.setAttribute('data-color-theme', savedTheme);
 
     // ============================================================
-    //  5. 模态框管理
+    //  6. 模态框管理
     // ============================================================
     const modalMap = {
         settings: document.getElementById('settings-modal'),
@@ -1265,9 +1249,6 @@
         disclaimer: document.getElementById('disclaimer-modal'),
         customReplies: document.getElementById('custom-replies-modal'),
         replyEditor: document.getElementById('reply-editor-modal'),
-        decision: document.getElementById('decision-menu-modal'),
-        coin: document.getElementById('coin-toss-overlay'),
-        wheel: document.getElementById('wheel-modal'),
         anniversary: document.getElementById('anniversary-modal'),
         mood: document.getElementById('mood-modal'),
         envelope: document.getElementById('envelope-modal'),
@@ -1278,9 +1259,6 @@
     }
     function hideModal(id) {
         if (modalMap[id]) modalMap[id].classList.remove('show');
-    }
-    function hideAllModals() {
-        Object.values(modalMap).forEach(m => m?.classList.remove('show'));
     }
 
     // 设置入口
@@ -1322,7 +1300,7 @@
     });
 
     // ============================================================
-    //  6. 字卡（自定义回复）管理
+    //  7. 字卡（自定义回复）管理
     // ============================================================
     const REPLIES_STORAGE_KEY = 'customReplies';
 
@@ -1355,10 +1333,8 @@
             </div>
         `).join('');
 
-        // 点击展开/收起
         list.querySelectorAll('.reply-item').forEach(el => {
             el.addEventListener('click', function(e) {
-                // 如果点击的是删除按钮等，不触发展开
                 if (e.target.closest('.reply-item-delete')) return;
                 this.classList.toggle('open');
             });
@@ -1402,7 +1378,7 @@
         alert('✅ 字卡已保存');
     });
 
-    // 导入字卡
+    // ===== 导入字卡（只保存正式文本） =====
     document.getElementById('import-replies-btn').addEventListener('click', function() {
         document.getElementById('import-replies-input').click();
     });
@@ -1413,20 +1389,54 @@
         reader.onload = function(ev) {
             try {
                 const data = JSON.parse(ev.target.result);
-                if (!Array.isArray(data)) throw new Error('格式错误，需要数组');
-                const existing = getReplies();
-                // 简单合并：若名称相同则覆盖，否则追加
-                const merged = [...existing];
-                data.forEach(item => {
-                    if (item.name && item.replies) {
-                        const idx = merged.findIndex(m => m.name === item.name);
-                        if (idx !== -1) merged[idx] = item;
-                        else merged.push(item);
-                    }
+                let allTexts = [];
+                if (Array.isArray(data)) {
+                    data.forEach(item => {
+                        // 如果item是字符串，直接添加
+                        if (typeof item === 'string') {
+                            allTexts.push(item);
+                        } else if (item.replies && Array.isArray(item.replies)) {
+                            // 对象且有replies数组
+                            item.replies.forEach(r => {
+                                if (typeof r === 'string') allTexts.push(r);
+                            });
+                        } else if (item.content) {
+                            // 可能直接有content字段
+                            if (typeof item.content === 'string') allTexts.push(item.content);
+                        }
+                    });
+                } else if (data.replies && Array.isArray(data.replies)) {
+                    data.replies.forEach(r => {
+                        if (typeof r === 'string') allTexts.push(r);
+                    });
+                } else if (typeof data === 'string') {
+                    allTexts = data.split('\n').map(s => s.trim()).filter(s => s);
+                }
+                if (allTexts.length === 0) {
+                    alert('⚠️ 未能提取任何文本内容，请检查JSON格式');
+                    return;
+                }
+                // 去重（可选），保留顺序
+                const unique = [];
+                const seen = new Set();
+                allTexts.forEach(t => {
+                    if (!seen.has(t)) { seen.add(t); unique.push(t); }
                 });
-                saveReplies(merged);
+                // 保存到名为 "导入字卡" 的字卡中（若存在则追加）
+                const existing = getReplies();
+                let importCard = existing.find(item => item.name === '导入字卡');
+                if (importCard) {
+                    // 追加，去重
+                    const existingTexts = new Set(importCard.replies || []);
+                    unique.forEach(t => {
+                        if (!existingTexts.has(t)) importCard.replies.push(t);
+                    });
+                } else {
+                    existing.push({ name: '导入字卡', replies: unique });
+                }
+                saveReplies(existing);
                 renderReplyList();
-                alert(`✅ 导入成功！共导入 ${data.length} 个字卡`);
+                alert(`✅ 导入成功！共提取 ${unique.length} 条文本，已保存到「导入字卡」`);
             } catch (err) {
                 alert('❌ 导入失败：' + err.message);
             }
@@ -1436,101 +1446,10 @@
     });
 
     // ============================================================
-    //  7. 抉择功能
-    // ============================================================
-    document.getElementById('decision-function').addEventListener('click', () => showModal('decision'));
-    document.getElementById('close-decision-menu').addEventListener('click', () => hideModal('decision'));
-
-    // 抛硬币
-    document.getElementById('open-coin-toss').addEventListener('click', function() {
-        hideModal('decision');
-        setTimeout(() => showModal('coin'), 200);
-        document.getElementById('coin-result-text').textContent = '';
-        document.getElementById('animated-coin').style.transform = '';
-        document.getElementById('send-coin-result').style.display = 'none';
-    });
-    document.getElementById('cancel-coin-result').addEventListener('click', () => hideModal('coin'));
-    document.getElementById('retry-coin-toss').addEventListener('click', function() {
-        const coin = document.getElementById('animated-coin');
-        const resultText = document.getElementById('coin-result-text');
-        const result = Math.random() < 0.5 ? '是' : '否';
-        const deg = 720 + Math.random() * 360;
-        coin.style.transform = `rotateY(${deg}deg)`;
-        setTimeout(() => {
-            resultText.textContent = result;
-            document.getElementById('send-coin-result').style.display = 'inline-block';
-            document.getElementById('send-coin-result').dataset.result = result;
-        }, 600);
-    });
-    document.getElementById('send-coin-result').addEventListener('click', function() {
-        const result = this.dataset.result || '是';
-        addMessage('我', `抛硬币结果：${result}`, 'sent');
-        hideModal('coin');
-        // 模拟对方回复
-        setTimeout(() => {
-            const r = result === '是' ? '那就这么办吧 😊' : '嗯，再考虑考虑？';
-            addMessage('梦角', r, 'received');
-        }, 600);
-    });
-
-    // 随机抽签
-    let wheelOptions = ['选项A', '选项B', '选项C'];
-    document.getElementById('open-wheel').addEventListener('click', function() {
-        hideModal('decision');
-        setTimeout(() => showModal('wheel'), 200);
-        renderWheelOptions();
-        document.getElementById('wheel-result').textContent = '';
-        document.getElementById('send-wheel-result').style.display = 'none';
-    });
-    document.getElementById('close-wheel').addEventListener('click', () => hideModal('wheel'));
-
-    function renderWheelOptions() {
-        const list = document.getElementById('wheel-options-list');
-        list.innerHTML = wheelOptions.map((opt, i) => `
-            <span style="background:var(--primary-bg);padding:4px 12px;border-radius:16px;border:1px solid var(--border-color);display:inline-flex;align-items:center;gap:6px;">
-                ${opt}
-                <span style="cursor:pointer;color:#e74c3c;font-size:12px;" onclick="removeWheelOption(${i})">×</span>
-            </span>
-        `).join('');
-    }
-
-    window.removeWheelOption = function(idx) {
-        wheelOptions.splice(idx, 1);
-        renderWheelOptions();
-    };
-
-    document.getElementById('add-wheel-option').addEventListener('click', function() {
-        const input = document.getElementById('wheel-new-option');
-        const val = input.value.trim();
-        if (!val) return;
-        wheelOptions.push(val);
-        input.value = '';
-        renderWheelOptions();
-    });
-
-    document.getElementById('spin-wheel-btn').addEventListener('click', function() {
-        if (wheelOptions.length < 2) { alert('至少需要2个选项'); return; }
-        const result = wheelOptions[Math.floor(Math.random() * wheelOptions.length)];
-        document.getElementById('wheel-result').textContent = '🎯 ' + result;
-        document.getElementById('send-wheel-result').style.display = 'inline-block';
-        document.getElementById('send-wheel-result').dataset.result = result;
-    });
-
-    document.getElementById('send-wheel-result').addEventListener('click', function() {
-        const result = this.dataset.result || '结果';
-        addMessage('我', `抽签结果：${result}`, 'sent');
-        hideModal('wheel');
-        setTimeout(() => {
-            addMessage('梦角', `那就选「${result}」吧 ✨`, 'received');
-        }, 600);
-    });
-
-    // ============================================================
     //  8. 其他功能（重要日、心晴手账、信封投递）
     // ============================================================
     document.getElementById('anniversary-function').addEventListener('click', () => {
         showModal('anniversary');
-        // 简单展示示例
         const container = document.getElementById('ann-list-container');
         container.innerHTML = `
             <div style="background:var(--primary-bg);border-radius:12px;padding:12px;margin-bottom:8px;border-left:3px solid var(--accent-color);">
@@ -1576,7 +1495,7 @@
     document.getElementById('immersive-exit-btn').addEventListener('click', () => toggleImmersiveMode(false));
 
     // ============================================================
-    //  10. 模拟自动回复（可选）
+    //  10. 模拟自动回复
     // ============================================================
     let autoTimer = null;
     function startAutoReply() {
