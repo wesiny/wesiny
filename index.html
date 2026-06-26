@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#e6f2ff">
+<meta name="apple-mobile-web-app-title" content="梦角传讯">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoi546L5L7p5L7j8L+86LWEIiwic2hvcnRfbmFtZSI6IuW8teS4reW+veC7vCIsImRlc2NyaXB0aW9uIjoi546L5L7p5L7j8L+85LWE57uf54K55pyN5YqhIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiNlNmYyZmYiLCJ0aGVtZV9jb2xvciI6IiM0MDg4ZTAiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiM0MDg4ZTAiLz48dGV4dCB4PSIyMCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJzYXJpIiBmb250LXNpemU9IjIwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+PC90ZXh0Pjwvc3ZnPiIsInNpemVzIjoiNDB4NDAiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0=">
+<title>梦角传讯</title>
+<style>
+html {
+    touch-action: manipulation;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+body{
+    background: #f7f8fa;
+    color: #222;
+    min-height: 100vh;
+    padding-bottom: env(safe-area-inset-bottom);
+    overscroll-behavior-y: none;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 功能按钮栏 页面最顶部 */
+.func-bar{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 6px;
+    background: #ffffff;
+    border-bottom: 1px solid #eee;
+    flex-wrap: wrap;
+}
+.func-bar button{
+    padding:4px 8px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    background:#f5f5f5;
+    font-size:15px;
+    color:#666;
+}
+
+/* 顶部状态栏（仅名称在线状态） */
+.top-bar{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 6px;
+    background: #ffffff;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.top-bar span{
+    font-size: 18px;
+    color: #333;
+    font-weight: 500;
+}
+.top-bar .dot {
+    width: 7px;
+    height: 7px;
+    background-color: #4caf50;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 4px;
+}
+
+/* 通用弹窗遮罩 */
+.mask{
+    position: fixed;
+    inset:0;
+    background:rgba(0,0,0,0.5);
+    z-index:99;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:10px;
+}
+.pop{
+    width:100%;
+    max-width:420px;
+    background:#fff;
+    border-radius:14px;
+    padding:16px;
+}
+.pop h3{
+    font-size:18px;
+    margin-bottom:12px;
+}
+.pop textarea{
+    width:100%;
+    height:100px;
+    font-size:16px;
+    padding:8px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    margin-bottom:10px;
+}
+.pop .file-box{
+    margin-bottom:10px;
+}
+.pop .btn-row{
+    display:flex;
+    gap:8px;
+    justify-content:flex-end;
+}
+.pop button{
+    padding:6px 12px;
+    border-radius:8px;
+    border:none;
+    font-size:15px;
+}
+.btn-blue{
+    background:#4088e0;
+    color:#fff;
+}
+
+/* 头像设置弹窗 */
+.pop .avatar-setting{
+    display:flex;
+    gap:12px;
+    margin-bottom:12px;
+}
+.pop .avatar-item{
+    flex:1;
+    text-align:center;
+}
+.pop .avatar-preview{
+    width:64px;
+    height:64px;
+    border-radius:50%;
+    background:#eee;
+    margin:0 auto 8px;
+    overflow:hidden;
+}
+.pop .avatar-preview img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.pop input[type="file"]{
+    width:100%;
+    font-size:14px;
+}
+
+/* 字卡查看弹窗样式 */
+.card-list{
+    max-height: 240px;
+    overflow-y: auto;
+    border:1px solid #eee;
+    border-radius:8px;
+    margin:8px 0 12px;
+}
+.card-item{
+    padding:8px 10px;
+    border-bottom:1px solid #eee;
+    font-size:16px;
+}
+.card-item:last-child{
+    border-bottom:none;
+}
+
+/* 聊天区域 */
+.chat-box{
+    flex: 1;
+    padding: 8px 6px;
+    height: calc(100vh - 160px - env(safe-area-inset-bottom));
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* 单条消息容器：头像+气泡 */
+.chat-row{
+    display:flex;
+    align-items:flex-end;
+    gap:8px;
+    max-width:100%;
+}
+.chat-row.user{
+    justify-content:flex-end;
+}
+.chat-row.ai{
+    justify-content:flex-start;
+}
+
+.avatar{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:#ddd;
+    flex-shrink:0;
+    overflow:hidden;
+}
+.avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* 聊天气泡 */
+.chat-item{
+    padding: 8px 12px;
+    border-radius: 14px;
+    line-height: 1.5;
+    font-size: 22px;
+    max-width: 75%;
+    word-break: break-all;
+}
+.chat-item.system{
+    align-self: center;
+    background: #eef2f7;
+    color: #666;
+    font-size: 16px;
+    text-align: center;
+    max-width: 85%;
+    border-radius: 8px;
+    padding: 4px 10px;
+}
+.chat-item.user{
+    background: #4088e0;
+    color: #fff;
+    border-bottom-right-radius: 3px;
+}
+.chat-item.ai{
+    background: #ffffff;
+    border-bottom-left-radius: 3px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+
+/* 底部输入区域 */
+.chat-input-area{
+    position: fixed;
+    bottom: calc(6px + env(safe-area-inset-bottom));
+    left: 6px;
+    right: 6px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    background: transparent;
+}
+.chat-input-area input{
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    font-size: 16px !important;
+    min-font-size: 16px;
+    outline: none;
+    background: #fff;
+}
+.chat-input-area button{
+    width: 70px;
+    padding: 10px 0;
+    border-radius: 18px;
+    border: none;
+    background: #4088e0;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+.chat-input-area button:active {
+    background: #2a6fb8;
+}
+</style>
+</head>
+<body>
+
+<!-- 功能按钮栏 页面最顶端 -->
+<div class="func-bar">
+    <button id="avatarBtn">设置头像</button>
+    <button id="importBtn">导入字卡</button>
+    <button id="viewCardBtn">查看字卡</button>
+    <button id="clearRecordBtn">清空记录</button>
+</div>
+
+<!-- 名称在线状态栏 -->
+<div class="top-bar">
+    <span>梦角</span>
+    <span class="dot"></span>
+    <span>在线倾听中...</span>
+</div>
+
+<div class="chat-box" id="chatBox">
+</div>
+
+<div class="chat-input-area">
+    <input id="msgInput" placeholder="输入你想说的话…" onkeydown="if(event.key==='Enter') sendMsg()">
+    <button onclick="sendMsg()">发送</button>
+</div>
+
+<!-- 头像设置弹窗 -->
+<div class="mask" id="avatarMask">
+    <div class="pop">
+        <h3>设置双方头像</h3>
+        <div class="avatar-setting">
+            <div class="avatar-item">
+                <div class="avatar-preview" id="userAvatarPreview"></div>
+                <p style="font-size:14px;margin-bottom:8px;">我的头像</p>
+                <input type="file" id="userAvatarInput" accept="image/*">
+            </div>
+            <div class="avatar-item">
+                <div class="avatar-preview" id="aiAvatarPreview"></div>
+                <p style="font-size:14px;margin-bottom:8px;">梦角头像</p>
+                <input type="file" id="aiAvatarInput" accept="image/*">
+            </div>
+        </div>
+        <div class="btn-row">
+            <button id="avatarCancel">取消</button>
+            <button class="btn-blue" id="avatarConfirm">保存头像</button>
+        </div>
+    </div>
+</div>
+
+<!-- 导入字卡弹窗 -->
+<div class="mask" id="importMask">
+    <div class="pop">
+        <h3>批量导入回复字卡</h3>
+        <p style="font-size:14px;margin-bottom:8px;">方式1：粘贴文本/URL文本（每行一句）</p>
+        <textarea id="textArea" placeholder="每行一条回复，例如：&#10;我一直陪着你&#10;别难过"></textarea>
+        <div class="file-box">
+            <p style="font-size:14px;margin-bottom:8px;">方式2：上传本地txt文件</p>
+            <input type="file" id="fileInput" accept=".txt">
+        </div>
+        <div class="btn-row">
+            <button id="importCancel">取消</button>
+            <button class="btn-blue" id="importConfirm">确认导入</button>
+        </div>
+    </div>
+</div>
+
+<!-- 查看全部字卡弹窗 -->
+<div class="mask" id="viewCardMask">
+    <div class="pop">
+        <h3>梦角自动回复字卡列表</h3>
+        <p style="font-size:14px;margin-bottom:8px;">所有梦角可自动回复文案</p>
+        <div class="card-list" id="cardListWrap"></div>
+        <div class="btn-row">
+            <button id="viewCardClose">关闭</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const REPLY_KEY = "dreamReplyList";
+const STORAGE_KEY = "dreamChatRecord";
+const USER_AVATAR_KEY = "userAvatar";
+const AI_AVATAR_KEY = "aiAvatar";
+
+let chatRecords = [];
+let replyList = [];
+let userAvatar = "";
+let aiAvatar = "";
+
+// 加载回复字卡
+function loadReply(){
+    const local = localStorage.getItem(REPLY_KEY);
+    if(local){
+        replyList = JSON.parse(local);
+    }else{
+        replyList = [
+            "我一直在呢，不要难过。",
+            "我懂你的情绪，你已经很努力了。",
+            "慢慢来，我会一直陪着你。",
+            "你超棒的，请多偏爱自己一点。",
+            "所有委屈我都接住了。",
+            "别焦虑，一切都会慢慢变好。",
+            "我永远站在你这边。",
+            "你的心意，我全部收到。",
+            "累了就停下来，我陪着你休息。",
+            "你值得所有温柔与偏爱。"
+        ];
+        saveReply();
+    }
+}
+function saveReply(){
+    localStorage.setItem(REPLY_KEY, JSON.stringify(replyList));
+}
+
+// 渲染字卡列表
+function renderCardList(){
+    const wrap = document.getElementById("cardListWrap");
+    wrap.innerHTML = "";
+    replyList.forEach(text=>{
+        const div = document.createElement("div");
+        div.className = "card-item";
+        div.textContent = text;
+        wrap.appendChild(div);
+    })
+}
+
+// 加载头像
+function loadAvatars(){
+    userAvatar = localStorage.getItem(USER_AVATAR_KEY) || "";
+    aiAvatar = localStorage.getItem(AI_AVATAR_KEY) || "";
+    refreshAvatarPreviews();
+}
+
+function refreshAvatarPreviews(){
+    const userPreview = document.getElementById("userAvatarPreview");
+    const aiPreview = document.getElementById("aiAvatarPreview");
+
+    userPreview.innerHTML = userAvatar ? `<img src="${userAvatar}" alt="">` : "";
+    aiPreview.innerHTML = aiAvatar ? `<img src="${aiAvatar}" alt="">` : "";
+}
+
+// 聊天记录初始化
+function initChatRecord(){
+    const local = localStorage.getItem(STORAGE_KEY);
+    const chatBox = document.getElementById("chatBox");
+    if(!local){
+        chatRecords = [];
+        showSystemMessage("已成功建立心灵链接，随时可以向我倾诉✨");
+        return;
+    }
+    chatRecords = JSON.parse(local);
+    chatRecords.forEach(item=>{
+        appendMessage(item.sender, item.text, item.isUser, false);
+    })
+}
+function showSystemMessage(text){
+    const chatBox = document.getElementById("chatBox");
+    const sysItem = document.createElement("div");
+    sysItem.className = "chat-item system";
+    sysItem.textContent = text;
+    chatBox.appendChild(sysItem);
+}
+function appendMessage(sender, text, isUser = false, save = true) {
+    const box = document.getElementById("chatBox");
+
+    const row = document.createElement("div");
+    row.className = `chat-row ${isUser ? "user" : "ai"}`;
+
+    // 头像
+    const avatar = document.createElement("div");
+    avatar.className = "avatar";
+    const avatarSrc = isUser ? userAvatar : aiAvatar;
+    if(avatarSrc){
+        avatar.innerHTML = `<img src="${avatarSrc}" alt="">`;
+    }
+
+    // 气泡
+    const bubble = document.createElement("div");
+    bubble.className = `chat-item ${isUser ? "user" : "ai"}`;
+    bubble.textContent = text;
+
+    if(isUser){
+        row.appendChild(bubble);
+        row.appendChild(avatar);
+    }else{
+        row.appendChild(avatar);
+        row.appendChild(bubble);
+    }
+
+    box.appendChild(row);
+
+    if(save){
+        chatRecords.push({sender, text, isUser});
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
+    }
+
+    setTimeout(() => {
+        box.scrollTop = box.scrollHeight;
+    }, 50);
+}
+
+// 发送消息，梦角自动随机回信（对方控制回复）
+function sendMsg(){
+    const input = document.getElementById("msgInput");
+    const text = input.value.trim();
+    if(!text) return;
+    appendMessage("你", text, true);
+    input.value = "";
+    setTimeout(()=>{
+        const r = replyList[Math.floor(Math.random() * replyList.length)];
+        appendMessage("梦角", r, false);
+    }, 600);
+}
+
+// 清空聊天记录
+document.getElementById("clearRecordBtn").addEventListener("click",function(){
+    if(confirm("确定清空全部聊天记录？删除后无法恢复！")){
+        localStorage.removeItem(STORAGE_KEY);
+        chatRecords = [];
+        document.getElementById("chatBox").innerHTML = "";
+        showSystemMessage("已成功建立心灵链接，随时可以向我倾诉✨");
+    }
+})
+
+// 头像弹窗逻辑
+const avatarMask = document.getElementById("avatarMask");
+const avatarBtn = document.getElementById("avatarBtn");
+const avatarCancel = document.getElementById("avatarCancel");
+const avatarConfirm = document.getElementById("avatarConfirm");
+const userAvatarInput = document.getElementById("userAvatarInput");
+const aiAvatarInput = document.getElementById("aiAvatarInput");
+
+avatarBtn.onclick = ()=> avatarMask.style.display = "flex";
+avatarCancel.onclick = ()=> avatarMask.style.display = "none";
+
+avatarConfirm.onclick = ()=>{
+    localStorage.setItem(USER_AVATAR_KEY, userAvatar);
+    localStorage.setItem(AI_AVATAR_KEY, aiAvatar);
+    alert("头像已保存！");
+    avatarMask.style.display = "none";
+}
+
+// 读取用户头像
+userAvatarInput.addEventListener("change",e=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev=>{
+        userAvatar = ev.target.result;
+        refreshAvatarPreviews();
+    };
+    reader.readAsDataURL(file);
+})
+
+// 读取AI头像
+aiAvatarInput.addEventListener("change",e=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev=>{
+        aiAvatar = ev.target.result;
+        refreshAvatarPreviews();
+    };
+    reader.readAsDataURL(file);
+})
+
+// 导入字卡弹窗逻辑
+const importMask = document.getElementById("importMask");
+const importBtn = document.getElementById("importBtn");
+const importCancel = document.getElementById("importCancel");
+const textArea = document.getElementById("textArea");
+const fileInput = document.getElementById("fileInput");
+const importConfirm = document.getElementById("importConfirm");
+
+importBtn.onclick = ()=> importMask.style.display = "flex";
+importCancel.onclick = ()=>{
+    importMask.style.display = "none";
+    textArea.value = "";
+    fileInput.value = "";
+}
+
+importConfirm.onclick = async ()=>{
+    let arr = [];
+    const text = textArea.value.trim();
+    if(text){
+        arr = text.split(/\r?\n/).filter(s=>s.trim()!="");
+    }
+    const file = fileInput.files[0];
+    if(file){
+        const txt = await file.text();
+        const fileArr = txt.split(/\r?\n/).filter(s=>s.trim()!="");
+        arr = [...arr, ...fileArr];
+    }
+    if(arr.length === 0){
+        alert("请粘贴文本或上传txt文件！");
+        return;
+    }
+    replyList = [...replyList, ...arr];
+    saveReply();
+    renderCardList();
+    alert(`导入成功，新增${arr.length}条回复！`);
+    importMask.style.display = "none";
+    textArea.value = "";
+    fileInput.value = "";
+}
+
+// 查看字卡弹窗逻辑
+const viewCardMask = document.getElementById("viewCardMask");
+const viewCardBtn = document.getElementById("viewCardBtn");
+const viewCardClose = document.getElementById("viewCardClose");
+viewCardBtn.onclick = ()=>{
+    renderCardList();
+    viewCardMask.style.display = "flex";
+}
+viewCardClose.onclick = ()=> viewCardMask.style.display = "none";
+
+window.onload = ()=>{
+    loadReply();
+    renderCardList();
+    loadAvatars();
+    initChatRecord();
+}
+</script>
+
+</body>
+</html>
