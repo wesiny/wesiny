@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#e6f2ff">
     <meta name="apple-mobile-web-app-title" content="梦角传讯">
-    <title>梦角传讯 · 回复速度最长60s</title>
+    <title>梦角传讯 · 回复速度最长120s</title>
     <style>
         /* === 完整样式（与上版一致） === */
         html { touch-action: manipulation; height: 100%; }
@@ -151,7 +151,7 @@
         <button class="mode-toggle" id="modeToggle">💬 自动回复</button>
     </div>
 
-    <!-- 弹窗集合（同前，省略重复注释） -->
+    <!-- 弹窗集合 -->
     <div class="mask" id="avatarMask">
         <div class="pop"><h3>设置双方头像</h3>
             <div class="avatar-setting">
@@ -238,21 +238,25 @@
         let currentDelayIndex = 2;
         let selectedDateKey = null;
 
-        // ========== 修改点：最慢档位改为 60 秒 ==========
+        // ========== 修改点：最慢 60s，随机 0.5~120s ==========
         const delayPresets = [
             { label: '即时', value: 0 },
             { label: '快速 (0.5s)', value: 500 },
             { label: '中速 (1.5s)', value: 1500 },
-            { label: '慢速 (60s)', value: 60000 },   // 原来是 3000，现改为 60000
-            { label: '随机 (0.5~4s)', value: 'random' }
+            { label: '慢速 (60s)', value: 60000 },
+            { label: '随机 (0.5~120s)', value: 'random' }   // 标签更新
         ];
-        // ================================================
 
         function getDelay() {
             const preset = delayPresets[currentDelayIndex];
-            if (preset.value === 'random') return 500 + Math.random() * 3500;
+            if (preset.value === 'random') {
+                // 0.5~120秒，单位毫秒：500 ~ 120000
+                return 500 + Math.random() * 119500;
+            }
             return preset.value;
         }
+        // =====================================================
+
         function updateSpeedButton() {
             document.getElementById('speedBtn').textContent = '⏱ ' + delayPresets[currentDelayIndex].label;
         }
@@ -761,7 +765,7 @@
             if (box) box.scrollTop = box.scrollHeight;
         }
 
-        // ==================== 发送消息（接入回复速度 + 自动记录情绪） ====================
+        // ==================== 发送消息 ====================
         function sendMsg() {
             const input = document.getElementById("msgInput");
             const text = input.value.trim();
