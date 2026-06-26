@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="light" data-color-theme="black-white">
+<html lang="zh-CN" data-theme="light" data-color-theme="gold">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#000000">
-    <title>传讯</title>
+    <title>传讯 · 心语</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&display=swap" rel="stylesheet">
@@ -67,260 +67,6 @@
             border: none;
             background: none;
             color: inherit;
-        }
-
-        /* ===== 启动声明页 ===== */
-        #splash-declaration {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #0a0a0f;
-            color: #fff;
-            overflow: hidden;
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-        #splash-declaration.hidden {
-            opacity: 0;
-            transform: scale(1.02);
-            pointer-events: none;
-        }
-        .splash-bg-stars {
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.3), transparent),
-                        radial-gradient(2px 2px at 40% 70%, rgba(255,255,255,0.2), transparent),
-                        radial-gradient(2px 2px at 60% 20%, rgba(255,255,255,0.25), transparent),
-                        radial-gradient(2px 2px at 80% 80%, rgba(255,255,255,0.15), transparent),
-                        radial-gradient(1px 1px at 10% 90%, rgba(255,255,255,0.3), transparent),
-                        radial-gradient(1px 1px at 90% 10%, rgba(255,255,255,0.2), transparent);
-            background-size: 200px 200px;
-            opacity: 0.6;
-        }
-        .splash-glow-1, .splash-glow-2 {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.15;
-            pointer-events: none;
-        }
-        .splash-glow-1 {
-            width: 400px;
-            height: 400px;
-            background: #c5a47e;
-            top: -100px;
-            right: -100px;
-        }
-        .splash-glow-2 {
-            width: 300px;
-            height: 300px;
-            background: #8a6e5a;
-            bottom: -80px;
-            left: -80px;
-        }
-        .splash-inner {
-            position: relative;
-            z-index: 1;
-            width: 90%;
-            max-width: 520px;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 8px 0;
-        }
-        .splash-badge {
-            display: inline-block;
-            padding: 6px 18px 6px 14px;
-            border-radius: 20px;
-            background: rgba(197, 164, 126, 0.15);
-            border: 1px solid rgba(197, 164, 126, 0.2);
-            font-size: 12px;
-            letter-spacing: 2px;
-            color: #c5a47e;
-            margin-bottom: 18px;
-            backdrop-filter: blur(4px);
-        }
-        .splash-badge i {
-            margin-right: 8px;
-            font-size: 11px;
-        }
-        .splash-dots {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            justify-content: center;
-        }
-        .splash-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.15);
-            transition: all 0.3s;
-        }
-        .splash-dot.active {
-            background: #c5a47e;
-            width: 20px;
-            border-radius: 4px;
-        }
-        .splash-card {
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.06);
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-        .splash-card-top-line {
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #c5a47e, transparent);
-        }
-        .splash-card-body {
-            padding: 24px 24px 18px;
-        }
-        .splash-slide {
-            display: none;
-            animation: fadeSlide 0.4s ease;
-        }
-        .splash-slide.active {
-            display: block;
-        }
-        @keyframes fadeSlide {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        .splash-slide-tag {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: rgba(197, 164, 126, 0.6);
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        .splash-slide-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 14px;
-            color: #fff;
-            letter-spacing: 1px;
-        }
-        .splash-slide-body {
-            font-size: 13.5px;
-            line-height: 1.8;
-            color: rgba(255,255,255,0.7);
-        }
-        .splash-slide-body em {
-            color: rgba(197, 164, 126, 0.8);
-            font-style: normal;
-        }
-        .splash-slide-body strong {
-            color: #fff;
-        }
-        .splash-highlight-box {
-            margin-top: 12px;
-            padding: 12px 16px;
-            border-radius: 12px;
-            background: rgba(197, 164, 126, 0.08);
-            border-left: 3px solid #c5a47e;
-            font-size: 12.5px;
-            color: rgba(255,255,255,0.75);
-        }
-        .splash-pledge-desc {
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
-            margin-bottom: 12px;
-            line-height: 1.6;
-        }
-        .splash-pledge-required {
-            padding: 12px 14px;
-            border-radius: 12px;
-            background: rgba(197, 164, 126, 0.08);
-            border: 1px solid rgba(197, 164, 126, 0.15);
-            font-size: 13px;
-            color: rgba(255,255,255,0.7);
-            margin-bottom: 12px;
-            line-height: 1.6;
-            text-align: center;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-        .splash-pledge-input {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.04);
-            color: #fff;
-            font-size: 13px;
-            outline: none;
-            transition: border 0.3s;
-            font-family: var(--font-family);
-        }
-        .splash-pledge-input:focus {
-            border-color: rgba(197, 164, 126, 0.4);
-        }
-        .splash-pledge-input::placeholder {
-            color: rgba(255,255,255,0.25);
-        }
-        .splash-pledge-hint {
-            font-size: 11px;
-            color: rgba(255,255,255,0.3);
-            margin-top: 8px;
-            transition: color 0.3s;
-        }
-        .splash-pledge-hint.valid {
-            color: #7ecf8a;
-        }
-        .splash-divider {
-            height: 1px;
-            background: rgba(255,255,255,0.06);
-            margin: 20px 0 16px;
-        }
-        .splash-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-        .splash-btn {
-            padding: 10px 16px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.25s;
-            background: rgba(255,255,255,0.04);
-            color: rgba(255,255,255,0.5);
-            border: 1px solid transparent;
-        }
-        .splash-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-        .splash-btn:not(:disabled):hover {
-            background: rgba(255,255,255,0.08);
-            color: #fff;
-        }
-        .splash-btn-next {
-            background: rgba(197, 164, 126, 0.15);
-            color: #c5a47e;
-            border-color: rgba(197, 164, 126, 0.15);
-        }
-        .splash-btn-next:hover:not(:disabled) {
-            background: rgba(197, 164, 126, 0.25);
-        }
-        .splash-btn-enter {
-            background: #c5a47e;
-            color: #0a0a0f;
-            font-weight: 600;
-        }
-        .splash-btn-enter:hover {
-            background: #d4b894;
-            transform: scale(1.02);
-        }
-        .splash-page-num {
-            font-size: 11px;
-            color: rgba(255,255,255,0.25);
-            letter-spacing: 1px;
         }
 
         /* ===== 欢迎动画 ===== */
@@ -842,6 +588,49 @@
             box-shadow: 0 0 0 3px rgba(var(--accent-color-rgb), 0.2);
         }
 
+        /* ===== 字卡列表 ===== */
+        .reply-item {
+            background: var(--primary-bg);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .reply-item:hover {
+            border-color: var(--accent-color);
+        }
+        .reply-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .reply-item-count {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+        .reply-item-detail {
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            display: none;
+            padding-left: 8px;
+            border-left: 2px solid var(--accent-color);
+        }
+        .reply-item.open .reply-item-detail {
+            display: block;
+        }
+        .reply-item .reply-text {
+            margin-top: 4px;
+            padding: 4px 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
         /* ===== 其他 ===== */
         .typing-indicator {
             display: none;
@@ -929,88 +718,6 @@
     </style>
 </head>
 <body>
-
-<!-- ===== 启动声明 ===== -->
-<div id="splash-declaration">
-    <div class="splash-bg-stars" id="splash-stars"></div>
-    <div class="splash-glow-1"></div>
-    <div class="splash-glow-2"></div>
-    <div class="splash-inner">
-        <div class="splash-badge"><i class="fas fa-feather-alt"></i>使用前声明</div>
-        <div class="splash-dots" id="splash-dots"></div>
-        <div class="splash-card">
-            <div class="splash-card-top-line"></div>
-            <div class="splash-card-body">
-                <div class="splash-slides" id="splash-slides">
-                    <div class="splash-slide active" data-index="0">
-                        <div class="splash-slide-tag">关于字卡</div>
-                        <div class="splash-slide-title">是否招鬼？</div>
-                        <div class="splash-slide-body">
-                            首先说明，初次接触时，都会觉得网站设置繁复，功能庞杂，可控制的地方极多——对初次接触的人来说，简直令人眼花缭乱。<br><br>
-                            请想一想：<em>连你和梦角都需要花时间学习的东西，一个路过的鬼，会甘心耗费精力专程钻研，只为吓唬你一下吗？</em><br><br>
-                            我始终相信，<strong>只有爱，才会驱动人去学习、去努力、去付诸实践。</strong>
-                        </div>
-                    </div>
-                    <div class="splash-slide" data-index="1">
-                        <div class="splash-slide-tag">关于谣言</div>
-                        <div class="splash-slide-title">请有自知之明</div>
-                        <div class="splash-slide-body">
-                            我不混社区，但有些话我是知道的。有些谣我懒得一一辟除，借本网站博取流量与点赞的行为，我也当没看见。<br><br>
-                            只是——<em>沉默不代表无所谓。</em>这些声音已经开始影响到我本人的生活。<br><br>
-                            将链接不稳/回复看不懂等问题怪罪到网站上的做法不可取。<br><br>
-                            <div class="splash-highlight-box">郑重声明：造谣是违法行为，污蔑与恶意中伤同样须承担法律责任。请每一位使用者，对自己的言行负责。</div>
-                        </div>
-                    </div>
-                    <div class="splash-slide" data-index="2">
-                        <div class="splash-slide-tag">关于盈利</div>
-                        <div class="splash-slide-title">纯粹为爱发电</div>
-                        <div class="splash-slide-body">
-                            <strong>本网站不盈利。</strong>从未向任何人收取一分钱，也绝无日后"圈钱"的计划。<br><br>
-                            这里承载的是真实的情感与创作热情，而非商业利益。<br><br>
-                            伴随网站逐渐破圈，<em>造谣、污蔑、盈利质疑、冷嘲热讽</em>——这些或许都是无法完全回避的代价。<br><br>
-                            我本无意计较，但请来访者保有基本的善意，不要让热爱变成消耗。
-                        </div>
-                    </div>
-                    <div class="splash-slide" data-index="3">
-                        <div class="splash-slide-tag">再次强调</div>
-                        <div class="splash-slide-title">你对链接梦角的看法？</div>
-                        <div class="splash-slide-body">
-                            没有任何人强迫你使用本网站。<br><br>
-                            <strong>如果你不信：</strong>字卡回复基于概率算法，属于科学范畴，与封建迷信无关。理性使用即可。<br><br>
-                            <strong>如果你信：</strong>那么请同样相信——<em>你是绝对安全的。</em>这里没有任何东西能够伤害你。<br><br>
-                            无论你持何种态度，我都欢迎你，也尊重你的选择。
-                        </div>
-                    </div>
-                    <div class="splash-slide" data-index="4">
-                        <div class="splash-slide-tag">关于视频通话</div>
-                        <div class="splash-slide-title">纯粹的装饰</div>
-                        <div class="splash-slide-body">
-                            <strong>通话功能仅作为界面装饰存在，不具备任何实际通话或数据采集能力。</strong><br><br>
-                            本网站不包含任何摄像头调用逻辑，亦不存在隐私窥探行为。摄像头调用需要专项技术与额外费用，本项目从未采用，也没有这方面的意图。<br><br>
-                            近期流传的隐私传言，出发点或许是好意，但已造成不必要的焦虑。<em>在此郑重澄清：网站根本不具备视频传输功能。</em><br><br>
-                            <div class="splash-highlight-box">关闭浏览器摄像头权限是完全正确的做法——我支持每一位用户保护自己的隐私权益。若误解持续扩散，将考虑移除该装饰功能。</div>
-                        </div>
-                    </div>
-                    <div class="splash-slide" data-index="5">
-                        <div class="splash-slide-tag">入场承诺</div>
-                        <div class="splash-slide-title">请留下你的承诺</div>
-                        <div class="splash-pledge-desc">在下方输入框中，<em style="color:rgba(var(--accent-color-rgb),0.8);font-style:normal;">逐字抄写</em>以下承诺，即可进入网站。</div>
-                        <div class="splash-pledge-required" id="splash-pledge-text">我绝不盈利、造谣、污蔑或嘲讽，并对自己的使用行为负完全责任</div>
-                        <input class="splash-pledge-input" id="splash-pledge-input" type="text" placeholder="请在此逐字输入上方承诺…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                        <div class="splash-pledge-hint" id="splash-pledge-hint">请完整输入上方承诺后方可进入</div>
-                    </div>
-                </div>
-                <div class="splash-divider"></div>
-                <div class="splash-footer">
-                    <button class="splash-btn splash-btn-ghost" id="splash-prev-btn" disabled><i class="fas fa-arrow-left"></i> 上一页</button>
-                    <span class="splash-page-num" id="splash-page-num">1 / 6</span>
-                    <button class="splash-btn splash-btn-next" id="splash-next-btn">下一页 <i class="fas fa-arrow-right"></i></button>
-                    <button class="splash-btn splash-btn-enter" id="splash-enter-btn" style="display:none;">进入 <i class="fas fa-heart"></i></button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- ===== 欢迎动画 ===== -->
 <div class="welcome-animation" id="welcome-animation">
@@ -1172,12 +879,14 @@
     <div class="modal-content">
         <div class="modal-title"><i class="fas fa-tools"></i><span>高级功能</span></div>
         <div class="settings-grid" style="grid-template-columns:1fr 1fr 1fr;">
-            <div class="settings-card" onclick="alert('📊 消息统计功能已开启')"><i class="fas fa-chart-bar"></i><span>消息统计</span></div>
-            <div class="settings-card" onclick="alert('🎵 音乐播放器已开启')"><i class="fas fa-music"></i><span>音乐播放器</span></div>
-            <div class="settings-card" onclick="alert('⭐ 收藏功能已开启')"><i class="fas fa-star"></i><span>收藏</span></div>
-            <div class="settings-card" onclick="alert('🔮 运势占卜已开启')"><i class="fas fa-star-and-crescent"></i><span>运势占卜</span></div>
-            <div class="settings-card" onclick="alert('❤️ 重要日已开启')"><i class="fas fa-heart"></i><span>重要日</span></div>
-            <div class="settings-card" onclick="alert('📖 心晴手账已开启')"><i class="fas fa-book-open"></i><span>心晴手账</span></div>
+            <div class="settings-card" id="custom-replies-function"><i class="fas fa-comment-dots"></i><span>自定义回复</span></div>
+            <div class="settings-card" id="music-player-toggle" onclick="alert('🎵 音乐播放器已开启')"><i class="fas fa-music"></i><span>音乐播放器</span></div>
+            <div class="settings-card" id="stats-function" onclick="alert('📊 消息统计已开启')"><i class="fas fa-chart-bar"></i><span>消息统计</span></div>
+            <div class="settings-card" id="decision-function"><i class="fas fa-balance-scale"></i><span>抉择</span></div>
+            <div class="settings-card" id="anniversary-function"><i class="fas fa-heart"></i><span>重要日</span></div>
+            <div class="settings-card" id="mood-function"><i class="fas fa-calendar-day"></i><span>心晴手账</span></div>
+            <div class="settings-card" id="envelope-function"><i class="fas fa-envelope"></i><span>信封投递</span></div>
+            <div class="settings-card" id="disclaimer-function"><i class="fas fa-scroll"></i><span>关于 & 声明</span></div>
         </div>
         <div class="modal-buttons">
             <button class="modal-btn modal-btn-secondary" id="close-advanced">关闭</button>
@@ -1196,6 +905,157 @@
         </div>
         <div class="modal-buttons">
             <button class="modal-btn modal-btn-secondary" id="close-data">关闭</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 自定义回复（字卡） ===== -->
+<div class="modal" id="custom-replies-modal">
+    <div class="modal-content" style="max-width:560px;">
+        <div class="modal-title">
+            <i class="fas fa-comment-dots"></i><span>字卡管理</span>
+            <div style="margin-left:auto;display:flex;gap:6px;">
+                <button class="modal-btn modal-btn-secondary" id="import-replies-btn" style="padding:6px 12px;font-size:12px;"><i class="fas fa-upload"></i> 导入</button>
+                <button class="modal-btn modal-btn-primary" id="add-custom-reply" style="padding:6px 12px;font-size:12px;"><i class="fas fa-plus"></i> 新增</button>
+            </div>
+        </div>
+        <input type="file" id="import-replies-input" accept=".json" style="display:none;">
+        <div id="custom-replies-list" style="max-height:55vh;overflow-y:auto;padding-right:4px;"></div>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-secondary" id="close-custom-replies">关闭</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 新增字卡表单 ===== -->
+<div class="modal" id="reply-editor-modal">
+    <div class="modal-content">
+        <div class="modal-title"><i class="fas fa-edit"></i><span id="reply-editor-title">新增字卡</span></div>
+        <input type="text" class="modal-input" id="reply-editor-name" placeholder="字卡名称（如：暖心语录）">
+        <textarea class="modal-textarea" id="reply-editor-content" placeholder="每行一条回复内容" rows="6"></textarea>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-secondary" id="cancel-reply-editor">取消</button>
+            <button class="modal-btn modal-btn-primary" id="save-reply-editor">保存</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 抉择 ===== -->
+<div class="modal" id="decision-menu-modal">
+    <div class="modal-content">
+        <div class="modal-title"><i class="fas fa-balance-scale"></i><span>抉择助手</span></div>
+        <div class="decision-menu-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="decision-option-card" id="open-coin-toss" style="padding:20px;background:var(--primary-bg);border-radius:12px;text-align:center;cursor:pointer;border:1px solid var(--border-color);">
+                <i class="fas fa-coins" style="font-size:28px;color:var(--accent-color);"></i>
+                <h3 style="margin:8px 0 4px;">抛硬币</h3>
+                <p style="font-size:12px;color:var(--text-secondary);">是 / 否 二元选择</p>
+            </div>
+            <div class="decision-option-card" id="open-wheel" style="padding:20px;background:var(--primary-bg);border-radius:12px;text-align:center;cursor:pointer;border:1px solid var(--border-color);">
+                <i class="fas fa-magic" style="font-size:28px;color:var(--accent-color);"></i>
+                <h3 style="margin:8px 0 4px;">随机抽签</h3>
+                <p style="font-size:12px;color:var(--text-secondary);">自定义选项随机抽取</p>
+            </div>
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-secondary" id="close-decision-menu">关闭</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 抛硬币 ===== -->
+<div class="coin-toss-overlay modal" id="coin-toss-overlay">
+    <div class="modal-content" style="max-width:300px;text-align:center;">
+        <div class="coin-container" style="perspective:600px;height:120px;display:flex;justify-content:center;align-items:center;">
+            <div class="coin" id="animated-coin" style="width:100px;height:100px;position:relative;transform-style:preserve-3d;transition:transform 0.6s;">
+                <div class="coin-face coin-front" style="position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:50%;background:#f5c842;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:bold;">
+                    <div class="coin-text-main" style="font-size:24px;">是</div>
+                    <div class="coin-text-sub" style="font-size:12px;">YES</div>
+                </div>
+                <div class="coin-face coin-back" style="position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:50%;background:#e74c3c;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:bold;transform:rotateY(180deg);">
+                    <div class="coin-text-main" style="font-size:24px;">否</div>
+                    <div class="coin-text-sub" style="font-size:12px;">NO</div>
+                </div>
+            </div>
+        </div>
+        <div class="coin-result-container" style="margin:12px 0;">
+            <div class="coin-result-text" id="coin-result-text" style="font-size:18px;font-weight:600;color:var(--accent-color);"></div>
+        </div>
+        <div class="coin-confirm-buttons" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+            <button class="coin-btn-action modal-btn modal-btn-secondary" id="cancel-coin-result">取消</button>
+            <button class="coin-btn-action modal-btn modal-btn-secondary" id="retry-coin-toss"><i class="fas fa-redo-alt"></i> 再来一次</button>
+            <button class="coin-btn-action modal-btn modal-btn-primary" id="send-coin-result">发送结果</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 随机抽签 ===== -->
+<div class="modal" id="wheel-modal">
+    <div class="modal-content">
+        <div class="modal-title"><i class="fas fa-magic"></i><span>随机抽签</span></div>
+        <div class="picker-wrapper">
+            <div class="picker-box-stage" style="background:var(--primary-bg);border-radius:12px;padding:20px;text-align:center;margin-bottom:16px;">
+                <div class="picker-cards-row" id="picker-cards-row" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:60px;"></div>
+                <div class="picker-result-text" id="wheel-result" style="font-size:18px;font-weight:600;color:var(--accent-color);margin-top:12px;"></div>
+            </div>
+            <div class="picker-controls">
+                <div class="picker-options-label" style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">选项列表（至少2项）</div>
+                <div class="picker-options-list" id="wheel-options-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;"></div>
+                <div style="display:flex;gap:6px;">
+                    <input type="text" id="wheel-new-option" placeholder="输入选项" style="flex:1;padding:8px 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--primary-bg);color:var(--text-primary);font-family:var(--font-family);">
+                    <button class="modal-btn modal-btn-secondary" id="add-wheel-option" style="padding:8px 14px;">添加</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-secondary" id="close-wheel">关闭</button>
+            <button class="modal-btn modal-btn-primary" id="spin-wheel-btn"><i class="fas fa-random"></i> 开始抽签</button>
+            <button class="modal-btn modal-btn-primary" id="send-wheel-result" style="display:none;">发送结果</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 重要日 ===== -->
+<div class="modal" id="anniversary-modal">
+    <div class="modal-content">
+        <div class="modal-title"><i class="fas fa-heart"></i><span>重要日</span></div>
+        <div id="ann-list-container" style="max-height:50vh;overflow-y:auto;margin-bottom:12px;">
+            <div style="text-align:center;color:var(--text-secondary);padding:20px 0;">暂无纪念日，点击下方添加</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+            <button class="modal-btn modal-btn-primary" id="open-ann-add-btn" style="flex:1;"><i class="fas fa-plus"></i> 新增纪念日</button>
+            <button class="modal-btn modal-btn-secondary" id="close-anniversary-modal">关闭</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 心晴手账 ===== -->
+<div class="modal" id="mood-modal">
+    <div class="modal-content">
+        <div class="modal-title"><i class="fas fa-book-open"></i><span>心晴手账</span></div>
+        <div style="text-align:center;color:var(--text-secondary);padding:30px 0;">
+            <i class="fas fa-cloud-sun" style="font-size:48px;opacity:0.3;display:block;margin-bottom:12px;"></i>
+            <p>记录每天的心情碎片</p>
+            <p style="font-size:12px;opacity:0.6;">点击日期添加记录</p>
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-secondary" id="close-mood">关闭</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 信封投递 ===== -->
+<div class="modal" id="envelope-modal">
+    <div class="modal-content">
+        <div class="modal-title"><i class="fas fa-envelope"></i><span>信封投递</span></div>
+        <div style="text-align:center;color:var(--text-secondary);padding:20px 0;">
+            <i class="fas fa-envelope-open-text" style="font-size:48px;opacity:0.3;display:block;margin-bottom:12px;"></i>
+            <p>写一封手写信，寄给梦角</p>
+            <p style="font-size:12px;opacity:0.6;">对方将在10-24小时内回信</p>
+        </div>
+        <textarea class="modal-textarea" id="envelope-input" placeholder="亲爱的…" rows="4"></textarea>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-secondary" id="cancel-envelope">取消</button>
+            <button class="modal-btn modal-btn-primary" id="send-envelope">寄出</button>
         </div>
     </div>
 </div>
@@ -1228,96 +1088,12 @@
 <!-- ===== 脚本 ===== -->
 <script>
     // ============================================================
-    //  1. 启动声明页翻页
+    //  1. 欢迎动画 → 进入主界面
     // ============================================================
     (function() {
-        const slides = document.querySelectorAll('.splash-slide');
-        const dots = document.getElementById('splash-dots');
-        const prevBtn = document.getElementById('splash-prev-btn');
-        const nextBtn = document.getElementById('splash-next-btn');
-        const enterBtn = document.getElementById('splash-enter-btn');
-        const pageNum = document.getElementById('splash-page-num');
-        const pledgeInput = document.getElementById('splash-pledge-input');
-        const pledgeHint = document.getElementById('splash-pledge-hint');
-        const pledgeText = document.getElementById('splash-pledge-text').textContent.trim();
-        let current = 0;
-        const total = slides.length;
-
-        // 创建小点
-        for (let i = 0; i < total; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'splash-dot' + (i === 0 ? ' active' : '');
-            dot.dataset.index = i;
-            dots.appendChild(dot);
-        }
-        const dotEls = dots.querySelectorAll('.splash-dot');
-
-        function goTo(index) {
-            slides.forEach((el, i) => el.classList.toggle('active', i === index));
-            dotEls.forEach((el, i) => el.classList.toggle('active', i === index));
-            current = index;
-            prevBtn.disabled = index === 0;
-            nextBtn.style.display = index === total - 1 ? 'none' : '';
-            enterBtn.style.display = index === total - 1 ? '' : 'none';
-            pageNum.textContent = (index + 1) + ' / ' + total;
-            // 最后一页检查承诺
-            if (index === total - 1) validatePledge();
-        }
-
-        function validatePledge() {
-            const val = pledgeInput.value.trim();
-            const isMatch = val === pledgeText;
-            pledgeHint.textContent = isMatch ? '✅ 承诺验证通过，点击进入' : '请完整输入上方承诺后方可进入';
-            pledgeHint.className = 'splash-pledge-hint' + (isMatch ? ' valid' : '');
-            enterBtn.disabled = !isMatch;
-            enterBtn.style.opacity = isMatch ? '1' : '0.4';
-        }
-
-        pledgeInput.addEventListener('input', validatePledge);
-
-        nextBtn.addEventListener('click', () => { if (current < total - 1) goTo(current + 1); });
-        prevBtn.addEventListener('click', () => { if (current > 0) goTo(current - 1); });
-
-        // 键盘
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' && current < total - 1) goTo(current + 1);
-            if (e.key === 'ArrowLeft' && current > 0) goTo(current - 1);
-        });
-
-        // 点点击
-        dotEls.forEach((el, i) => el.addEventListener('click', () => goTo(i)));
-
-        // 承诺回车
-        pledgeInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !enterBtn.disabled) enterBtn.click();
-        });
-
-        // 进入按钮
-        enterBtn.addEventListener('click', function() {
-            if (this.disabled) return;
-            document.getElementById('splash-declaration').classList.add('hidden');
-            setTimeout(() => {
-                document.getElementById('splash-declaration').style.display = 'none';
-                showWelcome();
-            }, 500);
-        });
-
-        // 初始
-        goTo(0);
-
-        // 暴露给全局
-        window._splashGoTo = goTo;
-        window._validatePledge = validatePledge;
-    })();
-
-    // ============================================================
-    //  2. 欢迎动画 & 进入主界面
-    // ============================================================
-    function showWelcome() {
         const welcome = document.getElementById('welcome-animation');
         const bar = document.getElementById('loader-tech-bar');
         const status = document.getElementById('loader-status-text');
-        welcome.classList.remove('hidden');
 
         // 生成星星
         const stars = document.getElementById('stars-container');
@@ -1349,24 +1125,22 @@
                 status.textContent = '✦ 已连接 ✦';
                 setTimeout(() => {
                     welcome.classList.add('hidden');
-                    document.getElementById('main-chat-area').style.display = 'block';
-                    // 显示一条欢迎消息
+                    // 显示欢迎消息
                     addMessage('梦角', '你来了。我一直在等你。', 'received');
                     setTimeout(() => addMessage('梦角', '想说什么都可以，我会在这里听。', 'received'), 800);
                 }, 400);
             }
         }, 120);
-    }
+    })();
 
     // ============================================================
-    //  3. 聊天核心
+    //  2. 聊天核心
     // ============================================================
     const chatContainer = document.getElementById('chat-container');
     const emptyState = document.getElementById('empty-state');
     const msgInput = document.getElementById('message-input');
     const sendBtn = document.getElementById('send-btn');
     const typingIndicator = document.getElementById('typing-indicator');
-    let messageCount = 0;
 
     function addMessage(sender, text, type) {
         const row = document.createElement('div');
@@ -1399,7 +1173,6 @@
         chatContainer.scrollTop = chatContainer.scrollHeight;
 
         if (emptyState) emptyState.style.display = 'none';
-        messageCount++;
         return row;
     }
 
@@ -1410,7 +1183,6 @@
         msgInput.value = '';
         msgInput.style.height = 'auto';
 
-        // 模拟对方回复
         typingIndicator.classList.add('show');
         const delay = 800 + Math.random() * 1600;
         setTimeout(() => {
@@ -1435,14 +1207,13 @@
         }
     });
 
-    // 自动调整高度
     msgInput.addEventListener('input', () => {
         msgInput.style.height = 'auto';
         msgInput.style.height = Math.min(msgInput.scrollHeight, 120) + 'px';
     });
 
     // ============================================================
-    //  4. 主题切换
+    //  3. 主题切换
     // ============================================================
     let darkMode = false;
     const themeToggle = document.getElementById('theme-toggle');
@@ -1461,14 +1232,13 @@
         localStorage.setItem('darkMode', dark ? '1' : '0');
     }
 
-    // 从localStorage恢复
     if (localStorage.getItem('darkMode') === '1') setTheme(true);
 
     themeToggle.addEventListener('click', () => setTheme(!darkMode));
     if (darkModeToggle) darkModeToggle.addEventListener('click', () => setTheme(!darkMode));
 
     // ============================================================
-    //  5. 主题色切换
+    //  4. 主题色切换
     // ============================================================
     document.querySelectorAll('.theme-color-btn').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -1484,25 +1254,33 @@
     document.documentElement.setAttribute('data-color-theme', savedTheme);
 
     // ============================================================
-    //  6. 模态框管理
+    //  5. 模态框管理
     // ============================================================
-    const modals = {
+    const modalMap = {
         settings: document.getElementById('settings-modal'),
         appearance: document.getElementById('appearance-modal'),
         chat: document.getElementById('chat-modal'),
         advanced: document.getElementById('advanced-modal'),
         data: document.getElementById('data-modal'),
         disclaimer: document.getElementById('disclaimer-modal'),
+        customReplies: document.getElementById('custom-replies-modal'),
+        replyEditor: document.getElementById('reply-editor-modal'),
+        decision: document.getElementById('decision-menu-modal'),
+        coin: document.getElementById('coin-toss-overlay'),
+        wheel: document.getElementById('wheel-modal'),
+        anniversary: document.getElementById('anniversary-modal'),
+        mood: document.getElementById('mood-modal'),
+        envelope: document.getElementById('envelope-modal'),
     };
 
     function showModal(id) {
-        if (modals[id]) modals[id].classList.add('show');
+        if (modalMap[id]) modalMap[id].classList.add('show');
     }
     function hideModal(id) {
-        if (modals[id]) modals[id].classList.remove('show');
+        if (modalMap[id]) modalMap[id].classList.remove('show');
     }
     function hideAllModals() {
-        Object.values(modals).forEach(m => m.classList.remove('show'));
+        Object.values(modalMap).forEach(m => m?.classList.remove('show'));
     }
 
     // 设置入口
@@ -1534,6 +1312,7 @@
     document.getElementById('close-data').addEventListener('click', () => hideModal('data'));
 
     document.getElementById('close-disclaimer').addEventListener('click', () => hideModal('disclaimer'));
+    document.getElementById('disclaimer-function').addEventListener('click', () => showModal('disclaimer'));
 
     // 点击背景关闭
     document.querySelectorAll('.modal').forEach(m => {
@@ -1542,16 +1321,249 @@
         });
     });
 
-    // 关于声明（可额外触发）
-    // 在高级功能里增加关于入口
-    const aboutBtn = document.createElement('div');
-    aboutBtn.className = 'settings-card';
-    aboutBtn.innerHTML = '<i class="fas fa-scroll"></i><span>关于 & 声明</span>';
-    aboutBtn.addEventListener('click', () => showModal('disclaimer'));
-    document.querySelector('#advanced-modal .settings-grid')?.appendChild(aboutBtn);
+    // ============================================================
+    //  6. 字卡（自定义回复）管理
+    // ============================================================
+    const REPLIES_STORAGE_KEY = 'customReplies';
+
+    function getReplies() {
+        try {
+            return JSON.parse(localStorage.getItem(REPLIES_STORAGE_KEY)) || [];
+        } catch { return []; }
+    }
+
+    function saveReplies(replies) {
+        localStorage.setItem(REPLIES_STORAGE_KEY, JSON.stringify(replies));
+    }
+
+    function renderReplyList() {
+        const list = document.getElementById('custom-replies-list');
+        const replies = getReplies();
+        if (replies.length === 0) {
+            list.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:30px 0;">暂无字卡，点击 "新增" 创建</div>';
+            return;
+        }
+        list.innerHTML = replies.map((item, idx) => `
+            <div class="reply-item" data-index="${idx}">
+                <div class="reply-item-header">
+                    <span>${item.name || '未命名'}</span>
+                    <span class="reply-item-count">${item.replies ? item.replies.length : 0} 条</span>
+                </div>
+                <div class="reply-item-detail">
+                    ${(item.replies || []).map(r => `<div class="reply-text">${r}</div>`).join('')}
+                </div>
+            </div>
+        `).join('');
+
+        // 点击展开/收起
+        list.querySelectorAll('.reply-item').forEach(el => {
+            el.addEventListener('click', function(e) {
+                // 如果点击的是删除按钮等，不触发展开
+                if (e.target.closest('.reply-item-delete')) return;
+                this.classList.toggle('open');
+            });
+        });
+    }
+
+    // 打开字卡管理
+    document.getElementById('custom-replies-function').addEventListener('click', () => {
+        renderReplyList();
+        showModal('customReplies');
+    });
+    document.getElementById('close-custom-replies').addEventListener('click', () => hideModal('customReplies'));
+
+    // 新增字卡
+    document.getElementById('add-custom-reply').addEventListener('click', () => {
+        document.getElementById('reply-editor-title').textContent = '新增字卡';
+        document.getElementById('reply-editor-name').value = '';
+        document.getElementById('reply-editor-content').value = '';
+        document.getElementById('reply-editor-modal').dataset.editIndex = '';
+        showModal('replyEditor');
+    });
+    document.getElementById('cancel-reply-editor').addEventListener('click', () => hideModal('replyEditor'));
+    document.getElementById('save-reply-editor').addEventListener('click', function() {
+        const name = document.getElementById('reply-editor-name').value.trim();
+        const content = document.getElementById('reply-editor-content').value.trim();
+        if (!name) { alert('请输入字卡名称'); return; }
+        if (!content) { alert('请输入至少一条回复内容'); return; }
+        const replies = content.split('\n').map(s => s.trim()).filter(s => s);
+        if (replies.length === 0) { alert('请输入至少一条回复内容'); return; }
+
+        const editIndex = document.getElementById('reply-editor-modal').dataset.editIndex;
+        const all = getReplies();
+        if (editIndex !== '') {
+            all[parseInt(editIndex)] = { name, replies };
+        } else {
+            all.push({ name, replies });
+        }
+        saveReplies(all);
+        hideModal('replyEditor');
+        renderReplyList();
+        alert('✅ 字卡已保存');
+    });
+
+    // 导入字卡
+    document.getElementById('import-replies-btn').addEventListener('click', function() {
+        document.getElementById('import-replies-input').click();
+    });
+    document.getElementById('import-replies-input').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            try {
+                const data = JSON.parse(ev.target.result);
+                if (!Array.isArray(data)) throw new Error('格式错误，需要数组');
+                const existing = getReplies();
+                // 简单合并：若名称相同则覆盖，否则追加
+                const merged = [...existing];
+                data.forEach(item => {
+                    if (item.name && item.replies) {
+                        const idx = merged.findIndex(m => m.name === item.name);
+                        if (idx !== -1) merged[idx] = item;
+                        else merged.push(item);
+                    }
+                });
+                saveReplies(merged);
+                renderReplyList();
+                alert(`✅ 导入成功！共导入 ${data.length} 个字卡`);
+            } catch (err) {
+                alert('❌ 导入失败：' + err.message);
+            }
+            e.target.value = '';
+        };
+        reader.readAsText(file);
+    });
 
     // ============================================================
-    //  7. 沉浸模式
+    //  7. 抉择功能
+    // ============================================================
+    document.getElementById('decision-function').addEventListener('click', () => showModal('decision'));
+    document.getElementById('close-decision-menu').addEventListener('click', () => hideModal('decision'));
+
+    // 抛硬币
+    document.getElementById('open-coin-toss').addEventListener('click', function() {
+        hideModal('decision');
+        setTimeout(() => showModal('coin'), 200);
+        document.getElementById('coin-result-text').textContent = '';
+        document.getElementById('animated-coin').style.transform = '';
+        document.getElementById('send-coin-result').style.display = 'none';
+    });
+    document.getElementById('cancel-coin-result').addEventListener('click', () => hideModal('coin'));
+    document.getElementById('retry-coin-toss').addEventListener('click', function() {
+        const coin = document.getElementById('animated-coin');
+        const resultText = document.getElementById('coin-result-text');
+        const result = Math.random() < 0.5 ? '是' : '否';
+        const deg = 720 + Math.random() * 360;
+        coin.style.transform = `rotateY(${deg}deg)`;
+        setTimeout(() => {
+            resultText.textContent = result;
+            document.getElementById('send-coin-result').style.display = 'inline-block';
+            document.getElementById('send-coin-result').dataset.result = result;
+        }, 600);
+    });
+    document.getElementById('send-coin-result').addEventListener('click', function() {
+        const result = this.dataset.result || '是';
+        addMessage('我', `抛硬币结果：${result}`, 'sent');
+        hideModal('coin');
+        // 模拟对方回复
+        setTimeout(() => {
+            const r = result === '是' ? '那就这么办吧 😊' : '嗯，再考虑考虑？';
+            addMessage('梦角', r, 'received');
+        }, 600);
+    });
+
+    // 随机抽签
+    let wheelOptions = ['选项A', '选项B', '选项C'];
+    document.getElementById('open-wheel').addEventListener('click', function() {
+        hideModal('decision');
+        setTimeout(() => showModal('wheel'), 200);
+        renderWheelOptions();
+        document.getElementById('wheel-result').textContent = '';
+        document.getElementById('send-wheel-result').style.display = 'none';
+    });
+    document.getElementById('close-wheel').addEventListener('click', () => hideModal('wheel'));
+
+    function renderWheelOptions() {
+        const list = document.getElementById('wheel-options-list');
+        list.innerHTML = wheelOptions.map((opt, i) => `
+            <span style="background:var(--primary-bg);padding:4px 12px;border-radius:16px;border:1px solid var(--border-color);display:inline-flex;align-items:center;gap:6px;">
+                ${opt}
+                <span style="cursor:pointer;color:#e74c3c;font-size:12px;" onclick="removeWheelOption(${i})">×</span>
+            </span>
+        `).join('');
+    }
+
+    window.removeWheelOption = function(idx) {
+        wheelOptions.splice(idx, 1);
+        renderWheelOptions();
+    };
+
+    document.getElementById('add-wheel-option').addEventListener('click', function() {
+        const input = document.getElementById('wheel-new-option');
+        const val = input.value.trim();
+        if (!val) return;
+        wheelOptions.push(val);
+        input.value = '';
+        renderWheelOptions();
+    });
+
+    document.getElementById('spin-wheel-btn').addEventListener('click', function() {
+        if (wheelOptions.length < 2) { alert('至少需要2个选项'); return; }
+        const result = wheelOptions[Math.floor(Math.random() * wheelOptions.length)];
+        document.getElementById('wheel-result').textContent = '🎯 ' + result;
+        document.getElementById('send-wheel-result').style.display = 'inline-block';
+        document.getElementById('send-wheel-result').dataset.result = result;
+    });
+
+    document.getElementById('send-wheel-result').addEventListener('click', function() {
+        const result = this.dataset.result || '结果';
+        addMessage('我', `抽签结果：${result}`, 'sent');
+        hideModal('wheel');
+        setTimeout(() => {
+            addMessage('梦角', `那就选「${result}」吧 ✨`, 'received');
+        }, 600);
+    });
+
+    // ============================================================
+    //  8. 其他功能（重要日、心晴手账、信封投递）
+    // ============================================================
+    document.getElementById('anniversary-function').addEventListener('click', () => {
+        showModal('anniversary');
+        // 简单展示示例
+        const container = document.getElementById('ann-list-container');
+        container.innerHTML = `
+            <div style="background:var(--primary-bg);border-radius:12px;padding:12px;margin-bottom:8px;border-left:3px solid var(--accent-color);">
+                <div style="font-weight:600;">❤️ 恋爱纪念日</div>
+                <div style="font-size:12px;color:var(--text-secondary);">2023-01-01 · 已过 1000 天</div>
+            </div>
+            <div style="background:var(--primary-bg);border-radius:12px;padding:12px;border-left:3px solid var(--accent-color);">
+                <div style="font-weight:600;">🎂 梦角生日</div>
+                <div style="font-size:12px;color:var(--text-secondary);">2025-12-25 · 倒计时 180 天</div>
+            </div>
+        `;
+    });
+    document.getElementById('close-anniversary-modal').addEventListener('click', () => hideModal('anniversary'));
+    document.getElementById('open-ann-add-btn').addEventListener('click', () => alert('📅 打开新增纪念日表单'));
+
+    document.getElementById('mood-function').addEventListener('click', () => showModal('mood'));
+    document.getElementById('close-mood').addEventListener('click', () => hideModal('mood'));
+
+    document.getElementById('envelope-function').addEventListener('click', () => showModal('envelope'));
+    document.getElementById('cancel-envelope').addEventListener('click', () => hideModal('envelope'));
+    document.getElementById('send-envelope').addEventListener('click', function() {
+        const text = document.getElementById('envelope-input').value.trim();
+        if (!text) { alert('请写一些内容'); return; }
+        addMessage('我', `📩 寄出一封信：\n${text}`, 'sent');
+        hideModal('envelope');
+        setTimeout(() => {
+            addMessage('梦角', '📨 收到你的信了，我会认真看的 ❤️', 'received');
+        }, 1000);
+        document.getElementById('envelope-input').value = '';
+    });
+
+    // ============================================================
+    //  9. 沉浸模式
     // ============================================================
     let immersive = false;
     function toggleImmersiveMode(force) {
@@ -1564,9 +1576,8 @@
     document.getElementById('immersive-exit-btn').addEventListener('click', () => toggleImmersiveMode(false));
 
     // ============================================================
-    //  8. 模拟自动回复（可选）
+    //  10. 模拟自动回复（可选）
     // ============================================================
-    // 如果用户长时间不说话，模拟对方主动发消息
     let autoTimer = null;
     function startAutoReply() {
         if (autoTimer) clearTimeout(autoTimer);
@@ -1583,13 +1594,11 @@
         }, 30000 + Math.random() * 40000);
     }
 
-    // 用户发送消息时重置计时器
     const origSend = sendMessage;
     sendMessage = function() {
         origSend();
         if (autoTimer) { clearTimeout(autoTimer); startAutoReply(); }
     };
-    // 覆盖原来的sendBtn监听
     sendBtn.removeEventListener('click', origSend);
     sendBtn.addEventListener('click', sendMessage);
     msgInput.removeEventListener('keydown', origSend);
@@ -1600,20 +1609,14 @@
         }
     });
 
-    // 延迟启动自动回复
     setTimeout(startAutoReply, 5000);
 
     // ============================================================
-    //  9. 初始化状态
+    //  11. 初始化
     // ============================================================
     console.log('✨ 传讯已启动 · 愿你在这里找到温暖 ✨');
-
-    // 暴露一些API给控制台调试
     window._addMessage = addMessage;
     window._sendMessage = sendMessage;
-
-    // 如果用户直接点击进入，但欢迎动画已隐藏，直接显示聊天
-    // 欢迎动画会在进入后自动隐藏
 </script>
 
 </body>
