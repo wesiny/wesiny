@@ -7,8 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#e6f2ff">
     <meta name="apple-mobile-web-app-title" content="梦角传讯">
-    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoi546L5L7p5L7j8L+86LWEIiwic2hvcnRfbmFtZSI6IuW8teS4reW+veC7vCIsImRlc2NyaXB0aW9uIjoi546L5L7p5L7j8L+85LWE57uf54K55pyN5YqhIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dy3VuZF9jb2xvciI6IiNlNmYyZmYiLCJ0aGVtZV9jb2xvciI6IiM0MDg4ZTAiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiM0MDg4ZTAiLz48dGV4dCB4PSIyMCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJzYXJpIiBmb250LXNpemU9IjIwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+PC90ZXh0Pjwvc3ZnPiIsInNpemVzIjoiNDB4NDAiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0=">
-    <title>梦角传讯</title>
+    <title>梦角传讯 · 优化版</title>
     <style>
         html {
             touch-action: manipulation;
@@ -27,37 +26,43 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* 防止整体滚动 */
+            overflow: hidden;
             font-size: 16px;
         }
 
-        /* 功能按钮栏 页面最顶部 */
         .func-bar {
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 6px;
-            padding: 8px 6px;
+            gap: 4px;
+            padding: 6px 4px;
             background: #ffffff;
             border-bottom: 1px solid #eee;
             flex-wrap: wrap;
             flex-shrink: 0;
         }
         .func-bar button {
-            padding: 4px 10px;
+            padding: 4px 8px;
             border-radius: 10px;
             border: 1px solid #ddd;
             background: #f5f5f5;
-            font-size: 14px;
+            font-size: 12px;
             color: #444;
             white-space: nowrap;
+            transition: all 0.1s;
         }
         .func-bar button:active {
             background: #e5e5e5;
+            transform: scale(0.96);
+        }
+        .func-bar .speed-btn {
+            background: #e8f0fe;
+            border-color: #4088e0;
+            color: #1a5bb5;
+            font-weight: 500;
         }
 
-        /* 顶部状态栏 */
         .top-bar {
             width: 100%;
             display: flex;
@@ -83,26 +88,22 @@
             margin-right: 4px;
         }
 
-        /* ---- 聊天区域：flex:1 自动撑满，底部留出安全间距 ---- */
         .chat-box {
             flex: 1;
             overflow-y: auto;
-            padding: 8px 6px 12px 6px; /* 底部增加内边距，防止最后一条消息紧贴边缘 */
+            padding: 8px 6px 12px 6px;
             display: flex;
             flex-direction: column;
             gap: 6px;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
-            min-height: 0; /* 防止flex溢出 */
+            min-height: 0;
         }
-
-        /* 滚动锚点（不可见占位） */
         .scroll-anchor {
             height: 1px;
             flex-shrink: 0;
         }
 
-        /* ---- 底部输入区域：固定于底部，不遮挡聊天 ---- */
         .chat-input-area {
             flex-shrink: 0;
             display: flex;
@@ -137,7 +138,6 @@
             background: #2a6fb8;
         }
 
-        /* 回复模式切换按钮 */
         .mode-toggle {
             padding: 6px 10px;
             border-radius: 18px;
@@ -155,7 +155,7 @@
             border-color: #4088e0;
         }
 
-        /* 通用弹窗遮罩 (与之前相同) */
+        /* 弹窗通用 */
         .mask {
             position: fixed;
             inset: 0;
@@ -226,7 +226,6 @@
             background: #777;
         }
 
-        /* 头像设置弹窗 */
         .pop .avatar-setting {
             display: flex;
             gap: 12px;
@@ -254,7 +253,6 @@
             font-size: 14px;
         }
 
-        /* 字卡查看弹窗样式 */
         .card-list {
             max-height: 240px;
             overflow-y: auto;
@@ -291,7 +289,6 @@
             font-size: 14px;
         }
 
-        /* 日历弹窗样式 */
         .calendar-wrap {
             width: 100%;
         }
@@ -425,7 +422,6 @@
             cursor: pointer;
         }
 
-        /* 自定义情绪弹窗 */
         .emo-edit-item {
             display: flex;
             gap: 8px;
@@ -458,7 +454,6 @@
             border-bottom: none;
         }
 
-        /* 聊天气泡 - 字体大小使用 clamp 自适应 */
         .chat-item {
             padding: 8px 12px;
             border-radius: 14px;
@@ -488,7 +483,6 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
         }
 
-        /* 单条消息容器 */
         .chat-row {
             display: flex;
             align-items: flex-end;
@@ -515,7 +509,6 @@
             object-fit: cover;
         }
 
-        /* 导入提示 */
         .import-hint {
             font-size: 13px;
             color: #888;
@@ -529,11 +522,10 @@
             font-size: 13px;
         }
 
-        /* 移动端适配 */
         @media (max-width: 480px) {
             .func-bar button {
-                font-size: 12px;
-                padding: 3px 7px;
+                font-size: 11px;
+                padding: 3px 6px;
             }
             .top-bar span {
                 font-size: 16px;
@@ -619,8 +611,8 @@
         }
         @media (max-width: 375px) {
             .func-bar button {
-                font-size: 11px;
-                padding: 2px 6px;
+                font-size: 10px;
+                padding: 2px 5px;
             }
             .top-bar span {
                 font-size: 15px;
@@ -637,141 +629,75 @@
 </head>
 <body>
 
-    <!-- 功能按钮栏 -->
     <div class="func-bar">
         <button id="avatarBtn">设置头像</button>
         <button id="importBtn">导入字卡</button>
         <button id="viewCardBtn">查看字卡</button>
         <button id="calendarBtn">情绪日历</button>
         <button id="clearRecordBtn">清空记录</button>
+        <button id="speedBtn" class="speed-btn">⏱ 中速 (1.5s)</button>
     </div>
 
-    <!-- 名称在线状态栏 -->
     <div class="top-bar">
         <span>梦角</span>
         <span class="dot"></span>
         <span>在线倾听中...</span>
     </div>
 
-    <!-- 聊天区域（含滚动锚点） -->
     <div class="chat-box" id="chatBox">
-        <!-- 滚动锚点：用于将底部完全滚动到视口 -->
         <div class="scroll-anchor" id="scrollAnchor"></div>
     </div>
 
-    <!-- 底部输入区域（含模式切换） -->
     <div class="chat-input-area">
         <input id="msgInput" placeholder="输入你想说的话…" onkeydown="if(event.key==='Enter') sendMsg()">
         <button onclick="sendMsg()">发送</button>
         <button class="mode-toggle" id="modeToggle"> 自动回复</button>
     </div>
 
-    <!-- 头像设置弹窗 -->
+    <!-- 弹窗们 -->
     <div class="mask" id="avatarMask">
-        <div class="pop">
-            <h3>设置双方头像</h3>
+        <div class="pop"><h3>设置双方头像</h3>
             <div class="avatar-setting">
-                <div class="avatar-item">
-                    <div class="avatar-preview" id="userAvatarPreview"></div>
-                    <p style="font-size:14px;margin-bottom:8px;">我的头像</p>
-                    <input type="file" id="userAvatarInput" accept="image/*">
-                </div>
-                <div class="avatar-item">
-                    <div class="avatar-preview" id="aiAvatarPreview"></div>
-                    <p style="font-size:14px;margin-bottom:8px;">梦角头像</p>
-                    <input type="file" id="aiAvatarInput" accept="image/*">
-                </div>
+                <div class="avatar-item"><div class="avatar-preview" id="userAvatarPreview"></div><p style="font-size:14px;margin-bottom:8px;">我的头像</p><input type="file" id="userAvatarInput" accept="image/*"></div>
+                <div class="avatar-item"><div class="avatar-preview" id="aiAvatarPreview"></div><p style="font-size:14px;margin-bottom:8px;">梦角头像</p><input type="file" id="aiAvatarInput" accept="image/*"></div>
             </div>
-            <div class="btn-row">
-                <button id="avatarCancel">取消</button>
-                <button class="btn-blue" id="avatarConfirm">保存头像</button>
-            </div>
+            <div class="btn-row"><button id="avatarCancel">取消</button><button class="btn-blue" id="avatarConfirm">保存头像</button></div>
         </div>
     </div>
 
-    <!-- 导入字卡弹窗 -->
     <div class="mask" id="importMask">
-        <div class="pop">
-            <h3>批量导入回复字卡</h3>
-            <div class="import-hint">
-                <strong>支持三种方式（可同时使用）：</strong><br>
-                ① 普通文本：每行一句<br>
-                ② JSON数组：<code>["句子1","句子2"]</code><br>
-                ③ 上传 .txt / .json 文件
-            </div>
-            <textarea id="textArea" placeholder="普通文本示例：
-我一直陪着你
-别难过
-
-JSON示例：
-[&quot;我一直陪着你&quot;,&quot;别难过&quot;,&quot;我会一直在&quot;]"></textarea>
-            <div class="file-box">
-                <p style="font-size:14px;margin-bottom:8px;"> 上传文件（.txt / .json）</p>
-                <input type="file" id="fileInput" accept=".txt,.json">
-            </div>
-            <div class="btn-row">
-                <button id="importCancel">取消</button>
-                <button class="btn-blue" id="importConfirm">确认导入</button>
-            </div>
+        <div class="pop"><h3>批量导入回复字卡</h3>
+            <div class="import-hint"><strong>支持三种方式（可同时使用）：</strong><br>① 普通文本：每行一句<br>② JSON数组：<code>["句子1","句子2"]</code><br>③ 上传 .txt / .json 文件</div>
+            <textarea id="textArea" placeholder="普通文本示例：\n我一直陪着你\n别难过\n\nJSON示例：\n[&quot;我一直陪着你&quot;,&quot;别难过&quot;]"></textarea>
+            <div class="file-box"><p style="font-size:14px;margin-bottom:8px;"> 上传文件（.txt / .json）</p><input type="file" id="fileInput" accept=".txt,.json"></div>
+            <div class="btn-row"><button id="importCancel">取消</button><button class="btn-blue" id="importConfirm">确认导入</button></div>
         </div>
     </div>
 
-    <!-- 查看全部字卡弹窗 -->
     <div class="mask" id="viewCardMask">
-        <div class="pop">
-            <h3>梦角自动回复字卡列表</h3>
-            <p style="font-size:14px;margin-bottom:8px;">所有梦角可自动回复文案，单条可删除</p>
+        <div class="pop"><h3>梦角自动回复字卡列表</h3><p style="font-size:14px;margin-bottom:8px;">所有梦角可自动回复文案，单条可删除</p>
             <div class="card-list" id="cardListWrap"></div>
-            <div class="card-bottom-btns">
-                <button class="btn-red" id="clearAllCard">清空全部字卡</button>
-                <button id="viewCardClose">关闭</button>
-            </div>
+            <div class="card-bottom-btns"><button class="btn-red" id="clearAllCard">清空全部字卡</button><button id="viewCardClose">关闭</button></div>
         </div>
     </div>
 
-    <!-- 情绪日历弹窗 -->
     <div class="mask" id="calendarMask">
         <div class="pop calendar-wrap">
-            <div class="calendar-header">
-                <div class="calendar-nav">
-                    <button id="calPrev">&lt;</button>
-                </div>
-                <h3 id="calTitle">2026年6月</h3>
-                <div class="calendar-nav">
-                    <button id="calNext">&gt;</button>
-                </div>
-            </div>
-            <div class="calendar-role-tab">
-                <button id="tabUser" class="active">我的情绪</button>
-                <button id="tabAi">梦角情绪</button>
-            </div>
+            <div class="calendar-header"><div class="calendar-nav"><button id="calPrev">&lt;</button></div><h3 id="calTitle">2026年6月</h3><div class="calendar-nav"><button id="calNext">&gt;</button></div></div>
+            <div class="calendar-role-tab"><button id="tabUser" class="active">我的情绪</button><button id="tabAi">梦角情绪</button></div>
             <div class="emoji-select" id="emojiBox"></div>
             <button class="btn-gray calendar-add-emo-btn" id="openEditEmo">自定义管理情绪</button>
-            <div class="calendar-week">
-                <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
-            </div>
+            <div class="calendar-week"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
             <div class="calendar-days" id="calDaysBox"></div>
-            <div class="calendar-bottom-btn">
-                <button id="calClearDay">清空当日标记</button>
-                <button class="btn-blue" id="calSave">保存当日情绪</button>
-                <button id="calClose">关闭</button>
-            </div>
+            <div class="calendar-bottom-btn"><button id="calClearDay">清空当日标记</button><button class="btn-blue" id="calSave">保存当日情绪</button><button id="calClose">关闭</button></div>
         </div>
     </div>
 
-    <!-- 自定义情绪编辑弹窗 -->
     <div class="mask" id="emoEditMask">
-        <div class="pop">
-            <h3>自定义情绪管理</h3>
-            <div class="emo-edit-item">
-                <input id="newEmoChar" placeholder="输入表情，如 ">
-                <input id="newEmoText" placeholder="情绪备注，如 想念">
-                <button class="btn-blue" id="addNewEmo">添加</button>
-            </div>
+        <div class="pop"><h3>自定义情绪管理</h3>
+            <div class="emo-edit-item"><input id="newEmoChar" placeholder="输入表情，如 "><input id="newEmoText" placeholder="情绪备注，如 想念"><button class="btn-blue" id="addNewEmo">添加</button></div>
             <div class="emo-list-box" id="customEmoList"></div>
-            <div class="btn-row">
-                <button id="closeEmoEdit">关闭</button>
-            </div>
+            <div class="btn-row"><button id="closeEmoEdit">关闭</button></div>
         </div>
     </div>
 
@@ -797,6 +723,38 @@ JSON示例：
         let customEmoList = [];
         let allEmoList = [];
         let replyMode = "auto";
+
+        // --- 新增：回复速度控制 ---
+        const delayPresets = [
+            { label: '即时', value: 0 },
+            { label: '快速 (0.5s)', value: 500 },
+            { label: '中速 (1.5s)', value: 1500 },
+            { label: '慢速 (3s)', value: 3000 },
+            { label: '随机 (0.5~4s)', value: 'random' }
+        ];
+        let currentDelayIndex = 2; // 默认中速
+
+        function getDelay() {
+            const preset = delayPresets[currentDelayIndex];
+            if (preset.value === 'random') {
+                return 500 + Math.random() * 3500;
+            }
+            return preset.value;
+        }
+
+        function updateSpeedButton() {
+            const btn = document.getElementById('speedBtn');
+            btn.textContent = '⏱ ' + delayPresets[currentDelayIndex].label;
+        }
+
+        function cycleSpeed() {
+            currentDelayIndex = (currentDelayIndex + 1) % delayPresets.length;
+            updateSpeedButton();
+            // 给个小反馈
+            const label = delayPresets[currentDelayIndex].label;
+            showSystemMessage(`回复速度已切换为：${label}`);
+        }
+        // ==============================================
 
         // ==================== 模式切换 ====================
         function loadMode() {
@@ -829,30 +787,14 @@ JSON示例：
             showSystemMessage(msg);
         }
 
-        // ==================== 字卡导入解析（同前） ====================
+        // ==================== 字卡导入解析 ====================
         function parseImportText(rawText) {
             const result = [];
             const trimText = rawText.trim();
             if (!trimText) return result;
-            if (trimText.includes('[') && trimText.includes(']')) {
-                const extracted = tryExtractJsonStrings(trimText);
-                if (extracted.length > 0) return extracted;
-            }
-            const lines = trimText.split(/\r?\n/);
-            for (const line of lines) {
-                let clean = line.trim();
-                if (!clean) continue;
-                clean = clean.replace(/^["']|["']$/g, '').trim();
-                clean = clean.replace(/^[\[\]{}]/, '').replace(/[\[\]{}]$/, '').trim();
-                if (clean) result.push(clean);
-            }
-            return result;
-        }
-
-        function tryExtractJsonStrings(text) {
-            const result = [];
+            // 优先尝试 JSON 解析
             try {
-                const parsed = JSON.parse(text);
+                const parsed = JSON.parse(trimText);
                 if (Array.isArray(parsed)) {
                     for (const item of parsed) {
                         if (typeof item === 'string') {
@@ -864,58 +806,29 @@ JSON示例：
                     }
                     if (result.length > 0) return result;
                 }
-            } catch (_) {}
-            let match;
-            const doubleQuoteRegex = /"([^"\\]*(?:\\.[^"\\]*)*)"/g;
-            let found = false;
-            while ((match = doubleQuoteRegex.exec(text)) !== null) {
-                const content = match[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\').trim();
-                if (content) { result.push(content);
-                    found = true; }
-            }
-            if (found) return result;
-            const singleQuoteRegex = /'([^'\\]*(?:\\.[^'\\]*)*)'/g;
-            while ((match = singleQuoteRegex.exec(text)) !== null) {
-                const content = match[1].replace(/\\'/g, "'").replace(/\\\\/g, '\\').trim();
-                if (content) { result.push(content);
-                    found = true; }
-            }
-            if (found) return result;
-            const bracketMatch = text.match(/\[([\s\S]*?)\]/);
-            if (bracketMatch) {
-                const inner = bracketMatch[1];
-                const parts = splitByCommaOutsideQuotes(inner);
-                for (const part of parts) {
-                    let clean = part.trim();
-                    clean = clean.replace(/^["']|["']$/g, '').trim();
-                    clean = clean.replace(/^[\s,]+|[\s,]+$/g, '').trim();
-                    if (clean) result.push(clean);
+            } catch (_) { /* 忽略，降级处理 */ }
+
+            // 降级：按行解析
+            const lines = trimText.split(/\r?\n/);
+            for (const line of lines) {
+                let clean = line.trim();
+                if (!clean) continue;
+                // 尝试去除首尾引号
+                clean = clean.replace(/^["']|["']$/g, '').trim();
+                // 如果还是 JSON 数组片段，尝试提取
+                if (clean.startsWith('[') && clean.endsWith(']')) {
+                    const inner = clean.slice(1, -1).trim();
+                    if (inner) {
+                        const parts = inner.split(',').map(s => s.trim().replace(/^["']|["']$/g, '').trim());
+                        for (const p of parts) {
+                            if (p) result.push(p);
+                        }
+                        continue;
+                    }
                 }
-                if (result.length > 0) return result;
+                if (clean) result.push(clean);
             }
             return result;
-        }
-
-        function splitByCommaOutsideQuotes(str) {
-            const parts = [];
-            let current = '';
-            let inQuote = false;
-            let quoteChar = '';
-            for (let i = 0; i < str.length; i++) {
-                const ch = str[i];
-                if (ch === '"' || ch === "'") {
-                    if (!inQuote) { inQuote = true;
-                        quoteChar = ch; } else if (ch === quoteChar && str[i - 1] !== '\\') { inQuote = false; }
-                    current += ch;
-                } else if (ch === ',' && !inQuote) {
-                    parts.push(current);
-                    current = '';
-                } else {
-                    current += ch;
-                }
-            }
-            if (current.trim()) parts.push(current);
-            return parts;
         }
 
         // ==================== 情绪存储 ====================
@@ -985,7 +898,9 @@ JSON示例：
             });
         }
 
-        // ==================== 渲染日历 ====================
+        // ==================== 渲染日历（优化版：使用 data-selected） ====================
+        let selectedDateKey = null;
+
         function renderCalendar() {
             const y = calNowDate.getFullYear();
             const m = calNowDate.getMonth();
@@ -998,11 +913,13 @@ JSON示例：
             const todayKey = getDateKey(today);
             const box = document.getElementById("calDaysBox");
             box.innerHTML = "";
+
             for (let i = 0; i < startWeek; i++) {
                 const empty = document.createElement("div");
                 empty.className = "day-cell";
                 box.appendChild(empty);
             }
+
             for (let d = 1; d <= totalDays; d++) {
                 const cellDate = new Date(y, m, d);
                 const key = getDateKey(cellDate);
@@ -1010,6 +927,14 @@ JSON示例：
                 cell.className = "day-cell";
                 if (key === todayKey) cell.classList.add("today");
                 cell.dataset.date = key;
+
+                // 高亮选中的日期
+                if (key === selectedDateKey) {
+                    cell.style.background = "#eef6ff";
+                } else {
+                    cell.style.background = "";
+                }
+
                 cell.innerHTML = `<span>${d}</span>`;
                 if (calendarData[key]) {
                     const markSpan = document.createElement("span");
@@ -1021,9 +946,10 @@ JSON示例：
                     }
                     if (markSpan.textContent) cell.appendChild(markSpan);
                 }
+
                 cell.onclick = () => {
-                    document.querySelectorAll(".day-cell").forEach(c => c.style.background = "");
-                    cell.style.background = "#eef6ff";
+                    selectedDateKey = key;
+                    renderCalendar(); // 重新渲染以高亮
                 };
                 box.appendChild(cell);
             }
@@ -1040,8 +966,15 @@ JSON示例：
             customEmoList.forEach(emo => {
                 const row = document.createElement("div");
                 row.className = "emo-row";
-                row.innerHTML =
-                    `<span>${emo}</span><button class="btn-red" style="font-size:12px;padding:2px 6px;" data-emo="${emo}">删除</button>`;
+                const span = document.createElement("span");
+                span.textContent = emo;
+                row.appendChild(span);
+                const btn = document.createElement("button");
+                btn.className = "btn-red";
+                btn.style.cssText = "font-size:12px;padding:2px 6px;";
+                btn.textContent = "删除";
+                btn.dataset.emo = emo;
+                row.appendChild(btn);
                 wrap.appendChild(row);
             });
             document.querySelectorAll("#customEmoList button").forEach(btn => {
@@ -1062,20 +995,24 @@ JSON示例：
                 calActiveRole = "user";
                 document.getElementById("tabUser").classList.add("active");
                 document.getElementById("tabAi").classList.remove("active");
+                selectedDateKey = null;
                 renderCalendar();
             };
             document.getElementById("tabAi").onclick = () => {
                 calActiveRole = "ai";
                 document.getElementById("tabAi").classList.add("active");
                 document.getElementById("tabUser").classList.remove("active");
+                selectedDateKey = null;
                 renderCalendar();
             };
             document.getElementById("calPrev").onclick = () => {
                 calNowDate = new Date(calNowDate.getFullYear(), calNowDate.getMonth() - 1, 1);
+                selectedDateKey = null;
                 renderCalendar();
             };
             document.getElementById("calNext").onclick = () => {
                 calNowDate = new Date(calNowDate.getFullYear(), calNowDate.getMonth() + 1, 1);
+                selectedDateKey = null;
                 renderCalendar();
             };
             document.getElementById("calSave").onclick = () => {
@@ -1083,28 +1020,24 @@ JSON示例：
                     alert("请先选择情绪表情！");
                     return;
                 }
-                const selected = document.querySelector(".day-cell[style*='background:#eef6ff']");
-                if (!selected) {
+                if (!selectedDateKey) {
                     alert("请先点击日期格子！");
                     return;
                 }
-                const key = selected.dataset.date;
-                if (!calendarData[key]) calendarData[key] = {};
-                calendarData[key][calActiveRole] = calSelectEmo;
+                if (!calendarData[selectedDateKey]) calendarData[selectedDateKey] = {};
+                calendarData[selectedDateKey][calActiveRole] = calSelectEmo;
                 saveCalendarData();
                 renderCalendar();
                 alert("情绪记录保存成功");
             };
             document.getElementById("calClearDay").onclick = () => {
-                const selected = document.querySelector(".day-cell[style*='background:#eef6ff']");
-                if (!selected) {
+                if (!selectedDateKey) {
                     alert("请先选择日期格子！");
                     return;
                 }
-                const key = selected.dataset.date;
-                if (calendarData[key] && calendarData[key][calActiveRole]) {
-                    delete calendarData[key][calActiveRole];
-                    if (Object.keys(calendarData[key]).length === 0) delete calendarData[key];
+                if (calendarData[selectedDateKey] && calendarData[selectedDateKey][calActiveRole]) {
+                    delete calendarData[selectedDateKey][calActiveRole];
+                    if (Object.keys(calendarData[selectedDateKey]).length === 0) delete calendarData[selectedDateKey];
                     saveCalendarData();
                     renderCalendar();
                     alert("已清空该日期情绪");
@@ -1119,6 +1052,7 @@ JSON示例：
             document.getElementById("calClose").onclick = () => {
                 document.getElementById("calendarMask").style.display = "none";
                 calSelectEmo = "";
+                selectedDateKey = null;
             };
             document.getElementById("closeEmoEdit").onclick = () => {
                 document.getElementById("emoEditMask").style.display = "none";
@@ -1147,6 +1081,7 @@ JSON示例：
                 calNowDate = new Date();
                 calActiveRole = "user";
                 calSelectEmo = "";
+                selectedDateKey = null;
                 document.getElementById("tabUser").classList.add("active");
                 document.getElementById("tabAi").classList.remove("active");
                 renderEmojiBox();
@@ -1181,30 +1116,39 @@ JSON示例：
             localStorage.setItem(REPLY_KEY, JSON.stringify(replyList));
         }
 
+        // ==================== 安全渲染字卡列表 (修复XSS) ====================
         function renderCardList() {
             const wrap = document.getElementById("cardListWrap");
             wrap.innerHTML = "";
             if (replyList.length === 0) {
-                wrap.innerHTML = "<p style='text-align:center;color:#999;padding:20px 0;'>暂无字卡，请先导入</p>";
+                const p = document.createElement("p");
+                p.style.cssText = "text-align:center;color:#999;padding:20px 0;";
+                p.textContent = "暂无字卡，请先导入";
+                wrap.appendChild(p);
                 return;
             }
             replyList.forEach((text, index) => {
                 const div = document.createElement("div");
                 div.className = "card-item";
-                div.innerHTML =
-                    `<span>${text}</span><button class="del-btn btn-red" data-idx="${index}">删除</button>`;
-                wrap.appendChild(div);
-            });
-            document.querySelectorAll(".del-btn").forEach(btn => {
+
+                const span = document.createElement("span");
+                span.textContent = text;
+                div.appendChild(span);
+
+                const btn = document.createElement("button");
+                btn.className = "del-btn btn-red";
+                btn.textContent = "删除";
+                btn.dataset.idx = index;
                 btn.onclick = (e) => {
                     e.stopPropagation();
-                    const idx = Number(btn.dataset.idx);
-                    if (confirm(`确定删除这条字卡：\n${replyList[idx]}`)) {
-                        replyList.splice(idx, 1);
+                    if (confirm(`确定删除这条字卡：\n${replyList[index]}`)) {
+                        replyList.splice(index, 1);
                         saveReply();
                         renderCardList();
                     }
                 };
+                div.appendChild(btn);
+                wrap.appendChild(div);
             });
         }
 
@@ -1219,7 +1163,7 @@ JSON示例：
             };
         }
 
-        // ==================== 头像逻辑 ====================
+        // ==================== 头像逻辑（压缩上传） ====================
         function loadAvatars() {
             userAvatar = localStorage.getItem(USER_AVATAR_KEY) || "";
             aiAvatar = localStorage.getItem(AI_AVATAR_KEY) || "";
@@ -1233,6 +1177,25 @@ JSON示例：
             aiPreview.innerHTML = aiAvatar ? `<img src="${aiAvatar}" alt="">` : "";
         }
 
+        function compressImage(file, callback) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const size = 128;
+                    canvas.width = size;
+                    canvas.height = size;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, size, size);
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                    callback(dataUrl);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
         // ==================== 聊天记录 ====================
         function initChatRecord() {
             const local = localStorage.getItem(STORAGE_KEY);
@@ -1243,16 +1206,20 @@ JSON示例：
                 return;
             }
             chatRecords = JSON.parse(local);
+            // 限制记录数量，防止溢出
+            const MAX_RECORDS = 500;
+            if (chatRecords.length > MAX_RECORDS) {
+                chatRecords = chatRecords.slice(-MAX_RECORDS);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
+            }
             chatRecords.forEach(item => {
                 appendMessage(item.sender, item.text, item.isUser, false);
             });
-            // 初始化时滚动到底部
             scrollToBottom();
         }
 
         function showSystemMessage(text) {
             const chatBox = document.getElementById("chatBox");
-            // 将系统消息插入到滚动锚点之前
             const anchor = document.getElementById("scrollAnchor");
             const sysItem = document.createElement("div");
             sysItem.className = "chat-item system";
@@ -1279,25 +1246,32 @@ JSON示例：
                 row.appendChild(avatar);
                 row.appendChild(bubble);
             }
-            // 将消息插入到滚动锚点之前
             const anchor = document.getElementById("scrollAnchor");
             box.insertBefore(row, anchor);
             if (save) {
                 chatRecords.push({ sender, text, isUser });
+                // 再次检查上限
+                if (chatRecords.length > 500) {
+                    chatRecords = chatRecords.slice(-500);
+                }
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
             }
             scrollToBottom();
         }
 
-        // 滚动到底部：使滚动锚点可见
+        // 增强滚动
         function scrollToBottom() {
             const anchor = document.getElementById("scrollAnchor");
             if (anchor) {
-                anchor.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                anchor.scrollIntoView({ behavior: 'auto', block: 'end' });
+            }
+            const box = document.getElementById("chatBox");
+            if (box) {
+                box.scrollTop = box.scrollHeight;
             }
         }
 
-        // ==================== 发送消息 ====================
+        // ==================== 发送消息（接入回复速度） ====================
         function sendMsg() {
             const input = document.getElementById("msgInput");
             const text = input.value.trim();
@@ -1305,10 +1279,14 @@ JSON示例：
             appendMessage("你", text, true);
             input.value = "";
 
+            const delayMs = getDelay();
+
             if (replyMode === "readonly") {
+                // 已读模式也用延迟，但稍微快一点
+                const readDelay = Math.min(delayMs, 500);
                 setTimeout(() => {
                     showSystemMessage("梦角已读");
-                }, 400);
+                }, readDelay);
             } else {
                 setTimeout(() => {
                     if (replyList.length === 0) {
@@ -1317,7 +1295,7 @@ JSON示例：
                     }
                     const r = replyList[Math.floor(Math.random() * replyList.length)];
                     appendMessage("梦角", r, false);
-                }, 600);
+                }, delayMs);
             }
         }
 
@@ -1332,9 +1310,13 @@ JSON示例：
             loadCalendarData();
             loadCustomEmo();
             bindCalendarEvent();
+            updateSpeedButton(); // 初始化速度按钮
 
-            // 模式切换按钮
+            // 模式切换
             document.getElementById("modeToggle").addEventListener("click", toggleMode);
+
+            // 速度切换
+            document.getElementById("speedBtn").addEventListener("click", cycleSpeed);
 
             // ---- 头像弹窗 ----
             const avatarMask = document.getElementById("avatarMask");
@@ -1349,18 +1331,18 @@ JSON示例：
             document.getElementById("userAvatarInput").addEventListener("change", e => {
                 const f = e.target.files[0];
                 if (!f) return;
-                const r = new FileReader();
-                r.onload = ev => { userAvatar = ev.target.result;
-                    refreshAvatarPreviews(); };
-                r.readAsDataURL(f);
+                compressImage(f, (dataUrl) => {
+                    userAvatar = dataUrl;
+                    refreshAvatarPreviews();
+                });
             });
             document.getElementById("aiAvatarInput").addEventListener("change", e => {
                 const f = e.target.files[0];
                 if (!f) return;
-                const r = new FileReader();
-                r.onload = ev => { aiAvatar = ev.target.result;
-                    refreshAvatarPreviews(); };
-                r.readAsDataURL(f);
+                compressImage(f, (dataUrl) => {
+                    aiAvatar = dataUrl;
+                    refreshAvatarPreviews();
+                });
             });
 
             // ---- 导入弹窗 ----
