@@ -522,18 +522,20 @@
             box-shadow: 0 2px 12px rgba(0,0,0,0.03);
         }
 
-        /* 消息时间戳 */
+        /* 消息时间戳 - 修复样式 */
         .msg-time {
             font-size: 11px;
             color: #9a8aaa;
-            margin-top: 4px;
+            margin-top: 5px;
             text-align: right;
             letter-spacing: 0.3px;
-            opacity: 0.7;
-            padding-right: 4px;
+            opacity: 0.8;
+            padding-right: 2px;
+            display: block;
+            clear: both;
         }
         .chat-item.user .msg-time {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.75);
         }
 
         .chat-row {
@@ -613,7 +615,7 @@
 </head>
 <body>
 
-    <!-- ===== 功能栏（已删除顶部状态行） ===== -->
+    <!-- ===== 功能栏 ===== -->
     <div class="func-bar">
         <button id="avatarBtn">🖼️ 头像</button>
         <button id="importBtn">📥 导入字卡</button>
@@ -702,7 +704,7 @@
         const CALENDAR_KEY = "dreamCalendarData";
         const CUSTOM_EMO_KEY = "dreamCustomEmo";
         const MODE_KEY = "replyMode";
-        const SPEED_INDEX_KEY = "dreamSpeedIndex"; // 新增：保存速度档位
+        const SPEED_INDEX_KEY = "dreamSpeedIndex";
 
         let chatRecords = [];
         let replyList = [];
@@ -728,7 +730,6 @@
             { label: '随机 (0.5~120s)', value: 'random' }
         ];
 
-        // ===== 速度存储 =====
         function loadSpeedIndex() {
             const saved = localStorage.getItem(SPEED_INDEX_KEY);
             if (saved !== null) {
@@ -1213,8 +1214,8 @@
             reader.readAsDataURL(file);
         }
 
-        // ===== 聊天消息 =====
-        let originalAppendMessage = function(sender, text, isUser = false, save = true, timestamp = null) {
+        // ===== 【修复】聊天消息 - 时间戳正确显示 =====
+        function appendMessage(sender, text, isUser = false, save = true, timestamp = null) {
             const box = document.getElementById("chatBox");
             const row = document.createElement("div");
             row.className = `chat-row ${isUser ? "user" : "ai"}`;
@@ -1224,18 +1225,27 @@
             const avatarSrc = isUser ? userAvatar : aiAvatar;
             if (avatarSrc) avatar.innerHTML = `<img src="${avatarSrc}" alt="">`;
 
+            // 消息气泡
             const bubble = document.createElement("div");
             bubble.className = `chat-item ${isUser ? "user" : "ai"}`;
-            bubble.textContent = text;
 
-            if (timestamp !== null) {
+            // 消息文本
+            const textSpan = document.createElement("span");
+            textSpan.textContent = text;
+            bubble.appendChild(textSpan);
+
+            // ===== 时间戳修复：只有 timestamp 存在且不为 null 时才显示 =====
+            if (timestamp !== null && timestamp !== undefined) {
                 const timeDiv = document.createElement("div");
                 timeDiv.className = "msg-time";
                 const date = new Date(timestamp);
-                const hours = String(date.getHours()).padStart(2, "0");
-                const minutes = String(date.getMinutes()).padStart(2, "0");
-                timeDiv.textContent = `${hours}:${minutes}`;
-                bubble.appendChild(timeDiv);
+                // 检查日期是否有效
+                if (!isNaN(date.getTime())) {
+                    const hours = String(date.getHours()).padStart(2, "0");
+                    const minutes = String(date.getMinutes()).padStart(2, "0");
+                    timeDiv.textContent = `${hours}:${minutes}`;
+                    bubble.appendChild(timeDiv);
+                }
             }
 
             if (isUser) {
@@ -1256,10 +1266,7 @@
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
             }
             scrollToBottom();
-        };
-
-        // 赋值
-        let appendMessage = originalAppendMessage;
+        }
 
         // ===== 系统消息 =====
         function showSystemMessage(text) {
@@ -1272,7 +1279,7 @@
             scrollToBottom();
         }
 
-        // ===== 历史记录加载 =====
+        // ===== 历史记录加载（修复：正确传递时间戳） =====
         function initChatRecord() {
             const local = localStorage.getItem(STORAGE_KEY);
             const chatBox = document.getElementById("chatBox");
@@ -1288,6 +1295,7 @@
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(chatRecords));
             }
             chatRecords.forEach(item => {
+                // 关键修复：如果 item.timestamp 不存在，传 null（不显示时间）
                 const ts = item.timestamp || null;
                 appendMessage(item.sender, item.text, item.isUser, false, ts);
             });
@@ -1309,6 +1317,7 @@
             function sendNext() {
                 if (index >= messages.length) return;
                 const msg = messages[index];
+                // 每条消息独立时间戳
                 appendMessage("梦角", msg, false, true);
                 index++;
                 if (index < messages.length) {
@@ -1322,6 +1331,7 @@
             const input = document.getElementById("msgInput");
             const text = input.value.trim();
             if (!text) return;
+            // 用户消息带当前时间戳
             appendMessage("你", text, true, true);
             input.value = "";
             const delayMs = getDelay();
@@ -1348,9 +1358,7 @@
 
         // ===== 初始化 =====
         window.onload = () => {
-            // 加载速度档位
             loadSpeedIndex();
-
             loadMode();
             loadReply();
             renderCardList();
