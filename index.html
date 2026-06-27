@@ -293,16 +293,21 @@
             text-align: right;
             letter-spacing: 0.5px;
         }
-         .message-row {
-    display: flex;
-    align-items: flex-end;
-    gap: 8px;
-    margin-bottom: 2px;
-}
-.message-row.sent {
-    justify-content: flex-end;
-}
-        var(--in-chat-avatar-size);
+
+        /* 消息行靠右（自己发的） */
+        .message-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+        .message-row.sent {
+            justify-content: flex-end;
+        }
+
+        .message-row .avatar-mini {
+            width: var(--in-chat-avatar-size);
+            height: var(--in-chat-avatar-size);
             border-radius: 50%;
             flex-shrink: 0;
             background: var(--border-color);
@@ -660,9 +665,6 @@
         [data-color-theme="sunset"] { --accent-color: #d4956b; --accent-color-rgb: 212,149,107; }
         [data-color-theme="forest"] { --accent-color: #5d8a6b; --accent-color-rgb: 93,138,107; }
         [data-color-theme="ocean"] { --accent-color: #4d7a8a; --accent-color-rgb: 77,122,138; }
-
-        /* ===== 简单按钮图标 ===== */
-        .icon-btn { font-size: 18px; line-height: 1; }
     </style>
 </head>
 <body>
@@ -998,7 +1000,7 @@
     })();
 
     // ============================================================
-    //  2. 聊天核心
+    //  2. 聊天核心（含“消息靠右”修改）
     // ============================================================
     const chatContainer = document.getElementById('chat-container');
     const emptyState = document.getElementById('empty-state');
@@ -1007,9 +1009,8 @@
     const typingIndicator = document.getElementById('typing-indicator');
 
     function addMessage(sender, text, type) {
-    const row = document.createElement('div');
-    row.className = 'message-row' + (type === 'sent' ? ' sent' : '');
-}
+        const row = document.createElement('div');
+        row.className = 'message-row' + (type === 'sent' ? ' sent' : '');
         const avatar = document.createElement('div');
         avatar.className = 'avatar-mini';
         const avatarKey = type === 'sent' ? 'myAvatar' : 'partnerAvatar';
@@ -1027,8 +1028,13 @@
         const d = new Date();
         time.textContent = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
         msg.appendChild(time);
-        if (type === 'sent') { row.appendChild(msg); row.appendChild(avatar); }
-        else { row.appendChild(avatar); row.appendChild(msg); }
+        if (type === 'sent') {
+            row.appendChild(msg);
+            row.appendChild(avatar);
+        } else {
+            row.appendChild(avatar);
+            row.appendChild(msg);
+        }
         chatContainer.appendChild(row);
         chatContainer.scrollTop = chatContainer.scrollHeight;
         if (emptyState) emptyState.style.display = 'none';
@@ -1177,7 +1183,7 @@
     });
 
     // ============================================================
-    //  7. 字卡管理
+    //  7. 字卡管理（含增强导入）
     // ============================================================
     const REPLIES_STORAGE_KEY = 'customReplies';
 
@@ -1237,101 +1243,92 @@
         alert('✅ 字卡已保存');
     });
 
-    // 导入字卡
+    // ===== 增强导入 =====
+    document.getElementById('import-replies-btn').addEventListener('click', function() {
+        document.getElementById('import-replies-input').click();
+    });
     document.getElementById('import-replies-input').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-        try {
-            const data = JSON.parse(ev.target.result);
-
-            // 递归收集字符串，并尝试识别分组
-            function collect(obj, groups, flatStrings, currentGroupName) {
-                if (typeof obj === 'string') {
-                    flatStrings.push(obj);
-                    return;
-                }
-                if (Array.isArray(obj)) {
-                    for (let item of obj) {
-                        collect(item, groups, flatStrings, currentGroupName);
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            try {
+                const data = JSON.parse(ev.target.result);
+                function collect(obj, groups, flatStrings, currentGroupName) {
+                    if (typeof obj === 'string') {
+                        flatStrings.push(obj);
+                        return;
                     }
-                    return;
-                }
-                if (obj && typeof obj === 'object') {
-                    // 优先识别常见回复数组字段
-                    const possibleReplyFields = ['replies', 'items', 'contents', 'texts', 'messages', 'list', 'data'];
-                    let foundReplyArray = null;
-                    let groupName = obj.name || obj.title || currentGroupName || null;
-                    for (let key of possibleReplyFields) {
-                        if (Array.isArray(obj[key])) {
-                            foundReplyArray = obj[key];
-                            break;
+                    if (Array.isArray(obj)) {
+                        for (let item of obj) {
+                            collect(item, groups, flatStrings, currentGroupName);
                         }
+                        return;
                     }
-                    if (foundReplyArray) {
-                        // 提取数组中的字符串
-                        let replies = [];
-                        for (let item of foundReplyArray) {
-                            if (typeof item === 'string') replies.push(item);
-                            else if (item && typeof item === 'object') {
-                                // 尝试从对象中提取所有字符串值
-                                for (let val of Object.values(item)) {
-                                    if (typeof val === 'string') replies.push(val);
-                                }
+                    if (obj && typeof obj === 'object') {
+                        const possibleReplyFields = ['replies', 'items', 'contents', 'texts', 'messages', 'list', 'data', 'text'];
+                        let foundReplyArray = null;
+                        let groupName = obj.name || obj.title || currentGroupName || null;
+                        for (let key of possibleReplyFields) {
+                            if (Array.isArray(obj[key])) {
+                                foundReplyArray = obj[key];
+                                break;
                             }
                         }
-                        if (replies.length > 0) {
-                            groups.push({ name: groupName || '未命名', replies: replies });
-                            return;
+                        if (foundReplyArray) {
+                            let replies = [];
+                            for (let item of foundReplyArray) {
+                                if (typeof item === 'string') replies.push(item);
+                                else if (item && typeof item === 'object') {
+                                    for (let val of Object.values(item)) {
+                                        if (typeof val === 'string') replies.push(val);
+                                    }
+                                }
+                            }
+                            if (replies.length > 0) {
+                                groups.push({ name: groupName || '未命名', replies: replies });
+                                return;
+                            }
+                        }
+                        for (let key in obj) {
+                            collect(obj[key], groups, flatStrings, groupName || key);
                         }
                     }
-                    // 否则递归遍历所有属性
-                    for (let key in obj) {
-                        collect(obj[key], groups, flatStrings, groupName || key);
+                }
+                let groups = [];
+                let flatStrings = [];
+                collect(data, groups, flatStrings, null);
+                if (groups.length === 0 && flatStrings.length > 0) {
+                    groups.push({ name: '导入字卡', replies: flatStrings });
+                }
+                if (groups.length === 0) {
+                    alert('⚠️ 未能提取任何文本内容，请检查JSON格式');
+                    return;
+                }
+                const existing = getReplies();
+                for (let g of groups) {
+                    let uniqueReplies = [...new Set(g.replies)];
+                    if (uniqueReplies.length === 0) continue;
+                    let existingGroup = existing.find(item => item.name === g.name);
+                    if (existingGroup) {
+                        let existingSet = new Set(existingGroup.replies || []);
+                        for (let r of uniqueReplies) {
+                            if (!existingSet.has(r)) existingGroup.replies.push(r);
+                        }
+                    } else {
+                        existing.push({ name: g.name, replies: uniqueReplies });
                     }
                 }
+                saveReplies(existing);
+                renderReplyList();
+                alert('✅ 导入成功！共导入 ' + groups.reduce((acc, g) => acc + g.replies.length, 0) + ' 条文本');
+            } catch (err) {
+                alert('❌ 导入失败：' + err.message);
             }
-
-            let groups = [];
-            let flatStrings = [];
-            collect(data, groups, flatStrings, null);
-
-            // 若没有分组但有零散字符串，则合并为一个组
-            if (groups.length === 0 && flatStrings.length > 0) {
-                groups.push({ name: '导入字卡', replies: flatStrings });
-            }
-
-            if (groups.length === 0) {
-                alert('⚠️ 未能提取任何文本内容，请检查JSON格式');
-                return;
-            }
-
-            // 合并到现有字卡（去重）
-            const existing = getReplies();
-            for (let g of groups) {
-                let uniqueReplies = [...new Set(g.replies)];
-                if (uniqueReplies.length === 0) continue;
-                let existingGroup = existing.find(item => item.name === g.name);
-                if (existingGroup) {
-                    let existingSet = new Set(existingGroup.replies || []);
-                    for (let r of uniqueReplies) {
-                        if (!existingSet.has(r)) existingGroup.replies.push(r);
-                    }
-                } else {
-                    existing.push({ name: g.name, replies: uniqueReplies });
-                }
-            }
-            saveReplies(existing);
-            renderReplyList();
-            alert('✅ 导入成功！共导入 ' + groups.reduce((acc, g) => acc + g.replies.length, 0) + ' 条文本');
-        } catch (err) {
-            alert('❌ 导入失败：' + err.message);
-        }
-        e.target.value = '';
-    };
-    reader.readAsText(file);
-});
+            e.target.value = '';
+        };
+        reader.readAsText(file);
+    });
 
     // ============================================================
     //  8. 查看字卡
