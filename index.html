@@ -504,7 +504,6 @@
                     <i class="fas fa-cog"></i><span>设置</span>
                 </div>
                 <div class="settings-grid">
-                    <!-- 外观设置卡片已删除 -->
                     <div class="settings-card" id="chat-settings">
                         <i class="fas fa-comments"></i>
                         <span>聊天设置</span>
@@ -524,9 +523,7 @@
             </div>
         </div>
 
-        <!-- 外观模态框已完全删除 -->
-
-        <!-- Modal: 聊天设置 -->
+        <!-- Modal: 聊天设置 (音效已移除) -->
         <div class="modal" id="chat-modal">
             <div class="modal-content">
                 <div class="cs-header">
@@ -543,9 +540,7 @@
                         <button class="cs-tab" data-panel="cs-panel-rhythm" onclick="switchCsTab(this)">
                             <i class="fas fa-hourglass-half"></i> 节奏
                         </button>
-                        <button class="cs-tab" data-panel="cs-panel-sound" onclick="switchCsTab(this)">
-                            <i class="fas fa-volume-up"></i> 音效
-                        </button>
+                        <!-- 音效标签已删除 -->
                         <button class="cs-tab" data-panel="cs-panel-display" onclick="switchCsTab(this)">
                             <i class="fas fa-eye"></i> 显示
                         </button>
@@ -654,129 +649,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="cs-panel" id="cs-panel-sound">
-                        <p class="cs-group-label">消息音效</p>
-                        <div class="cs-card">
-                            <div class="setting-pill-row" id="sound-toggle">
-                                <span class="setting-pill-icon"><i class="fas fa-volume-up"></i></span>
-                                <span class="setting-pill-label">开启音效</span>
-                                <div class="setting-pill-switch"><div class="setting-pill-knob"></div></div>
-                            </div>
-                            <div id="sound-detail-section" class="cs-sound-inner" style="padding-top:10px;">
-                                <div class="cs-slider-row" style="border-bottom:1px solid var(--border-color);padding:0 0 10px;">
-                                    <span class="cs-slider-label" style="width:32px;">音量</span>
-                                    <input type="range" min="0" max="100" step="5" value="15" class="font-size-slider" id="sound-volume-slider">
-                                    <span class="cs-slider-val" id="sound-volume-value">15%</span>
-                                </div>
-                                <div style="padding-top:10px;display:flex;flex-direction:column;gap:12px;">
-                                    <div>
-                                        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;">我发出的消息音效</div>
-                                        <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
-                                            <select id="sound-my-send-preset" style="flex:1;padding:7px 10px;border:1px solid var(--border-color);border-radius:8px;font-size:12px;background:var(--primary-bg);color:var(--text-primary);outline:none;font-family:var(--font-family);">
-                                                <option value="mute">无音效</option>
-                                                <option value="kakaotalk">kakaotalk</option>
-                                                <option value="tone_default">内置：默认</option>
-                                                <option value="tone_soft">内置：柔和</option>
-                                                <option value="tone_low">内置：低沉</option>
-                                                <option value="tone_warm">内置：厚暖</option>
-                                                <option value="tone_dark">内置：暗夜</option>
-                                                <option value="tone_haze">内置：雾感</option>
-                                            </select>
-                                            <button id="test-sound-my-send-btn" class="modal-btn modal-btn-secondary" style="padding:6px 10px;font-size:12px;white-space:nowrap;"><i class="fas fa-play"></i> 试听</button>
-                                        </div>
-                                        <div style="display:flex;gap:6px;align-items:center;">
-                                            <input type="text" id="sound-my-send-custom-url" placeholder="可填自定义URL（留空用内置预设）" style="flex:1;padding:7px 10px;border:1px solid var(--border-color);border-radius:8px;font-size:12px;background:var(--primary-bg);color:var(--text-primary);outline:none;">
-                                            <button id="upload-sound-my-send-btn" class="modal-btn modal-btn-secondary" style="padding:6px 10px;font-size:12px;white-space:nowrap;" title="上传本地音频文件"><i class="fas fa-upload"></i></button>
-                                            <input type="file" id="upload-sound-my-send-file" accept="audio/mp3,audio/mpeg,audio/wav,audio/ogg,audio/*" style="display:none;">
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;">对方发来的消息音效</div>
-                                        <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
-                                            <select id="sound-partner-message-preset" style="flex:1;padding:7px 10px;border:1px solid var(--border-color);border-radius:8px;font-size:12px;background:var(--primary-bg);color:var(--text-primary);outline:none;font-family:var(--font-family);">
-                                                <option value="mute">无音效</option>
-                                                <option value="kakaotalk">kakaotalk</option>
-                                                <option value="tone_default">内置：默认</option>
-                                                <option value="tone_soft">内置：柔和</option>
-                                                <option value="tone_low">内置：低沉</option>
-                                                <option value="tone_warm">内置：厚暖</option>
-                                                <option value="tone_dark">内置：暗夜</option>
-                                                <option value="tone_haze">内置：雾感</option>
-                                            </select>
-                                            <button id="test-sound-partner-message-btn" class="modal-btn modal-btn-secondary" style="padding:6px 10px;font-size:12px;white-space:nowrap;"><i class="fas fa-play"></i> 试听</button>
-                                        </div>
-                                        <div style="display:flex;gap:6px;align-items:center;">
-                                            <input type="text" id="sound-partner-message-custom-url" placeholder="可填自定义URL（留空用内置预设）" style="flex:1;padding:7px 10px;border:1px solid var(--border-color);border-radius:8px;font-size:12px;background:var(--primary-bg);color:var(--text-primary);outline:none;">
-                                            <button id="upload-sound-partner-message-btn" class="modal-btn modal-btn-secondary" style="padding:6px 10px;font-size:12px;white-space:nowrap;" title="上传本地音频文件"><i class="fas fa-upload"></i></button>
-                                            <input type="file" id="upload-sound-partner-message-file" accept="audio/mp3,audio/mpeg,audio/wav,audio/ogg,audio/*" style="display:none;">
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;">我拍一拍音效</div>
-                                        <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
-                                            <select id="sound-my-poke-preset" style="flex:1;padding:7px 10px;border:1px solid var(--border-color);border-radius:8px;font-size:12px;background:var(--primary-bg);color:var(--text-primary);outline:none;font-family:var(--font-family);">
-                                                <option value="mute">无音效</option>
-                                                <option value="kakaotalk">kakaotalk</option>
-                                                <option value="tone_default">内置：默认</option>
-                                                <option value="tone_soft">内置：柔和</option>
-                                                <option value="tone_low">内置：低沉</option>
-                                                <option value="tone_warm">内置：厚暖</option>
-                                                <option value="tone_dark">内置：暗夜</option>
-                                                <option value="tone_haze">内置：雾感</option>
-                                            </select>
-                                            <button id="test-sound-my-poke-btn" class="modal-btn modal-btn-secondary" style="padding:6px 10px;font-size:12px;white-space:nowrap;"><i class="fas fa-play"></i> 试听</button>
-                                        </div>
-                                        <div style="display:flex;gap:6px;align-items:center;">
-                                            <input type="text" id="sound-my-poke-custom-url" placeholder="可填自定义URL（留空用内置预设）" style="flex:1;padding:7px 10px;border:1px solid var(--border-color);border-radius:8px;font-size:12px;background:var(--primary-bg);color:var(--text-primary);outline:none;">
-                                            <button id="upload-sound-my-poke-btn" class="modal-btn modal-btn-secondary" style="padding:6px 10px;font-size:12px;white-space:nowrap;" title="上传本地音频文件"><i class="fas fa-upload"></i></button>
-                                            <input type="file" id="upload-sound-my-poke-file" accept="audio/mp3,audio/mpeg,audio/wav,audio/ogg,audio/*" style="display:none;">
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;">对方拍一拍音效</div>
-                                        <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
-                                            <select id="sound-partner-poke-preset" style="flex:1;padding:7px 10px;border:1px solid var(--border-color);border-radius:8px;font-size:12px;background:var(--primary-bg);color:var(--text-primary);outline:none;font-family:var(--font-family);">
-                                                <option value="mute">无音效</option>
-                                                <option value="kakaotalk">kakaotalk</option>
-                                                <option value="tone_default">内置：默认</option>
-                                                <option value="tone_soft">内置：柔和</option>
-                                                <option value="tone_low">内置：低沉</option>
-                                                <option value="tone_warm">内置：厚暖</option>
-                                                <option value="tone_dark">内置：暗夜</option>
-                                                <option value="tone_haze">内置：雾感</option>
-                                            </select>
-                                            <button id="test-sound-partner-poke-btn" class="modal-btn modal-btn-secondary" style="padding:6px 10px;font-size:12px;white-space:nowrap;"><i class="fas fa-play"></i> 试听</button>
-                                        </div>
-                                        <div style="display:flex;gap:6px;align-items:center;">
-                                            <input type="text" id="sound-partner-poke-custom-url" placeholder="可填自定义URL（留空用内置预设）" style="flex:1;padding:7px 10px;border:1px solid var(--border-color);border-radius:8px;font-size:12px;background:var(--primary-bg);color:var(--text-primary);outline:none;">
-                                            <button id="upload-sound-partner-poke-btn" class="modal-btn modal-btn-secondary" style="padding:6px 10px;font-size:12px;white-space:nowrap;" title="上传本地音频文件"><i class="fas fa-upload"></i></button>
-                                            <input type="file" id="upload-sound-partner-poke-file" accept="audio/mp3,audio/mpeg,audio/wav,audio/ogg,audio/*" style="display:none;">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="cs-group-label" style="margin-top:16px;">挂机保活音频</p>
-                        <div class="cs-card">
-                            <div class="setting-pill-row" id="keepalive-audio-toggle" onclick="window._toggleKeepaliveAudio && window._toggleKeepaliveAudio()">
-                                <span class="setting-pill-icon" style="position:relative;">
-                                    <i class="fas fa-broadcast-tower"></i>
-                                    <span id="keepalive-dot" class="keepalive-dot"></span>
-                                </span>
-                                <span class="setting-pill-label">后台保活 <span style="font-size:11px;color:var(--text-secondary);font-weight:400;" id="keepalive-audio-desc">静音循环音频，防止页面被系统挂起</span></span>
-                                <div class="setting-pill-switch" id="keepalive-audio-switch"><div class="setting-pill-knob"></div></div>
-                            </div>
-                            <div id="keepalive-bar-row" style="display:none;align-items:center;gap:3px;padding:8px 14px 10px;border-top:1px solid var(--border-color);">
-                                <span style="font-size:11px;color:var(--text-secondary);margin-right:4px;">音频状态</span>
-                                <div class="keepalive-wave-bar" style="animation-delay:0s;"></div>
-                                <div class="keepalive-wave-bar" style="animation-delay:0.1s;"></div>
-                                <div class="keepalive-wave-bar" style="animation-delay:0.2s;"></div>
-                                <div class="keepalive-wave-bar" style="animation-delay:0.15s;"></div>
-                                <div class="keepalive-wave-bar" style="animation-delay:0.05s;"></div>
-                                <span style="font-size:11px;color:var(--accent-color);margin-left:6px;font-weight:600;">LIVE</span>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- cs-panel-sound 已完全删除 -->
                     <div class="cs-panel" id="cs-panel-display">
                         <p class="cs-group-label">界面模式</p>
                         <div class="cs-card cs-immersive-wrap">
@@ -878,11 +751,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modal: 主题编辑器（外观定制相关，但保留因为可能被其他依赖，若想彻底删除可删，但为了不破坏依赖暂留） -->
-        <!-- 但用户要求删除外观个性化，这里编辑器也删掉 -->
-        <!-- 已删除外观模态框，但主题编辑器可能独立，为保险也删除 -->
-        <!-- 实际HTML中并无独立主题编辑器模态框，其内容在appearance-modal内，已删，故不需额外操作 -->
 
         <!-- Modal: 自定义回复 -->
         <div class="modal" id="custom-replies-modal">
