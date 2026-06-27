@@ -293,15 +293,16 @@
             text-align: right;
             letter-spacing: 0.5px;
         }
-        .message-row {
-            display: flex;
-            align-items: flex-end;
-            gap: 8px;
-            margin-bottom: 2px;
-        }
-        .message-row .avatar-mini {
-            width: var(--in-chat-avatar-size);
-            height: var(--in-chat-avatar-size);
+         .message-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    margin-bottom: 2px;
+}
+.message-row.sent {
+    justify-content: flex-end;
+}
+        var(--in-chat-avatar-size);
             border-radius: 50%;
             flex-shrink: 0;
             background: var(--border-color);
@@ -1006,8 +1007,9 @@
     const typingIndicator = document.getElementById('typing-indicator');
 
     function addMessage(sender, text, type) {
-        const row = document.createElement('div');
-        row.className = 'message-row';
+    const row = document.createElement('div');
+    row.className = 'message-row' + (type === 'sent' ? ' sent' : '');
+}
         const avatar = document.createElement('div');
         avatar.className = 'avatar-mini';
         const avatarKey = type === 'sent' ? 'myAvatar' : 'partnerAvatar';
